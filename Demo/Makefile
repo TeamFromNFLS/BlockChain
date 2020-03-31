@@ -25,7 +25,7 @@ $(SUBDIRS):ECHO
 	make -C $@
 DEBUG:ECHO
     #直接去debug目录下执行makefile文件
-	make -C debug
+	make -C Debug
 ECHO:
 	@echo $(SUBDIRS)
 #将c文件编译为o文件，并放在指定放置目标文件的目录中即OBJS_DIR
