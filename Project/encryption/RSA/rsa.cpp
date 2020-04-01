@@ -9,22 +9,21 @@ using namespace std;
 
 bool RSA::IsPrime(const BigInt &num, const int k = 100)
 {
-    BigInt Zero("0"), One("1"), Two("2");
     BigInt n = num;
-    if (n == Zero)
+    if (n == number.empty())
         return false;
-    else if (n == Two)
+    else if (n == 2)
         return true;
     else
     {
-        BigInt numMinus = n - One, d, a;
+        BigInt numMinus = n - 1, d, a;
         d = numMinus;
         int r = 0;
         //write num-1 as 2^r * d
-        while (d % Two == Zero)
+        while (d % 2 == number.empty())
         {
             r++;
-            d /= Two;
+            d /= 2;
         }
         //test if there exists a number a such that a^d mod num != 1
         //and a^(2^j*d) mod num != -1
@@ -33,7 +32,7 @@ bool RSA::IsPrime(const BigInt &num, const int k = 100)
             a = CreateRandomNum(n); //create a random number between 1 and num
             //test a^d mod num
             BigInt reMod = BigInt::PowMod(a, d, n);
-            if (reMod == One) //probably prime
+            if (reMod == 1) //probably prime
                 continue;
 
             //test a^(2^j*d) mod num for 0 <= j <= r-1
@@ -41,7 +40,7 @@ bool RSA::IsPrime(const BigInt &num, const int k = 100)
             {
                 if (reMod != numMinus) //composite
                     return false;
-                reMod = BigInt::PowMod(reMod, Two, n);
+                reMod = BigInt::PowMod(reMod, 2, n);
             }
         }
         return true;
@@ -65,10 +64,10 @@ BigInt RSA::CreateOdd()
 
 BigInt RSA::CreatePrime()
 {
-    BigInt Prime = CreateOdd(), Two("2");
+    BigInt Prime = CreateOdd(), 2("2");
     while (!IsPrime(Prime))
     {
-        Prime += Two; //if not prime, then plus 2
+        Prime += 2; //if not prime, then plus 2
     }
     return Prime;
 }
