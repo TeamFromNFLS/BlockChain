@@ -8,9 +8,11 @@ int main()
     vector<int> getNumber;
     //cin >> a;
     string s = "3";
-    BigInt a("123"), b("123");
+    BigInt a = 5, b("5");
+    a.check();
     BigInt c, d("12345");
-    c = BigInt::Pow(a, b);
+    c += 5;
+    bool flag = (c == 25);
     //c = a * a;
     cout << c << endl;
 

@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 using namespace std;
 vector<int>::iterator it;
 void BigInt::check() // carry bit
@@ -43,11 +44,18 @@ void BigInt::SetNumber(string s)
     number.clear();
     for (_it = s.end() - 1; _it >= s.begin(); --_it)
         number.push_back(*_it - '0');
+    check();
     return;
 }
 
 BigInt::BigInt(string s)
 {
+    SetNumber(s);
+}
+
+BigInt::BigInt(const int &x)
+{
+    string s = to_string(x);
     SetNumber(s);
 }
 
@@ -109,7 +117,7 @@ bool BigInt::operator>=(BigInt &bigInt)
     return !(*this < bigInt);
 }
 
-BigInt &BigInt::operator+=(BigInt &bigInt)
+BigInt &BigInt::operator+=(BigInt bigInt)
 {
     if (number.size() < bigInt.number.size())
         number.resize(bigInt.number.size());
@@ -178,7 +186,7 @@ BigInt BigInt::operator*(BigInt &bigInt)
     return result;
 }
 
-BigInt &BigInt::operator*=(BigInt &bigInt)
+BigInt &BigInt::operator*=(BigInt bigInt)
 {
     *this = *this * bigInt;
     return *this;
@@ -201,10 +209,11 @@ BigInt BigInt::operator/(BigInt bigInt) // Divide with mod, using minus to reali
             result += tmp;
         }
     }
+    result.check();
     return result;
 }
 
-BigInt &BigInt::operator/=(BigInt &bigInt)
+BigInt &BigInt::operator/=(BigInt bigInt)
 {
     *this = *this / bigInt;
     return *this;
@@ -224,10 +233,11 @@ BigInt BigInt::operator%(BigInt &bigInt)
             substitute -= _tmp;
         }
     }
+    substitute.check();
     return substitute;
 }
 
-BigInt &BigInt::operator%=(BigInt &bigInt)
+BigInt &BigInt::operator%=(BigInt bigInt)
 {
     *this = *this % bigInt;
     return *this;
@@ -235,35 +245,35 @@ BigInt &BigInt::operator%=(BigInt &bigInt)
 
 BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
 {
-    BigInt result("1"), zero("0"), two("2");
+    BigInt result = 1;
     while (!index.number.empty())
     {
         result %= mod;
         BigInt tmp;
-        tmp = index % two;
+        tmp = index % 2;
         if (!tmp.number.empty())
         {
             result *= base;
         }
         base = base * base % mod;
-        index /= two;
+        index /= 2;
     }
     return result;
 }
 
 BigInt BigInt::Pow(BigInt base, BigInt index)
 {
-    BigInt result("1"), zero("0"), two("2");
+    BigInt result = 1;
     while (!index.number.empty())
     {
         BigInt tmp;
-        tmp = index % two;
+        tmp = index % 2;
         if (!tmp.number.empty())
         {
             result *= base;
         }
         base = base * base;
-        index /= two;
+        index /= 2;
     }
     return result;
 }

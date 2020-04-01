@@ -21,6 +21,7 @@ public:
     BigInt(string s);
     ~BigInt(){};
     operator int();
+    BigInt(const int &x);                  // implicit type change from int to BigInt
     void SetNumber(string s);              // use a string to adjust the number
     bool GetNumber(vector<int> &vec) const // use another vector to contain the number
     {
@@ -37,16 +38,16 @@ public:
     bool operator>(BigInt &bigInt);
     bool operator<=(BigInt &bigInt);
     bool operator>=(BigInt &bigInt);
-    BigInt &operator+=(BigInt &bigInt);
+    BigInt &operator+=(BigInt bigInt);
     BigInt operator+(BigInt bigInt);
     BigInt &operator-=(BigInt bigInt);
     BigInt operator-(BigInt bigInt);
-    BigInt &operator*=(BigInt &bigInt);
+    BigInt &operator*=(BigInt bigInt);
     BigInt operator*(BigInt &bigInt);
-    BigInt &operator/=(BigInt &bigInt);
+    BigInt &operator/=(BigInt bigInt);
     BigInt operator/(BigInt bigInt);
     BigInt operator%(BigInt &bigInt);
-    BigInt &operator%=(BigInt &bigInt);
+    BigInt &operator%=(BigInt bigInt);
     static BigInt PowMod(BigInt base, BigInt index, BigInt mod);
     static BigInt Pow(BigInt base, BigInt index);
     vector<int> number;
