@@ -19,6 +19,7 @@ public:
         number.assign(bigInt.number.begin(), bigInt.number.end());
     }
     BigInt(string s);
+    ~BigInt(){};
     operator int();
     void SetNumber(string s);              // use a string to adjust the number
     bool GetNumber(vector<int> &vec) const // use another vector to contain the number
