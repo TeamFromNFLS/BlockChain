@@ -1,26 +1,38 @@
-#include"bigInt.h"
-#include<iostream>
-#include<cstring>
-#include<vector>
+#include "bigInt.h"
+#include <iostream>
+#include <cstring>
+#include <vector>
 using namespace std;
 vector<int>::iterator it;
-void BigInt::check() {
+void BigInt::check() // carry bit
+{
     while (!number.empty() && !number.back())
         number.pop_back();
-    if (number.empty()) return;
-    for (it = number.begin() + 1; it != number.end(); ++it) {
+    if (number.empty())
+        return;
+    for (it = number.begin() + 1; it != number.end(); ++it)
+    {
         *it += *(it - 1) / 10;
         *(it - 1) %= 10;
     }
-    while (number.back() > 10) {
+    while (number.back() > 10)
+    {
         it = number.begin() + number.size() - 2;
         number.push_back(number.back() / 10);
         *it %= 10;
     }
     return;
 }
-
-istream &operator>>(istream &input, BigInt &bigInt) {
+void BigInt::SetNumber(string s)
+{
+    string::iterator _it;
+    number.clear();
+    for (_it = s.end() - 1; _it >= s.begin(); --_it)
+        number.push_back(*_it - '0');
+    return;
+}
+istream &operator>>(istream &input, BigInt &bigInt)
+{
     string s;
     input >> s;
     string::iterator _it;
@@ -30,8 +42,10 @@ istream &operator>>(istream &input, BigInt &bigInt) {
     return input;
 }
 
-ostream &operator<<(ostream &output, BigInt &bigInt) {
-    if(bigInt.number.empty()) output << 0;
+ostream &operator<<(ostream &output, BigInt &bigInt)
+{
+    if (bigInt.number.empty())
+        output << 0;
     for (it = bigInt.number.end() - 1; it >= bigInt.number.begin(); --it)
         output << *it;
     return output;
