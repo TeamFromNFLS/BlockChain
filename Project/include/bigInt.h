@@ -2,7 +2,6 @@
 #define BIG_INT_H
 #include <iostream>
 #include <vector>
-#include <cstring>
 #include <algorithm>
 using namespace std;
 
@@ -15,8 +14,14 @@ public:
         number.push_back(0);
         check();
     }
-    void SetNumber(string s);        // use a string to adjust the number
-    bool GetNumber(vector<int> &vec) // use another vector to contain the number
+    BigInt(const BigInt &bigInt)
+    {
+        number.assign(bigInt.number.begin(), bigInt.number.end());
+    }
+    BigInt(string s);
+    operator int();
+    void SetNumber(string s);              // use a string to adjust the number
+    bool GetNumber(vector<int> &vec) const // use another vector to contain the number
     {
         vec.assign(number.begin(), number.end());
         reverse(vec.begin(), vec.end());
@@ -31,19 +36,22 @@ public:
     bool operator>(BigInt &bigInt);
     bool operator<=(BigInt &bigInt);
     bool operator>=(BigInt &bigInt);
-    void operator+=(BigInt &bigInt);
-    void operator-=(BigInt &bigInt);
-    void operator*=(BigInt &bigInt);
-    void operator/=(BigInt &bigInt);
-    BigInt operator+(BigInt &bigInt);
-    BigInt operator-(BigInt &bigInt);
+    BigInt &operator+=(BigInt &bigInt);
+    BigInt operator+(BigInt bigInt);
+    BigInt &operator-=(BigInt bigInt);
+    BigInt operator-(BigInt bigInt);
+    BigInt &operator*=(BigInt &bigInt);
     BigInt operator*(BigInt &bigInt);
-    BigInt operator/(BigInt &bigInt);
+    BigInt &operator/=(BigInt &bigInt);
+    BigInt operator/(BigInt bigInt);
     BigInt operator%(BigInt &bigInt);
-    BigInt DivWithMod(BigInt &bigInt);
+    BigInt &operator%=(BigInt &bigInt);
+    static BigInt PowMod(BigInt base, BigInt index, BigInt mod);
+    static BigInt Pow(BigInt base, BigInt index);
+    vector<int> number;
 
 private:
-    vector<int> number; // stored in inverted order
+    // stored in inverted order
 };
 
 #endif

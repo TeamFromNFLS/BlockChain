@@ -5,16 +5,14 @@ using namespace std;
 
 int main()
 {
-    BigInt a;
     vector<int> getNumber;
-    cin >> a;
-    string s = "123456789";
-    a.SetNumber(s);
-    a.GetNumber(getNumber);
-    vector<int>::iterator it;
-    for (it = getNumber.begin(); it != getNumber.end(); ++it)
-        cout << *it;
-    cout << endl;
-    cout << a << endl;
+    //cin >> a;
+    string s = "3";
+    BigInt a("12345"), b("12345");
+    BigInt c, d("12345");
+    c = BigInt::Pow(a, b);
+    //c = a * a;
+    cout << c << endl;
+
     return 0;
 }
