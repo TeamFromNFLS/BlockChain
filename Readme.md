@@ -40,6 +40,15 @@
 
       1. Title case. e.g. MaxValue
 
+2. ## A really simple guide of gdb
+
+   1. In your **makefile**, make sure that you add "-g3" into the compile order.
+   2. Use command: gdb $(EXEDIR) to start debugging.
+   3. In gdb, use command dir $(DIR) to locate to the file you want.
+   4. Then use command break(**b** for short) fileName.cpp:n to make a break point at line #n.
+   5. Use command run(**r** for short) to run the program. Then your program would stop at the break point.
+   6. Use print(**p** for short) variableName to print the variable you want to.
+   7. More commands, please search on the Internet.
 Add anything new if you want!
 Telling others what you've done through commits! *(NO need of date)*
 
