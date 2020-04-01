@@ -16,7 +16,7 @@ public:
     BigInt CreateRandomNum(const BigInt &); //for the private key and the prime test
     BigInt Encrypt(const BigInt &);
     BigInt Decrypt(const BigInt &);
-    bool IsPrime(const BigInt &, const int k = 100); //k随便取的，判断正确率是1/4^k
+    bool IsPrime(const BigInt &, const int k = 100); //k随便取的，判断错误率是1/4^k
     const int length = 10;
     BigInt PublicKey;
 
