@@ -1,7 +1,8 @@
 #include "bigInt.h"
 #include <iostream>
-#include <cstring>
 #include <vector>
+#include <algorithm>
+#include <cmath>
 using namespace std;
 vector<int>::iterator it;
 void BigInt::check() // carry bit
@@ -9,20 +10,33 @@ void BigInt::check() // carry bit
     while (!number.empty() && !number.back())
         number.pop_back();
     if (number.empty())
+    {
         return;
+    }
     for (it = number.begin() + 1; it != number.end(); ++it)
     {
         *it += *(it - 1) / 10;
         *(it - 1) %= 10;
     }
-    while (number.back() > 10)
+    while (number.back() >= 10)
     {
-        it = number.begin() + number.size() - 2;
         number.push_back(number.back() / 10);
+        it = number.begin() + number.size() - 2;
         *it %= 10;
     }
     return;
 }
+
+BigInt::operator int()
+{
+    int result;
+    for (it = number.begin(); it != number.end(); ++it)
+    {
+        result += *it * pow(10, (it - number.begin()));
+    }
+    return result;
+}
+
 void BigInt::SetNumber(string s)
 {
     string::iterator _it;
@@ -31,6 +45,12 @@ void BigInt::SetNumber(string s)
         number.push_back(*_it - '0');
     return;
 }
+
+BigInt::BigInt(string s)
+{
+    SetNumber(s);
+}
+
 istream &operator>>(istream &input, BigInt &bigInt)
 {
     string s;
@@ -49,4 +69,201 @@ ostream &operator<<(ostream &output, BigInt &bigInt)
     for (it = bigInt.number.end() - 1; it >= bigInt.number.begin(); --it)
         output << *it;
     return output;
+}
+
+bool BigInt::operator!=(BigInt &bigInt)
+{
+    return !(number == bigInt.number);
+}
+
+bool BigInt::operator==(BigInt &bigInt)
+{
+    return number == bigInt.number;
+}
+
+bool BigInt::operator<(BigInt &bigInt)
+{
+    if (number.size() != bigInt.number.size())
+        return number.size() < bigInt.number.size();
+    vector<int>::iterator _it;
+    for (it = number.end() - 1, _it = bigInt.number.end() - 1; it >= number.begin(), _it >= bigInt.number.begin(); --it, --_it)
+    {
+        if (*it != *_it)
+            return *it < *_it;
+    }
+    return false;
+}
+
+bool BigInt::operator>(BigInt &bigInt)
+{
+    return bigInt < *this;
+}
+
+bool BigInt::operator<=(BigInt &bigInt)
+{
+    return !(*this > bigInt);
+}
+
+bool BigInt::operator>=(BigInt &bigInt)
+{
+    return !(*this < bigInt);
+}
+
+BigInt &BigInt::operator+=(BigInt &bigInt)
+{
+    if (number.size() < bigInt.number.size())
+        number.resize(bigInt.number.size());
+    vector<int>::iterator _it;
+    for (it = number.begin(), _it = bigInt.number.begin(); it != number.end(), _it != bigInt.number.end(); ++it, ++_it)
+    {
+        *it += *_it;
+    }
+    check();
+    return *this;
+}
+
+BigInt BigInt::operator+(BigInt bigInt)
+{
+    BigInt result;
+    result = bigInt += *this;
+    return result;
+}
+
+BigInt &BigInt::operator-=(BigInt bigInt)
+{
+    if (*this < bigInt)
+        swap(*this, bigInt);
+    vector<int>::iterator _it;
+    for (_it = bigInt.number.begin(); _it != bigInt.number.end(); ++_it)
+    {
+        it = number.begin() + (_it - bigInt.number.begin());
+        *it -= *_it;
+        if (*it < 0)
+        {
+            vector<int>::iterator tmp = it + 1;
+            while (!(*tmp))
+            {
+                ++tmp;
+            }
+            while (tmp > it)
+            {
+                --(*tmp);
+                *(--tmp) += 10;
+            }
+        }
+    }
+    check();
+    return *this;
+}
+
+BigInt BigInt::operator-(BigInt bigInt)
+{
+    BigInt result;
+    result = bigInt -= *this;
+    return result;
+}
+
+BigInt BigInt::operator*(BigInt &bigInt)
+{
+    BigInt result;
+    result.number.assign(number.size() + bigInt.number.size(), 0);
+    for (int i = 0; i != number.size(); ++i)
+    {
+        for (int j = 0; j != bigInt.number.size(); ++j)
+        {
+            result.number[i + j] = number[i] * bigInt.number[j];
+        }
+    }
+    result.check();
+    return result;
+}
+
+BigInt &BigInt::operator*=(BigInt &bigInt)
+{
+    *this = *this * bigInt;
+    return *this;
+}
+
+BigInt BigInt::operator/(BigInt bigInt) // Divide with mod, using minus to realise
+{
+    BigInt result;
+    BigInt substitute = *this;
+    for (int i = number.size() - bigInt.number.size(); substitute >= bigInt; --i)
+    {
+        BigInt tmp; // pow(bigInt, 10)
+        tmp.number.assign(i + 1, 0);
+        tmp.number.back() = 1;
+        BigInt _tmp = bigInt * tmp; // ready to minus
+        int cnt = 1;
+        while (substitute >= _tmp)
+        {
+            substitute -= _tmp;
+            result += tmp;
+        }
+    }
+    return result;
+}
+
+BigInt &BigInt::operator/=(BigInt &bigInt)
+{
+    *this = *this / bigInt;
+    return *this;
+}
+
+BigInt BigInt::operator%(BigInt &bigInt)
+{
+    BigInt substitute = *this;
+    for (int i = number.size() - bigInt.number.size(); substitute >= bigInt; --i)
+    {
+        BigInt tmp; // pow(bigInt, 10)
+        tmp.number.assign(i + 1, 0);
+        tmp.number.back() = 1;
+        BigInt _tmp = bigInt * tmp; // ready to minus
+        while (substitute >= _tmp)
+        {
+            substitute -= _tmp;
+        }
+    }
+    return substitute;
+}
+
+BigInt &BigInt::operator%=(BigInt &bigInt)
+{
+    *this = *this % bigInt;
+    return *this;
+}
+
+BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
+{
+    BigInt result("1"), zero("0"), two("2");
+    while (!index.number.empty())
+    {
+        result %= mod;
+        BigInt tmp;
+        tmp = index % two;
+        if (!tmp.number.empty())
+        {
+            result *= base;
+        }
+        base = base * base % mod;
+        index /= two;
+    }
+    return result;
+}
+
+BigInt BigInt::Pow(BigInt base, BigInt index)
+{
+    BigInt result("1"), zero("0"), two("2");
+    while (!index.number.empty())
+    {
+        BigInt tmp;
+        tmp = index % two;
+        if (!tmp.number.empty())
+        {
+            result *= base;
+        }
+        base = base * base;
+        index /= two;
+    }
+    return result;
 }
