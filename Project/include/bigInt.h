@@ -44,7 +44,7 @@ public:
     BigInt operator-(BigInt bigInt);
     BigInt &operator*=(BigInt bigInt);
     BigInt operator*(BigInt &bigInt);
-    BigInt &operator/=(BigInt &bigInt);
+    BigInt &operator/=(BigInt bigInt);
     BigInt operator/(BigInt bigInt);
     BigInt operator%(BigInt &bigInt);
     BigInt &operator%=(BigInt bigInt);
