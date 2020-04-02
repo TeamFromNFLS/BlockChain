@@ -5,7 +5,7 @@
 using namespace std;
 const long MAX = 100000;
 
-long prime_ls[MAX + 1]; //store prime number
+/* long prime_ls[MAX + 1]; //store prime number
 long generatePrime()
 {
     long p[MAX + 1];
@@ -30,10 +30,10 @@ long generatePrime()
     }
     return cnt;
 }
-
+ */
 int main()
 {
-    long i, cnt = generatePrime();
+    //long i, cnt = generatePrime();
     /* for (i = 0; i < cnt; i++)
     {
         cout << prime_ls[i] << " ";
