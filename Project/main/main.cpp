@@ -12,7 +12,7 @@ int main()
     cout << c << endl;
 
     RSA rsa;
-    BigInt prime("100001651");
+    BigInt prime = rsa.CreateRandom(1);
     bool isPrime = rsa.IsPrime(prime);
     cout << isPrime << endl;
     return 0;
