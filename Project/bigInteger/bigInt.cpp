@@ -121,7 +121,13 @@ BigInt BigInt::operator+(BigInt &bigInt)
 {
     BigInt result;
     if (number.size() < bigInt.number.size())
+    {
         number.resize(bigInt.number.size());
+    }
+    else if (number.size() > bigInt.number.size())
+    {
+        bigInt.number.resize(number.size());
+    }
     vector<int>::iterator _it;
     for (it = number.begin(), _it = bigInt.number.begin(); it != number.end(), _it != bigInt.number.end(); ++it, ++_it)
     {
@@ -194,7 +200,7 @@ BigInt &BigInt::operator*=(BigInt bigInt)
     return *this;
 }
 
-BigInt BigInt::operator/(BigInt bigInt) // Divide with mod, using minus to realise
+BigInt BigInt::operator/(BigInt &bigInt) // Divide with mod, using minus to realise
 {
     BigInt result;
     BigInt substitute = *this;

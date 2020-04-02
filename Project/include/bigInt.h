@@ -45,15 +45,14 @@ public:
     BigInt &operator*=(BigInt bigInt);
     BigInt operator*(BigInt &bigInt);
     BigInt &operator/=(BigInt bigInt);
-    BigInt operator/(BigInt bigInt);
+    BigInt operator/(BigInt &bigInt);
     BigInt operator%(BigInt &bigInt);
     BigInt &operator%=(BigInt bigInt);
     static BigInt PowMod(BigInt base, BigInt index, BigInt mod);
     static BigInt Pow(BigInt base, BigInt index);
-    vector<int> number;
+    vector<int> number; // stored in inverted order
 
 private:
-    // stored in inverted order
 };
 
 #endif
