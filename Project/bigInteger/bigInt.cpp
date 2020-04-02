@@ -117,34 +117,37 @@ bool BigInt::operator>=(BigInt &bigInt)
     return !(*this < bigInt);
 }
 
-BigInt &BigInt::operator+=(BigInt bigInt)
+BigInt BigInt::operator+(BigInt &bigInt)
 {
+    BigInt result;
     if (number.size() < bigInt.number.size())
         number.resize(bigInt.number.size());
     vector<int>::iterator _it;
     for (it = number.begin(), _it = bigInt.number.begin(); it != number.end(), _it != bigInt.number.end(); ++it, ++_it)
     {
-        *it += *_it;
+        result.number.push_back(*it + *_it);
     }
-    check();
-    return *this;
-}
-
-BigInt BigInt::operator+(BigInt bigInt)
-{
-    BigInt result;
-    result = bigInt += *this;
+    result.check();
     return result;
 }
 
-BigInt &BigInt::operator-=(BigInt bigInt)
+BigInt &BigInt::operator+=(BigInt bigInt)
 {
-    if (*this < bigInt)
-        swap(*this, bigInt);
+    *this = *this + bigInt;
+    return *this;
+}
+
+BigInt BigInt::operator-(BigInt &bigInt)
+{
+    BigInt minuend, subtrahend;
+    minuend = *this;
+    subtrahend = bigInt;
+    if (minuend < subtrahend)
+        swap(minuend, subtrahend);
     vector<int>::iterator _it;
-    for (_it = bigInt.number.begin(); _it != bigInt.number.end(); ++_it)
+    for (_it = subtrahend.number.begin(); _it != subtrahend.number.end(); ++_it)
     {
-        it = number.begin() + (_it - bigInt.number.begin());
+        it = minuend.number.begin() + (_it - subtrahend.number.begin());
         *it -= *_it;
         if (*it < 0)
         {
@@ -160,15 +163,14 @@ BigInt &BigInt::operator-=(BigInt bigInt)
             }
         }
     }
-    check();
-    return *this;
+    minuend.check();
+    return minuend;
 }
 
-BigInt BigInt::operator-(BigInt bigInt)
+BigInt &BigInt::operator-=(BigInt bigInt)
 {
-    BigInt result;
-    result = bigInt -= *this;
-    return result;
+    *this = *this - bigInt;
+    return *this;
 }
 
 BigInt BigInt::operator*(BigInt &bigInt)

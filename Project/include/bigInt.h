@@ -39,9 +39,9 @@ public:
     bool operator<=(BigInt &bigInt);
     bool operator>=(BigInt &bigInt);
     BigInt &operator+=(BigInt bigInt);
-    BigInt operator+(BigInt bigInt);
+    BigInt operator+(BigInt &bigInt);
     BigInt &operator-=(BigInt bigInt);
-    BigInt operator-(BigInt bigInt);
+    BigInt operator-(BigInt &bigInt);
     BigInt &operator*=(BigInt bigInt);
     BigInt operator*(BigInt &bigInt);
     BigInt &operator/=(BigInt bigInt);
