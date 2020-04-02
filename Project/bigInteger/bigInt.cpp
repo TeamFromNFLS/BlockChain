@@ -182,12 +182,14 @@ BigInt &BigInt::operator-=(BigInt bigInt)
 BigInt BigInt::operator*(BigInt &bigInt)
 {
     BigInt result;
-    result.number.assign(number.size() + bigInt.number.size(), 0);
-    for (int i = 0; i != number.size(); ++i)
+    result.number.assign(number.size() + bigInt.number.size() - 1, 0);
+    vector<int>::iterator _it, __it;
+    for (it = number.begin(); it != number.end(); ++it)
     {
-        for (int j = 0; j != bigInt.number.size(); ++j)
+        for (_it = bigInt.number.begin(); _it != bigInt.number.end(); ++_it)
         {
-            result.number[i + j] = number[i] * bigInt.number[j];
+            __it = result.number.begin() + (it - number.begin()) + (_it - bigInt.number.begin());
+            *__it += *it * *_it;
         }
     }
     result.check();
@@ -256,13 +258,16 @@ BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
     BigInt result = 1;
     while (!index.number.empty())
     {
+        //cout << result << ' ' << base << ' ' << index << endl;
         BigInt tmp;
         tmp = index % 2;
         if (!tmp.number.empty())
         {
             result *= base;
         }
-        base = base * base % mod;
+        base = base * base;
+        cout << base << endl;
+        base %= mod;
         index /= 2;
         result %= mod;
     }
