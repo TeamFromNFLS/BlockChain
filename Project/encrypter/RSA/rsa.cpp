@@ -32,7 +32,7 @@ bool RSA::PrimePair(const BigInt &num1, const BigInt &num2)
 bool RSA::IsPrime(const BigInt &num, int k)
 {
     BigInt n = num;
-    if (n == n.number.empty())
+    if (n == 1)
         return false;
     else if (n == 2)
         return true;
