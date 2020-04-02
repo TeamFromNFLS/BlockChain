@@ -258,7 +258,6 @@ BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
     BigInt result = 1;
     while (!index.number.empty())
     {
-        //cout << result << ' ' << base << ' ' << index << endl;
         BigInt tmp;
         tmp = index % 2;
         if (!tmp.number.empty())
@@ -266,7 +265,6 @@ BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
             result *= base;
         }
         base = base * base;
-        cout << base << endl;
         base %= mod;
         index /= 2;
         result %= mod;

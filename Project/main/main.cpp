@@ -11,6 +11,6 @@ int main()
     a *= 16;
     //BigInt c = a + b;
     cout << a << endl;
-    //cout << BigInt::PowMod(2, 11, 23) << endl;
+    cout << BigInt::PowMod(2, 11, 23) << endl;
     return 0;
 }
