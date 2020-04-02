@@ -18,6 +18,8 @@
 
      1. Debug.
      2. Attempt to use NTT, failed.
+  2. gyr
+     1. Find bugs.
 
 Update this log plz!
 
