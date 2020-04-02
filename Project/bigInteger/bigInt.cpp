@@ -256,7 +256,6 @@ BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
     BigInt result = 1;
     while (!index.number.empty())
     {
-        result %= mod;
         BigInt tmp;
         tmp = index % 2;
         if (!tmp.number.empty())
@@ -265,6 +264,7 @@ BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
         }
         base = base * base % mod;
         index /= 2;
+        result %= mod;
     }
     return result;
 }
