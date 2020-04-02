@@ -21,7 +21,7 @@ public:
     BigInt DecryptByPublic(const BigInt &);
     BigInt DecryptByPrivate(const BigInt &);
     bool IsPrime(const BigInt &, int k = 100); //k随便取的，判断错误率是1/4^k
-    const int length = 1024;
+    const int length = 305;
     BigInt publicKey, product;
 
 private:

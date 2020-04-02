@@ -6,14 +6,9 @@ using namespace std;
 
 int main()
 {
-    BigInt a = 10;
-    BigInt c;
-    c = a - 8;
-    cout << c << endl;
 
     RSA rsa;
-    BigInt prime = rsa.CreateRandom(1);
-    bool isPrime = rsa.IsPrime(prime);
-    cout << isPrime << endl;
+    BigInt prime = rsa.CreatePrime();
+    cout << prime << endl;
     return 0;
 }
