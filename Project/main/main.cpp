@@ -40,13 +40,8 @@ int main()
     } */
 
     RSA rsa;
-    BigInt prime;
-
-    for (i = 0; i < cnt; i++)
-    {
-        bool isPrime = rsa.IsPrime(prime_ls[i]);
-        cout << isPrime << " ";
-    }
+    BigInt prime, product;
+    rsa.Init();
     /* while (cin >> prime)
     {
         bool isPrime = rsa.IsPrime(prime);

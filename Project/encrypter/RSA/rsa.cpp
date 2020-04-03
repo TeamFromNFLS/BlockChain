@@ -3,18 +3,26 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <stdlib.h>
+#include <cstdlib>
 #include <ctime>
+#include <windows.h>
 using namespace std;
 
 void RSA::Init()
 {
     //产生大素数p,q
+    /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
     p = CreatePrime();
+    Sleep(1000); // Wait to create another seed
     q = CreatePrime();
     product = p * q;
+    p = p - 1, q = q - 1;
     //欧拉数
-    Euler = (p - 1) * (q - 1);
+    Euler = p * q;
+    p = p + 1, q = q + 1;
+    cout << p << endl
+         << q << endl
+         << Euler << endl;
 }
 
 bool RSA::PrimePair(const BigInt &num1, const BigInt &num2)
@@ -92,12 +100,17 @@ BigInt RSA::CreateRandom(int isOdd)
 {
     const int digit[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     stringstream ss;
-
     srand((unsigned)time(NULL)); //generate seed
+    int tmp = rand() % 10;
+    while (!tmp)
+    {
+        tmp = rand() % 10;
+    }
+    ss << digit[tmp];
     switch (isOdd)
     {
     case 1: //create random odd
-        for (int i = 0; i < length - 1; i++)
+        for (int i = 1; i < length - 1; i++)
         {
             ss << digit[rand() % 10];
         }
