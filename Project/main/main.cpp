@@ -3,60 +3,19 @@
 #include "bigInt.h"
 #include "rsa.h"
 using namespace std;
-const long MAX = 100000;
 
-/* long prime_ls[MAX + 1]; //store prime number
-long generatePrime()
-{
-    long p[MAX + 1];
-    long cnt = 0; //#prime number
-    long i, j;
-    for (i = 0; i <= MAX; i++)
-    {
-        p[i] = 1;
-    }
-
-    p[0] = p[1] = 0;
-    for (i = 2; i <= MAX; i++)
-    {
-        if (p[i] == 1)
-        {
-            prime_ls[cnt++] = i;
-            for (j = i; j <= MAX; j = j + i)
-            {
-                p[j] = 0;
-            }
-        }
-    }
-    return cnt;
-}
- */
 int main()
 {
-    //long i, cnt = generatePrime();
-    /* for (i = 0; i < cnt; i++)
-    {
-        cout << prime_ls[i] << " ";
-    } */
-
+    /* BigInt p("965020263285415169225506842409"), q("415924872698612520126277439911");
     RSA rsa;
-    BigInt prime;
-
-    for (i = 0; i < cnt; i++)
-    {
-        bool isPrime = rsa.IsPrime(prime_ls[i]);
-        cout << isPrime << " ";
-    }
-    /* while (cin >> prime)
-    {
-        bool isPrime = rsa.IsPrime(prime);
-        cout << isPrime << endl;
-        if (!prime)
-            break;
-    }  */
-    /* BigInt a = 22, b = 7, n = 29, reMod;
-    reMod = BigInt::PowMod(a, b, n);
-    cout << reMod << endl;
-    cout << 2048 % 23 << endl; */
+    rsa.length = 30;
+    rsa.setNumber(p, q);
+    cout << rsa.product << endl;
+    rsa.CreateKeys();
+    cout << rsa.publicKey << endl
+         << rsa.privateKey << endl; */
+    BigInt t;
+    t = 0.number.empty();
+    cout << t;
     return 0;
 }
