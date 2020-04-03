@@ -12,6 +12,7 @@ void RSA::Init()
 {
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
+    auto st = clock();
     p = CreatePrime();
     Sleep(1000); // Wait to create another seed
     q = CreatePrime();
@@ -20,9 +21,11 @@ void RSA::Init()
     //欧拉数
     Euler = p * q;
     p = p + 1, q = q + 1;
+    auto ed = clock();
     cout << p << endl
          << q << endl
-         << Euler << endl;
+         << Euler << endl
+         << "time:" << ed - st << endl;
 }
 
 bool RSA::PrimePair(const BigInt &num1, const BigInt &num2)
