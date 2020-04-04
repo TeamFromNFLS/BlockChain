@@ -9,23 +9,23 @@ class RSA
 public:
     RSA() {}
     ~RSA() {}
-    void Init(); //prime & euler
-    bool PrimePair(const BigInt &, const BigInt &);
+    void Init();          //prime & euler & product
     BigInt CreatePrime(); //create two prime numbers p and q
     BigInt CreateRandom(int);
-    void CreatePublic(); //randomly create the public key
-    void CreatePrivate();
+    void CreateKeys();                          //use ext gcd to create public and private key
     BigInt CreateRandomSmaller(const BigInt &); //for the private key and the prime test
     BigInt EncryptByPublic(const BigInt &);
     BigInt EncryptByPrivate(const BigInt &);
     BigInt DecryptByPublic(const BigInt &);
     BigInt DecryptByPrivate(const BigInt &);
-    bool IsPrime(const BigInt &, int k = 3); //k随便取的，判断错误率是1/4^k
-    int length = 305;
-    BigInt publicKey, product;
+    bool IsPrime(const BigInt &, int k = 10); //k随便取的，判断错误率是1/4^k
+    const int length = 305;
+    BigInt publicKey, privateKey, Euler, product, p, q;
+    void setNumber(BigInt, BigInt);
 
 private:
-    BigInt privateKey, p, q, Euler;
+    // BigInt privateKey,
+    //     Euler;
 };
 
 #endif
