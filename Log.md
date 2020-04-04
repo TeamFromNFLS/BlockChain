@@ -18,8 +18,17 @@
 
      1. Debug.
      2. Attempt to use NTT, failed.
+
   2. gyr
+
      1. Find bugs.
+
+* 2020.04.03
+
+   1.ph
+
+      1. Debug.
+      2. Trying to find better algorithms for BigInt.
 
 Update this log plz!
 
