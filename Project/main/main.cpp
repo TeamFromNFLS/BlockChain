@@ -38,9 +38,9 @@ int main()
     {
         cout << prime_ls[i] << " ";
     } */
-
     RSA rsa;
-    BigInt prime, product;
+    //BigInt prime("2030783851"), product;
+    //cout << rsa.IsPrime(prime) << endl;
     rsa.Init();
     /* while (cin >> prime)
     {

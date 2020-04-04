@@ -20,8 +20,8 @@ public:
     BigInt EncryptByPrivate(const BigInt &);
     BigInt DecryptByPublic(const BigInt &);
     BigInt DecryptByPrivate(const BigInt &);
-    bool IsPrime(const BigInt &, int k = 10); //k随便取的，判断错误率是1/4^k
-    const int length = 4;
+    bool IsPrime(const BigInt &, int k = 3); //k随便取的，判断错误率是1/4^k
+    int length = 305;
     BigInt publicKey, product;
 
 private:

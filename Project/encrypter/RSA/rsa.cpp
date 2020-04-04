@@ -17,10 +17,11 @@ void RSA::Init()
     Sleep(1000); // Wait to create another seed
     q = CreatePrime();
     product = p * q;
-    p = p - 1, q = q - 1;
+    BigInt one("1");
+    p = p - one, q = q - one;
     //欧拉数
     Euler = p * q;
-    p = p + 1, q = q + 1;
+    p = p + one, q = q + one;
     auto ed = clock();
     cout << p << endl
          << q << endl
@@ -127,7 +128,6 @@ BigInt RSA::CreateRandom(int isOdd)
         }
         break;
     }
-
     BigInt Random(ss.str());
     return Random;
 }
@@ -135,10 +135,13 @@ BigInt RSA::CreateRandom(int isOdd)
 BigInt RSA::CreatePrime()
 {
     BigInt Prime = CreateRandom(1);
-    while (!IsPrime(Prime))
+    bool flag = IsPrime(Prime);
+    //BigInt Prime = 2030783801;
+    /*while (!IsPrime(Prime))
     {
+        cout << Prime << endl;
         Prime += 2; //if not prime, then plus 2
-    }
+    }*/
     return Prime;
 }
 
