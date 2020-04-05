@@ -30,5 +30,11 @@
       1. Debug.
       2. Trying to find better algorithms for BigInt.
 
+* 2020.04.04
+
+   1.ph
+
+      1. Did nothing.
+
 Update this log plz!
 
