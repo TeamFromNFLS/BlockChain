@@ -17,10 +17,11 @@ int main()
     */
     int a;
 
-    RSA rsa;
     BigInt prime;
     while (cin >> a)
     {
+        RSA rsa;
+        rsa.length = a;
         prime = rsa.CreatePrime();
         cout << prime << endl;
         if (!a)

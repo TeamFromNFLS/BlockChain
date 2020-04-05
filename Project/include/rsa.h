@@ -32,7 +32,7 @@ public:
     //const int length = 305;
     BigInt publicKey, privateKey, Euler, product, p, q;
     //KeyPair public, private;
-    const int length = 10;
+    int length;
     void setNumber(BigInt, BigInt);
 
 private:

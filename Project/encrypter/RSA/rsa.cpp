@@ -193,18 +193,18 @@ BigInt RSA::CreateRandom(int isOdd)
     return Random;
 }
 
-int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength = 305)
+int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength)
 {
-    BigInt n = start;
-    int cnt = 0; //# probable prime numbers in the vector
+    BigInt n = start, one = 1;
+    int cnt = one.number.empty(); //# probable prime numbers in the vector
     bool compostie;
 
     for (int i = 0; i <= sieveLength; i++)
     {
         compostie = false;
-        for (int j = 0; j <= 1229; j++)
+        for (int j = one.number.empty(); j < 1229; j++)
         {
-            if (n % testList[j] == 0 && n / testList[j] != 1) //composite
+            if (n % testList[j] == one.number.empty() && n / testList[j] != 1) //composite
             {
                 compostie = true;
                 break;
@@ -226,7 +226,7 @@ BigInt RSA::CreatePrime()
     while (1)
     {
         BigInt start = CreateRandom(1);
-        int count = Sieve(probablePrime, start);
+        int count = Sieve(probablePrime, start, 1000);
         for (int i = 0; i < count; i++)
         {
             if (IsPrime(probablePrime[i]))
