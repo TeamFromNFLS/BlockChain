@@ -27,18 +27,12 @@ public:
     BigInt EncryptByPrivate(const BigInt &);
     BigInt DecryptByPublic(const BigInt &);
     BigInt DecryptByPrivate(const BigInt &);
-<<<<<<< HEAD
     bool IsPrime(const BigInt &, int k = 4); //k随便取的，判断错误率是1/4^k
     int Sieve(vector<BigInt> &, const BigInt &, int);
     //const int length = 305;
     BigInt publicKey, privateKey, Euler, product, p, q;
     //KeyPair public, private;
     const int length = 10;
-=======
-    bool IsPrime(const BigInt &, int k = 10); //k随便取的，判断错误率是1/4^k
-    const int length = 305;
-    BigInt publicKey, privateKey, Euler, product, p, q;
->>>>>>> dc796e2845c8307b6bfa3df8088404858f705003
     void setNumber(BigInt, BigInt);
 
 private:

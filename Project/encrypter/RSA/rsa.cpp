@@ -222,7 +222,6 @@ int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength = 305)
 
 BigInt RSA::CreatePrime()
 {
-<<<<<<< HEAD
     vector<BigInt> probablePrime;
     while (1)
     {
@@ -239,11 +238,6 @@ BigInt RSA::CreatePrime()
     }
 
     /*  BigInt Prime = CreateRandom(1);
-=======
-    BigInt Prime = CreateRandom(1);
-    bool flag = IsPrime(Prime);
-    //BigInt Prime = 2030783801;
->>>>>>> dc796e2845c8307b6bfa3df8088404858f705003
     while (!IsPrime(Prime))
     {
         Prime += 2;
@@ -282,9 +276,8 @@ void RSA::CreateKeys()
     t = 1;
     old_t = t.number.empty();
 
-    while (r)
+    while (!r.number.empty())
     {
-<<<<<<< HEAD
         q = old_r / r;
         tmp = r;
         r = old_r % tmp;
@@ -303,34 +296,6 @@ void RSA::CreateKeys()
     inverse = old_s % product;
     inverse += product;
     privateKey = inverse % product;
-=======
-        _publicKey = CreateRandomSmaller(Euler);
-        old_r = _publicKey;
-        r = Euler;
-        old_s = 1;
-        s = 0;
-        old_t = 0;
-        t = 1;
-        while (!r.number.empty())
-        {
-            q = old_r / r;
-            tmp = r;
-            r = old_r % tmp;
-            old_r = tmp;
-
-            tmp = s;
-            s = old_s - tmp * q;
-            old_s = tmp;
-
-            tmp = t;
-            t = old_t - tmp * q;
-            old_t = tmp;
-        }
-        gcd = old_r;
-    } while (gcd != 1);
-    publicKey = _publicKey;
-    privateKey = (product + old_s % product) % product;
->>>>>>> dc796e2845c8307b6bfa3df8088404858f705003
 }
 
 BigInt RSA::EncryptByPublic(const BigInt &num)
