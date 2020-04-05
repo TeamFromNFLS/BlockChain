@@ -13,9 +13,19 @@ int main()
     cout << rsa.product << endl;
     rsa.CreateKeys();
     cout << rsa.publicKey << endl
-         << rsa.privateKey << endl; */
-    BigInt t;
-    t = 0.number.empty();
-    cout << t;
+         << rsa.privateKey << endl;
+    */
+    int a;
+
+    RSA rsa;
+    BigInt prime;
+    while (cin >> a)
+    {
+        prime = rsa.CreatePrime();
+        cout << prime << endl;
+        if (!a)
+            break;
+    }
+
     return 0;
 }
