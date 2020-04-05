@@ -28,7 +28,7 @@ void BigInt::check() // carry bit
     return;
 }
 
-BigInt::operator int()
+/*BigInt::operator int()
 {
     int result;
     for (it = number.begin(); it != number.end(); ++it)
@@ -36,7 +36,7 @@ BigInt::operator int()
         result += *it * pow(10, (it - number.begin()));
     }
     return result;
-}
+}*/
 
 void BigInt::SetNumber(string s)
 {
@@ -79,17 +79,17 @@ ostream &operator<<(ostream &output, BigInt &bigInt)
     return output;
 }
 
-bool BigInt::operator!=(BigInt &bigInt)
+bool BigInt::operator!=(BigInt bigInt)
 {
     return !(number == bigInt.number);
 }
 
-bool BigInt::operator==(BigInt &bigInt)
+bool BigInt::operator==(BigInt bigInt)
 {
     return number == bigInt.number;
 }
 
-bool BigInt::operator<(BigInt &bigInt)
+bool BigInt::operator<(BigInt bigInt)
 {
     if (number.size() != bigInt.number.size())
         return number.size() < bigInt.number.size();
@@ -102,22 +102,22 @@ bool BigInt::operator<(BigInt &bigInt)
     return false;
 }
 
-bool BigInt::operator>(BigInt &bigInt)
+bool BigInt::operator>(BigInt bigInt)
 {
     return bigInt < *this;
 }
 
-bool BigInt::operator<=(BigInt &bigInt)
+bool BigInt::operator<=(BigInt bigInt)
 {
     return !(*this > bigInt);
 }
 
-bool BigInt::operator>=(BigInt &bigInt)
+bool BigInt::operator>=(BigInt bigInt)
 {
     return !(*this < bigInt);
 }
 
-BigInt BigInt::operator+(BigInt &bigInt)
+BigInt BigInt::operator+(BigInt bigInt)
 {
     BigInt result;
     if (number.size() < bigInt.number.size())
@@ -143,7 +143,7 @@ BigInt &BigInt::operator+=(BigInt bigInt)
     return *this;
 }
 
-BigInt BigInt::operator-(BigInt &bigInt)
+BigInt BigInt::operator-(BigInt bigInt)
 {
     BigInt minuend, subtrahend;
     minuend = *this;
@@ -179,7 +179,7 @@ BigInt &BigInt::operator-=(BigInt bigInt)
     return *this;
 }
 
-BigInt BigInt::operator*(BigInt &bigInt)
+BigInt BigInt::operator*(BigInt bigInt)
 {
     BigInt result;
     result.number.assign(number.size() + bigInt.number.size() - 1, 0);
@@ -202,7 +202,7 @@ BigInt &BigInt::operator*=(BigInt bigInt)
     return *this;
 }
 
-BigInt BigInt::operator/(BigInt &bigInt) // Divide with mod, using minus to realise
+BigInt BigInt::operator/(BigInt bigInt) // Divide with mod, using minus to realise
 {
     BigInt result;
     BigInt substitute = *this;
@@ -229,7 +229,7 @@ BigInt &BigInt::operator/=(BigInt bigInt)
     return *this;
 }
 
-BigInt BigInt::operator%(BigInt &bigInt)
+BigInt BigInt::operator%(BigInt bigInt)
 {
     BigInt substitute = *this;
     for (int i = number.size() - bigInt.number.size(); substitute >= bigInt; --i)

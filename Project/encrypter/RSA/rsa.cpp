@@ -83,17 +83,21 @@ void RSA::Init()
 {
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
+    auto st = clock();
     p = CreatePrime();
     Sleep(1000); // Wait to create another seed
     q = CreatePrime();
     product = p * q;
-    p = p - 1, q = q - 1;
+    BigInt one("1");
+    p = p - one, q = q - one;
     //欧拉数
     Euler = p * q;
-    p = p + 1, q = q + 1;
+    p = p + one, q = q + one;
+    auto ed = clock();
     cout << p << endl
          << q << endl
-         << Euler << endl;
+         << Euler << endl
+         << "time:" << ed - st << endl;
 }
 
 bool RSA::IsPrime(const BigInt &num, int k)
@@ -185,7 +189,6 @@ BigInt RSA::CreateRandom(int isOdd)
         }
         break;
     }
-
     BigInt Random(ss.str());
     return Random;
 }
@@ -219,6 +222,7 @@ int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength = 305)
 
 BigInt RSA::CreatePrime()
 {
+<<<<<<< HEAD
     vector<BigInt> probablePrime;
     while (1)
     {
@@ -235,6 +239,11 @@ BigInt RSA::CreatePrime()
     }
 
     /*  BigInt Prime = CreateRandom(1);
+=======
+    BigInt Prime = CreateRandom(1);
+    bool flag = IsPrime(Prime);
+    //BigInt Prime = 2030783801;
+>>>>>>> dc796e2845c8307b6bfa3df8088404858f705003
     while (!IsPrime(Prime))
     {
         Prime += 2;
@@ -252,7 +261,7 @@ BigInt RSA::CreateRandomSmaller(const BigInt &num)
     {
         Random = CreateRandom(0);
         Random %= n;
-        if (Random && (Random - 1))
+        if (!(Random.number.empty()) && !((Random - 1).number.empty()))
         {
             zeroOrOne = false;
         }
@@ -275,6 +284,7 @@ void RSA::CreateKeys()
 
     while (r)
     {
+<<<<<<< HEAD
         q = old_r / r;
         tmp = r;
         r = old_r % tmp;
@@ -293,6 +303,34 @@ void RSA::CreateKeys()
     inverse = old_s % product;
     inverse += product;
     privateKey = inverse % product;
+=======
+        _publicKey = CreateRandomSmaller(Euler);
+        old_r = _publicKey;
+        r = Euler;
+        old_s = 1;
+        s = 0;
+        old_t = 0;
+        t = 1;
+        while (!r.number.empty())
+        {
+            q = old_r / r;
+            tmp = r;
+            r = old_r % tmp;
+            old_r = tmp;
+
+            tmp = s;
+            s = old_s - tmp * q;
+            old_s = tmp;
+
+            tmp = t;
+            t = old_t - tmp * q;
+            old_t = tmp;
+        }
+        gcd = old_r;
+    } while (gcd != 1);
+    publicKey = _publicKey;
+    privateKey = (product + old_s % product) % product;
+>>>>>>> dc796e2845c8307b6bfa3df8088404858f705003
 }
 
 BigInt RSA::EncryptByPublic(const BigInt &num)
