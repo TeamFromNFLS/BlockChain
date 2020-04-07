@@ -35,6 +35,16 @@
    1.ph
 
       1. Did nothing.
+* 2020.04.05
+
+   1.ph
+
+      1. Trying to change the system of BigInt storage
+* 2020.04.06
+
+   1.ph
+
+      1. Choose 2^32 system, complete input and output
 
 Update this log plz!
 
