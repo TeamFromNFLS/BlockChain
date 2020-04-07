@@ -6,6 +6,7 @@ using namespace std;
 
 int main()
 {
+    //freopen("out.txt", "w", stdout);
     /* BigInt p("965020263285415169225506842409"), q("415924872698612520126277439911");
     RSA rsa;
     rsa.length = 30;
@@ -15,17 +16,11 @@ int main()
     cout << rsa.publicKey << endl
          << rsa.privateKey << endl;
     */
-    int a;
-
-    RSA rsa;
-    BigInt prime;
-    while (cin >> a)
-    {
-        prime = rsa.CreatePrime();
-        cout << prime << endl;
-        if (!a)
-            break;
-    }
-
+    BigInt a, b, c;
+    cin >> a >> b;
+    cout << a << ' ' << b << endl;
+    // c = a - b;
+    //cout << c << endl;
+    //fclose(stdout);
     return 0;
 }

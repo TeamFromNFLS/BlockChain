@@ -4,9 +4,15 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <cstdio>
 using namespace std;
-vector<int>::iterator it;
-void BigInt::check() // carry bit
+
+/*define some const bigInt*/
+const BigInt BigInt::zero("0");
+const BigInt BigInt::one("1");
+const BigInt BigInt::two("2");
+/*carry bit*/
+void BigInt::check()
 {
     while (!number.empty() && !number.back())
         number.pop_back();
@@ -14,40 +20,94 @@ void BigInt::check() // carry bit
     {
         return;
     }
-    for (it = number.begin() + 1; it != number.end(); ++it)
+    int len = number.size();
+    for (int i = 1; i < len; ++i)
     {
-        *it += *(it - 1) / 10;
-        *(it - 1) %= 10;
+        number[i] += number[i - 1] / Base;
+        number[i - 1] %= Base;
     }
-    while (number.back() >= 10)
+    while (number.back() >= Base)
     {
-        number.push_back(number.back() / 10);
-        it = number.begin() + number.size() - 2;
-        *it %= 10;
+        number.push_back(number.back() / Base);
+        number[len - 2] %= Base;
     }
     return;
 }
 
-/*BigInt::operator int()
+/*simulate x / 2, x % 2 in string*/
+string BigInt::DecToBin(string s)
 {
-    int result;
-    for (it = number.begin(); it != number.end(); ++it)
+    string result;
+    string::iterator it;
+    vector<int> tmp; // number vector
+    for (it = s.end() - 1; it >= s.begin(); --it)
     {
-        result += *it * pow(10, (it - number.begin()));
+        tmp.push_back(*it - '0');
     }
+    while (!tmp.empty())
+    {
+        result += (tmp[0] & 1) + '0';
+        for (int i = s.size() - 1; i >= 0; --i)
+        {
+            if (tmp[i] & 1 && i)
+            {
+                tmp[i - 1] += 10;
+            }
+            tmp[i] /= 2;
+        }
+        while (!tmp.back() && !tmp.empty())
+        {
+            tmp.pop_back();
+        }
+    }
+    reverse(result.begin(), result.end());
     return result;
-}*/
+}
 
-void BigInt::SetNumber(string s)
+void BigInt::SetBin(string s, bool _sign)
 {
-    string::iterator _it;
-    number.clear();
-    for (_it = s.end() - 1; _it >= s.begin(); --_it)
-        number.push_back(*_it - '0');
+    int len = s.length(), cnt = 0, pos = -1;
+    string::iterator it = s.end() - 1;
+    if (!_sign)
+    {
+        sign = false;
+    }
+    while (len)
+    {
+        if (!cnt)
+        {
+            cnt = 0;
+            pos++;
+            number.push_back(0);
+        }
+        int now = *it - '0';
+        if (now)
+        {
+            number[pos] += pow(2, cnt);
+        }
+        len--;
+        it--;
+        cnt = (cnt + 1) % 32;
+    }
     check();
     return;
 }
 
+/*I don't think there's anyone who wants to input a number with bin or hex system*/
+void BigInt::SetNumber(string s)
+{
+    string::iterator it;
+    bool _sign = true;
+    if (s[0] == '-')
+    {
+        _sign = false;
+        s.erase(0, 1);
+    }
+    string ss = DecToBin(s);
+    SetBin(ss, _sign);
+}
+
+/*initialize, convert the input into binary*/
 BigInt::BigInt(string s)
 {
     SetNumber(s);
@@ -63,19 +123,82 @@ istream &operator>>(istream &input, BigInt &bigInt)
 {
     string s;
     input >> s;
-    string::iterator _it;
     bigInt.number.clear();
-    for (_it = s.end() - 1; _it >= s.begin(); --_it)
-        bigInt.number.push_back(*_it - '0');
+    bigInt.SetNumber(s);
     return input;
 }
 
+char _hex[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 ostream &operator<<(ostream &output, BigInt &bigInt)
 {
+    //freopen("out.txt", "w", stdout);
     if (bigInt.number.empty())
+    {
         output << 0;
-    for (it = bigInt.number.end() - 1; it >= bigInt.number.begin(); --it)
-        output << *it;
+        return output;
+    }
+    vector<int> resultBin;
+    int cnt = 0, now = 0;
+    resultBin.resize(32 * bigInt.number.size());
+    for (int i = 0; i < bigInt.number.size(); ++i)
+    {
+        uint32_t tmp = bigInt.number[i];
+        while (tmp)
+        {
+            resultBin[i * 32 + cnt] = tmp & 1;
+            tmp >>= 1;
+            cnt = (cnt + 1) % 32;
+        }
+    }
+    reverse(resultBin.begin(), resultBin.end());
+    bool flag = false; // whether it is the zero in front of the number
+    cnt = 0;
+    output << "Bin: ";
+    if (!bigInt.sign)
+    {
+        output << '-';
+    }
+    for (int i = 0; i < resultBin.size(); ++i)
+    {
+        if (cnt == 4)
+        {
+            output << ends;
+            cnt = 0;
+        }
+        output << resultBin[i];
+        cnt++;
+    }
+    output << endl
+           << "Hex: ";
+    cnt = 0;
+    if (!bigInt.sign)
+    {
+        output << '-';
+    }
+    output << "0x";
+    for (int i = 0; i < resultBin.size(); ++i)
+    {
+        if (cnt == 4)
+        {
+            if (now || flag)
+            {
+                flag = true;
+                output << _hex[now];
+            }
+            now = 0;
+            cnt = 0;
+        }
+        if (resultBin[i])
+        {
+            now += pow(2, 3 - cnt);
+        }
+        cnt++;
+    }
+    if (now || flag)
+    {
+        output << _hex[now];
+    }
+    //fclose(stdout);
     return output;
 }
 
@@ -93,11 +216,13 @@ bool BigInt::operator<(BigInt bigInt)
 {
     if (number.size() != bigInt.number.size())
         return number.size() < bigInt.number.size();
-    vector<int>::iterator _it;
-    for (it = number.end() - 1, _it = bigInt.number.end() - 1; it >= number.begin(), _it >= bigInt.number.begin(); --it, --_it)
+    int len = number.size();
+    for (int i = len - 1; i >= 0; --i)
     {
-        if (*it != *_it)
-            return *it < *_it;
+        if (number[i] != bigInt.number[i])
+        {
+            return number[i] < bigInt.number[i];
+        }
     }
     return false;
 }
@@ -117,7 +242,7 @@ bool BigInt::operator>=(BigInt bigInt)
     return !(*this < bigInt);
 }
 
-BigInt BigInt::operator+(BigInt bigInt)
+BigInt BigInt::operator+(BigInt &bigInt)
 {
     BigInt result;
     if (number.size() < bigInt.number.size())
@@ -128,16 +253,15 @@ BigInt BigInt::operator+(BigInt bigInt)
     {
         bigInt.number.resize(number.size());
     }
-    vector<int>::iterator _it;
-    for (it = number.begin(), _it = bigInt.number.begin(); it != number.end(), _it != bigInt.number.end(); ++it, ++_it)
+    for (int i = 0; i < number.size(); ++i)
     {
-        result.number.push_back(*it + *_it);
+        result.number.push_back(number[i] + bigInt.number[i]);
     }
     result.check();
     return result;
 }
 
-BigInt &BigInt::operator+=(BigInt bigInt)
+BigInt &BigInt::operator+=(BigInt &bigInt)
 {
     *this = *this + bigInt;
     return *this;
@@ -145,32 +269,30 @@ BigInt &BigInt::operator+=(BigInt bigInt)
 
 BigInt BigInt::operator-(BigInt bigInt)
 {
-    BigInt minuend, subtrahend;
-    minuend = *this;
-    subtrahend = bigInt;
-    if (minuend < subtrahend)
-        swap(minuend, subtrahend);
-    vector<int>::iterator _it;
-    for (_it = subtrahend.number.begin(); _it != subtrahend.number.end(); ++_it)
+    BigInt tmp = *this, result;
+    if (*this < bigInt)
+        swap(*this, bigInt);
+    for (int i = 0; i < number.size(); ++i)
     {
-        it = minuend.number.begin() + (_it - subtrahend.number.begin());
-        *it -= *_it;
-        if (*it < 0)
+        number[i] -= bigInt.number[i];
+        if (number[i] < 0)
         {
-            vector<int>::iterator tmp = it + 1;
-            while (!(*tmp))
+            int j = i + 1;
+            while (!number[j])
             {
-                ++tmp;
+                ++j;
             }
-            while (tmp > it)
+            while (j > i)
             {
-                --(*tmp);
-                *(--tmp) += 10;
+                --number[j];
+                number[--j] += 10;
             }
         }
     }
-    minuend.check();
-    return minuend;
+    check();
+    result = *this;
+    *this = tmp;
+    return result;
 }
 
 BigInt &BigInt::operator-=(BigInt bigInt)
@@ -178,7 +300,7 @@ BigInt &BigInt::operator-=(BigInt bigInt)
     *this = *this - bigInt;
     return *this;
 }
-
+/*
 BigInt BigInt::operator*(BigInt bigInt)
 {
     BigInt result;
@@ -288,3 +410,4 @@ BigInt BigInt::Pow(BigInt base, BigInt index)
     }
     return result;
 }
+*/
