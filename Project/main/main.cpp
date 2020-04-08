@@ -18,7 +18,8 @@ int main()
     */
     BigInt a, b, c;
     cin >> a >> b;
-    cout << a << ' ' << b << endl;
+    c = a - b;
+    cout << c << endl;
     // c = a - b;
     //cout << c << endl;
     //fclose(stdout);

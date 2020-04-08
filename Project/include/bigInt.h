@@ -19,6 +19,10 @@ public:
         number.assign(bigInt.number.begin(), bigInt.number.end());
     }
     BigInt(string s);
+    BigInt(const vector<uint64_t> &vec) : number(vec)
+    {
+        check();
+    }
     ~BigInt(){};
     //operator int();
     BigInt(const int &x);                       // implicit type change from int to BigInt
@@ -41,7 +45,7 @@ public:
     BigInt &operator+=(BigInt &bigInt);
     BigInt operator+(BigInt &bigInt);
     BigInt &operator-=(BigInt bigInt);
-    BigInt operator-(BigInt bigInt);
+    BigInt operator-(BigInt &bigInt);
     BigInt &operator*=(BigInt bigInt);
     BigInt operator*(BigInt bigInt);
     BigInt &operator/=(BigInt bigInt);

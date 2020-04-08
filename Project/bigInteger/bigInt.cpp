@@ -139,7 +139,7 @@ ostream &operator<<(ostream &output, BigInt &bigInt)
     }
     vector<int> resultBin;
     int cnt = 0, now = 0;
-    resultBin.resize(32 * bigInt.number.size());
+    resultBin.resize(64 * bigInt.number.size());
     for (int i = 0; i < bigInt.number.size(); ++i)
     {
         uint32_t tmp = bigInt.number[i];
@@ -242,9 +242,42 @@ bool BigInt::operator>=(BigInt bigInt)
     return !(*this < bigInt);
 }
 
+inline void __asm_add(vector<uint64_t> &a, vector<uint64_t> &b, vector<uint64_t> &c)
+{
+    //默认a, b长度相等, c.size() = a.size() + 1
+    uint64_t *pt_a = &a[0],
+             *pt_b = &b[0],
+             *pt_c = &c[0];
+    uint64_t len = a.size();
+    asm volatile(
+        "movq %0, %%r8;"
+        "movq %1, %%r9;"
+        "movq %2, %%r10;"
+        "movzx %3, %%rdx;"
+        "movq $0, %%rcx;"
+        "clc;"
+        "lahf;"
+        "loop_add:"
+        "sahf;" //从寄存器中读取flag
+        "movq (%%r8, %%rcx, 8), %%rax;"
+        "movq (%%r9, %%rcx, 8), %%rbx;"
+        "adc %%rax, %%rbx;"
+        "lahf;" //保存flag,后面的inc可能会破坏carry
+        "movq %%rbx, (%%r10, %%rcx, 8);"
+        "inc %%rcx;"
+        "cmp %%rcx, %%rdx;"
+        "jne loop_add;"
+        "movq $0, (%%r10, %%rcx, 8);"
+        "sahf;"
+        "adc $0, (%%r10, %%rcx, 8);"
+        :
+        : "m"(pt_a), "m"(pt_b), "m"(pt_c), "m"(len)
+        : "memory", "cc", "r8", "r9", "r10", "rdx", "rcx", "rax", "rbx");
+}
+
 BigInt BigInt::operator+(BigInt &bigInt)
 {
-    BigInt result;
+    /*BigInt result;
     if (number.size() < bigInt.number.size())
     {
         number.resize(bigInt.number.size());
@@ -258,7 +291,14 @@ BigInt BigInt::operator+(BigInt &bigInt)
         result.number.push_back(number[i] + bigInt.number[i]);
     }
     result.check();
-    return result;
+    */
+    vector<uint64_t> a = number, b = bigInt.number;
+    int maxLen = max(a.size(), b.size());
+    a.resize(maxLen, 0);
+    b.resize(maxLen, 0);
+    vector<uint64_t> result(maxLen + 1, 0);
+    __asm_add(a, b, result);
+    return BigInt(result);
 }
 
 BigInt &BigInt::operator+=(BigInt &bigInt)
@@ -267,9 +307,9 @@ BigInt &BigInt::operator+=(BigInt &bigInt)
     return *this;
 }
 
-BigInt BigInt::operator-(BigInt bigInt)
+BigInt BigInt::operator-(BigInt &bigInt)
 {
-    BigInt tmp = *this, result;
+    /*BigInt tmp = *this, result;
     if (*this < bigInt)
         swap(*this, bigInt);
     for (int i = 0; i < number.size(); ++i)
@@ -291,8 +331,37 @@ BigInt BigInt::operator-(BigInt bigInt)
     }
     check();
     result = *this;
-    *this = tmp;
-    return result;
+    *this = tmp;*/
+    vector<uint64_t> a = number, b = bigInt.number;
+    int maxLen = max(a.size(), b.size());
+    a.resize(maxLen, 0);
+    b.resize(maxLen, 0);
+    vector<uint64_t> result(maxLen, 0);
+    uint64_t *pt_a_bits = &a[0],
+             *pt_b_bits = &b[0],
+             *pt_result = &result[0];
+    asm volatile(
+        "movq %0, %%r8;" //减数放在r8
+        "movq %1, %%r9;" //被减数r9
+        "movq %2, %%r10;"
+        "movzx %3, %%rdx;"
+        "movq $0, %%rcx;"
+        "clc;"
+        "lahf;"
+        "1:"
+        "sahf;" //从寄存器中读取flag
+        "movq (%%r8, %%rcx, 8), %%rax;"
+        "movq (%%r9, %%rcx, 8), %%rbx;"
+        "sbb %%rax, %%rbx;"
+        "lahf;" //保存flag,后面的inc可能会破坏carry
+        "movq %%rbx, (%%r10, %%rcx, 8);"
+        "inc %%rcx;"
+        "cmp %%rcx, %%rdx;"
+        "jne 1b;"
+        :
+        : "m"(pt_b_bits), "m"(pt_a_bits), "m"(pt_result), "m"(maxLen)
+        : "memory", "cc", "r8", "r9", "r10", "rdx", "rcx", "rax", "rbx");
+    return BigInt(result);
 }
 
 BigInt &BigInt::operator-=(BigInt bigInt)

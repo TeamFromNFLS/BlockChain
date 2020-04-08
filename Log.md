@@ -69,5 +69,11 @@
    1. Completing bigInt.
    2. Update readme
 
+## 2020.04.08
+
+1. ph
+
+   1. Trying to rebuild bigInt with asm.
+   2. Discussion, failed.
 Update this log plz!
 
