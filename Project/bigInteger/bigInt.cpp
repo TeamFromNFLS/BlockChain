@@ -4,33 +4,41 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
-#include <cstdio>
+#include <utility>
+
+/*store carry flag into r15*/
+#define ASM_LOAD "lahf; shr $8, %%ax; mov %%al, %%r15b;"
+#define ASM_RESTORE "mov %%r15b, %%al; sal $8, %%ax; sahf;"
+
 using namespace std;
 
 /*define some const bigInt*/
 const BigInt BigInt::zero("0");
 const BigInt BigInt::one("1");
 const BigInt BigInt::two("2");
-/*carry bit*/
+
+/*calculate the bit length of a number*/
+int BigInt::Shrink(vector<uint64_t> &vec)
+{
+    int cntBits = 0;
+    for (int i = 0; i < vec.size(); ++i)
+    {
+        uint64_t tmp = vec[i];
+        while (tmp)
+        {
+            cntBits++;
+            tmp >>= 1;
+        }
+    }
+    return cntBits;
+}
+
+/*update*/
 void BigInt::check()
 {
     while (!number.empty() && !number.back())
         number.pop_back();
-    if (number.empty())
-    {
-        return;
-    }
-    int len = number.size();
-    for (int i = 1; i < len; ++i)
-    {
-        number[i] += number[i - 1] / Base;
-        number[i - 1] %= Base;
-    }
-    while (number.back() >= Base)
-    {
-        number.push_back(number.back() / Base);
-        number[len - 2] %= Base;
-    }
+    bit = Shrink(number);
     return;
 }
 
@@ -64,14 +72,11 @@ string BigInt::DecToBin(string s)
     return result;
 }
 
-void BigInt::SetBin(string s, bool _sign)
+void BigInt::SetBin(string s)
 {
     int len = s.length(), cnt = 0, pos = -1;
+    BigInt::bit = len;
     string::iterator it = s.end() - 1;
-    if (!_sign)
-    {
-        sign = false;
-    }
     while (len)
     {
         if (!cnt)
@@ -93,18 +98,29 @@ void BigInt::SetBin(string s, bool _sign)
     return;
 }
 
-/*I don't think there's anyone who wants to input a number with bin or hex system*/
+/*I don't think there's anyone who wants to input a number with hex system*/
 void BigInt::SetNumber(string s)
 {
     string::iterator it;
-    bool _sign = true;
-    if (s[0] == '-')
+    bool inputDec = false; // whether input is in dec system
+    for (it = s.begin(); it != s.end(); ++it)
     {
-        _sign = false;
-        s.erase(0, 1);
+        if (*it != '0' || *it != '1')
+        {
+            inputDec = true;
+            break;
+        }
     }
-    string ss = DecToBin(s);
-    SetBin(ss, _sign);
+    if (inputDec)
+    {
+        string ss = DecToBin(s);
+        SetBin(ss);
+    }
+    else
+    {
+        SetBin(s);
+    }
+    return;
 }
 
 /*initialize, convert the input into binary*/
@@ -154,10 +170,6 @@ ostream &operator<<(ostream &output, BigInt &bigInt)
     bool flag = false; // whether it is the zero in front of the number
     cnt = 0;
     output << "Bin: ";
-    if (!bigInt.sign)
-    {
-        output << '-';
-    }
     for (int i = 0; i < resultBin.size(); ++i)
     {
         if (cnt == 4)
@@ -171,10 +183,6 @@ ostream &operator<<(ostream &output, BigInt &bigInt)
     output << endl
            << "Hex: ";
     cnt = 0;
-    if (!bigInt.sign)
-    {
-        output << '-';
-    }
     output << "0x";
     for (int i = 0; i < resultBin.size(); ++i)
     {
@@ -229,7 +237,8 @@ bool BigInt::operator<(BigInt bigInt)
 
 bool BigInt::operator>(BigInt bigInt)
 {
-    return bigInt < *this;
+    const BigInt tmp = *this;
+    return bigInt < tmp;
 }
 
 bool BigInt::operator<=(BigInt bigInt)
@@ -245,9 +254,9 @@ bool BigInt::operator>=(BigInt bigInt)
 inline void __asm_add(vector<uint64_t> &a, vector<uint64_t> &b, vector<uint64_t> &c)
 {
     //默认a, b长度相等, c.size() = a.size() + 1
-    uint64_t *pt_a = &a[0],
-             *pt_b = &b[0],
-             *pt_c = &c[0];
+    uint64_t *ptA = &a[0],
+             *ptB = &b[0],
+             *ptC = &c[0];
     uint64_t len = a.size();
     asm volatile(
         "movq %0, %%r8;"
@@ -271,27 +280,12 @@ inline void __asm_add(vector<uint64_t> &a, vector<uint64_t> &b, vector<uint64_t>
         "sahf;"
         "adc $0, (%%r10, %%rcx, 8);"
         :
-        : "m"(pt_a), "m"(pt_b), "m"(pt_c), "m"(len)
+        : "m"(ptA), "m"(ptB), "m"(ptC), "m"(len)
         : "memory", "cc", "r8", "r9", "r10", "rdx", "rcx", "rax", "rbx");
 }
 
-BigInt BigInt::operator+(BigInt &bigInt)
+BigInt BigInt::operator+(const BigInt &bigInt)
 {
-    /*BigInt result;
-    if (number.size() < bigInt.number.size())
-    {
-        number.resize(bigInt.number.size());
-    }
-    else if (number.size() > bigInt.number.size())
-    {
-        bigInt.number.resize(number.size());
-    }
-    for (int i = 0; i < number.size(); ++i)
-    {
-        result.number.push_back(number[i] + bigInt.number[i]);
-    }
-    result.check();
-    */
     vector<uint64_t> a = number, b = bigInt.number;
     int maxLen = max(a.size(), b.size());
     a.resize(maxLen, 0);
@@ -301,45 +295,18 @@ BigInt BigInt::operator+(BigInt &bigInt)
     return BigInt(result);
 }
 
-BigInt &BigInt::operator+=(BigInt &bigInt)
+BigInt &BigInt::operator+=(const BigInt &bigInt)
 {
     *this = *this + bigInt;
     return *this;
 }
 
-BigInt BigInt::operator-(BigInt &bigInt)
+inline void __asm_sub(vector<uint64_t> &a, vector<uint64_t> &b, vector<uint64_t> &c)
 {
-    /*BigInt tmp = *this, result;
-    if (*this < bigInt)
-        swap(*this, bigInt);
-    for (int i = 0; i < number.size(); ++i)
-    {
-        number[i] -= bigInt.number[i];
-        if (number[i] < 0)
-        {
-            int j = i + 1;
-            while (!number[j])
-            {
-                ++j;
-            }
-            while (j > i)
-            {
-                --number[j];
-                number[--j] += 10;
-            }
-        }
-    }
-    check();
-    result = *this;
-    *this = tmp;*/
-    vector<uint64_t> a = number, b = bigInt.number;
-    int maxLen = max(a.size(), b.size());
-    a.resize(maxLen, 0);
-    b.resize(maxLen, 0);
-    vector<uint64_t> result(maxLen, 0);
-    uint64_t *pt_a_bits = &a[0],
-             *pt_b_bits = &b[0],
-             *pt_result = &result[0];
+    uint64_t *ptA = &a[0],
+             *ptB = &b[0],
+             *ptC = &c[0];
+    uint64_t len = a.size();
     asm volatile(
         "movq %0, %%r8;" //减数放在r8
         "movq %1, %%r9;" //被减数r9
@@ -359,124 +326,316 @@ BigInt BigInt::operator-(BigInt &bigInt)
         "cmp %%rcx, %%rdx;"
         "jne 1b;"
         :
-        : "m"(pt_b_bits), "m"(pt_a_bits), "m"(pt_result), "m"(maxLen)
+        : "m"(ptB), "m"(ptA), "m"(ptC), "m"(len)
         : "memory", "cc", "r8", "r9", "r10", "rdx", "rcx", "rax", "rbx");
+}
+
+BigInt BigInt::operator-(const BigInt &bigInt)
+{
+    vector<uint64_t> a = number, b = bigInt.number;
+    int maxLen = max(a.size(), b.size());
+    a.resize(maxLen, 0);
+    b.resize(maxLen, 0);
+    vector<uint64_t> result(maxLen, 0);
+    __asm_sub(a, b, result);
     return BigInt(result);
 }
 
-BigInt &BigInt::operator-=(BigInt bigInt)
+BigInt &BigInt::operator-=(const BigInt &bigInt)
 {
     *this = *this - bigInt;
     return *this;
 }
-/*
-BigInt BigInt::operator*(BigInt bigInt)
+
+BigInt BigInt::operator*(const BigInt &bigInt)
 {
-    BigInt result;
-    result.number.assign(number.size() + bigInt.number.size() - 1, 0);
-    vector<int>::iterator _it, __it;
-    for (it = number.begin(); it != number.end(); ++it)
+    vector<uint64_t> a = number, b = bigInt.number;
+    if (a.empty())
     {
-        for (_it = bigInt.number.begin(); _it != bigInt.number.end(); ++_it)
-        {
-            __it = result.number.begin() + (it - number.begin()) + (_it - bigInt.number.begin());
-            *__it += *it * *_it;
-        }
+        a.push_back(0);
     }
-    result.check();
-    return result;
+    vector<uint64_t> result(a.size() + b.size(), 0);
+    vector<uint64_t> tmp(a.size() + b.size(), 0); // store temp for each multi
+    uint64_t *ptA = &a[0],
+             *ptB = &b[0],
+             *ptResult = &result[0],
+             *ptTmp = &tmp[0];
+    uint64_t lenA = a.size(), tenTmp = tmp.size();
+    for (int i = 0; i < b.size(); ++i)
+    {
+        uint64_t *ptTmpI = ptTmp + i, *ptResultI = ptResult + i;
+        asm volatile(
+            "movq $0, %%rdx;"
+            "movq $0, %%r14;" //r14保存上一次乘法的溢出结果
+            "movq $0, %%rcx;" //rcx用于计数
+            "movq %1, %%rsi;" //rsi保存大数的首地址
+            "movq %3, %%rdi;" //rdi保存中间结果（就是tmp）的首地址
+            "movq %0, %%r8;"  //r8保存小乘数,维持不变(寄存器访问速度更快)
+            "clc;" ASM_LOAD   //carry保存在r15中
+            "1:"
+            "mov %%r8, %%rax;"
+            "mov (%%rsi, %%rcx, 8), %%rbx;"
+            "mul %%rbx;" //乘法完成,结果保留在rdx:rax中
+            "mov %%rax, %%rbx;" ASM_RESTORE
+            "adc %%r14, %%rbx;" //连带carry外加上一次的乘法溢出一起加到本次结果上
+            ASM_LOAD
+            "mov %%rdx, %%r14;"             //保存本次溢出
+            "mov %%rbx, (%%rdi, %%rcx, 8);" //本次计算结果保存到tmp数组
+            "inc %%rcx;"
+            "cmp %%rcx, %2;" //是否已经执行了length_a次
+            "jne 1b;" ASM_RESTORE
+            "mov $0, %%rax;"
+            "adc %%r14, %%rax;"
+            "mov %%rax, (%%rdi, %%rcx, 8);"
+            :
+            : "m"(ptB[i]), "m"(ptA), "m"(lenA), "m"(ptTmpI)
+            : "memory", "cc", "rax", "rbx", "rcx", "rdx", "rsi", "rdi", "r8", "r14", "r15");
+        //tmp更后面的结果赋值为0,避免每次对tmp重新赋值
+        fill(tmp.begin(), tmp.begin() + i, 0);
+        //这段汇编完成的是将tmp的值加到result上面,注意两个向量长度相等
+        uint64_t la1 = lenA + 1;
+        asm volatile(
+            "movq %0, %%r8;"
+            "movq %1, %%r9;"
+            "mov %2, %%rdx;"
+            "movq $0, %%rcx;"
+            "clc;"
+            "lahf;"
+            "1:"
+            "sahf;"
+            "movq (%%r8, %%rcx, 8), %%rax;"
+            "adc %%rax, (%%r9, %%rcx, 8);" //将r8指向的数加到r9上
+            "lahf;"
+            "inc %%rcx;"
+            "cmp %%rcx, %%rdx;"
+            "jne 1b;"
+            "sahf;"
+            "adc $0, (%%r9, %%rcx, 8);"
+            :
+            : "m"(ptTmpI), "m"(ptResultI), "m"(la1)
+            : "memory", "cc", "r8", "r9", "rdx", "rcx", "rax", "rbx");
+    }
+    return BigInt(result);
 }
 
-BigInt &BigInt::operator*=(BigInt bigInt)
+BigInt &BigInt::operator*=(const BigInt &bigInt)
 {
     *this = *this * bigInt;
     return *this;
 }
 
-BigInt BigInt::operator/(BigInt bigInt) // Divide with mod, using minus to realise
+inline int GetBitAt(const vector<uint64_t> &v, int m)
+{
+    return (v[m / 64] >> static_cast<uint64_t>(m % 64)) & UINT64_C(1);
+}
+
+//借助汇编实现逻辑右移
+inline uint64_t __asm_shr(uint64_t a, int s)
+{
+    uint64_t r;
+    asm volatile(
+        "mov %1, %0;"
+        "shr %%cl, %0;"
+        : "=r"(r)
+        : "r"(a), "c"(s)
+        :);
+    return s == 64 ? 0 : r;
+}
+
+inline void __asm_sub_from(vector<uint64_t> &a, vector<uint64_t> &b)
+{
+    //默认a和b一样长,将a-b的结果保存在a中
+    uint64_t *ptA = &a[0],
+             *ptB = &b[0],
+             len = a.size();
+    asm volatile(
+        "movq %0, %%r8;" //减数放在r8
+        "movq %1, %%r9;" //被减数r9
+        "mov %2, %%rdx;" //保存最大计数
+        "movq $0, %%rcx;"
+        "clc;"
+        "lahf;"
+        "1:"
+        "sahf;" //从寄存器中读取flag
+        "movq (%%r8, %%rcx, 8), %%rax;"
+        "sbb %%rax, (%%r9, %%rcx, 8);"
+        "lahf;" //保存flag,后面的inc可能会破坏carry
+        "inc %%rcx;"
+        "cmp %%rcx, %%rdx;"
+        "jne 1b;"
+        :
+        : "m"(ptB), "m"(ptA), "m"(len)
+        : "memory", "cc", "r8", "r9", "rdx", "rcx", "rax", "rbx");
+}
+
+/*return a pair of bigInt, first is quotient, second is remainder*/
+pair<BigInt, BigInt> BigInt::DivMod(const BigInt &_a, const BigInt &_b)
+{
+    vector<uint64_t> a, b;
+    _a.GetNumber(a), _b.GetNumber(b);
+    int l1 = _a.GetBit(), l2 = _b.GetBit();
+    vector<uint64_t> q(max((l1 - l2) / 64, 0) + 1, 0), r(l2, 0);
+    vector<uint64_t> tmp(a.size(), 0); //保存中间移位得到的结果
+    while (l1 >= l2)
+    {
+        int m = l2 - 1;
+        int posQ; //首先确定本轮除法商的位置
+        while (m >= 0 && GetBitAt(b, m) == GetBitAt(a, l1 - l2 + m))
+            --m;
+        if (m < 0 || GetBitAt(b, m) < GetBitAt(a, l1 - l2 + m))
+            posQ = l1 - l2;
+        else if (l1 > l2) //此时已经有m >= 0 && GetBitAt(b_bits, m) > GetBitAt(a_bits, l1 - l2 + m)
+            posQ = l1 - l2 - 1;
+        else
+            break;
+        int displaceEntry = posQ / 64, displaceBit = posQ % 64;
+        q[displaceEntry] |= static_cast<uint64_t>(1) << static_cast<uint64_t>(displaceBit); //设置商
+        //计算移位,这里合并了两个循环可以加快减少数据依赖
+        tmp[displaceEntry] = b[0] << static_cast<uint64_t>(displaceBit);
+        for (int i = 1; i < b.size(); ++i)
+        {
+            tmp[i + displaceEntry] = b[i] << static_cast<uint64_t>(displaceBit);
+            tmp[i + displaceEntry] |= __asm_shr(b[i - 1], 64 - displaceBit);
+        }
+        tmp[b.size() + displaceEntry] |= __asm_shr(b.back(), 64 - displaceBit);
+        //将tmp从a_bits中减去
+        __asm_sub_from(a, tmp);
+        //更新l1的值,缩小a
+        l1 = BigInt::Shrink(a);
+        tmp.resize(a.size());
+        fill(tmp.begin(), tmp.end(), 0);
+    }
+    r = a;
+    return make_pair(BigInt(q), BigInt(r));
+}
+
+BigInt BigInt::operator/(const BigInt &bigInt)
 {
     BigInt result;
-    BigInt substitute = *this;
-    for (int i = number.size() - bigInt.number.size(); substitute >= bigInt; --i)
-    {
-        BigInt tmp; // pow(bigInt, 10)
-        tmp.number.assign(i + 1, 0);
-        tmp.number.back() = 1;
-        BigInt _tmp = bigInt * tmp; // ready to minus
-        int cnt = 1;
-        while (substitute >= _tmp)
-        {
-            substitute -= _tmp;
-            result += tmp;
-        }
-    }
-    result.check();
+    result = result.DivMod(number, bigInt.number).first;
     return result;
 }
 
-BigInt &BigInt::operator/=(BigInt bigInt)
+BigInt &BigInt::operator/=(const BigInt &bigInt)
 {
     *this = *this / bigInt;
     return *this;
 }
 
-BigInt BigInt::operator%(BigInt bigInt)
+BigInt BigInt::operator%(const BigInt &bigInt)
 {
-    BigInt substitute = *this;
-    for (int i = number.size() - bigInt.number.size(); substitute >= bigInt; --i)
-    {
-        BigInt tmp; // pow(bigInt, 10)
-        tmp.number.assign(i + 1, 0);
-        tmp.number.back() = 1;
-        BigInt _tmp = bigInt * tmp; // ready to minus
-        while (substitute >= _tmp)
-        {
-            substitute -= _tmp;
-        }
-    }
-    substitute.check();
-    return substitute;
+    BigInt result;
+    result = result.DivMod(number, bigInt.number).second;
+    return result;
 }
 
-BigInt &BigInt::operator%=(BigInt bigInt)
+BigInt &BigInt::operator%=(const BigInt &bigInt)
 {
     *this = *this % bigInt;
     return *this;
 }
 
-BigInt BigInt::PowMod(BigInt base, BigInt index, BigInt mod)
+BigInt BigInt::PowMod(BigInt &a, BigInt &e, BigInt &mod)
 {
-    BigInt result = 1;
-    while (!index.number.empty())
+    BigInt aMod(zero);
+    if (a == mod)
     {
-        BigInt tmp;
-        tmp = index % 2;
-        if (!tmp.number.empty())
+        return zero;
+    }
+    else
+    {
+        if (a < mod)
         {
-            result *= base;
+            aMod = a % mod;
         }
-        base = base * base;
-        base %= mod;
-        index /= 2;
-        result %= mod;
+        else
+        {
+            aMod = a;
+        }
+    }
+    if (!mod.InverseComputed)
+    {
+        mod.ComputeInverse();
+    }
+    BigInt inverse(mod.numberInverse), basis = aMod, result = one;
+    int eLen = e.GetBit();
+    vector<uint64_t> eBits;
+    e.GetNumber(eBits);
+    for (int i = 0; i < eLen; ++i)
+    {
+        if (GetBitAt(eBits, i))
+        {
+            BigInt tmp = basis * result;
+            result = mod.GetResidualWithInverse(tmp, inverse);
+        }
+        BigInt tmp = basis * basis;
+        basis = mod.GetResidualWithInverse(tmp, inverse);
     }
     return result;
 }
 
-BigInt BigInt::Pow(BigInt base, BigInt index)
+BigInt BigInt::GetResidualWithInverse(BigInt &a, BigInt &inv) const
 {
-    BigInt result = 1;
-    while (!index.number.empty())
+    //a <= this^2
+    BigInt res = (a * inv).RightShift(2 * bit) * *this;
+    res = a - res;
+    while (res >= *this)
     {
-        BigInt tmp;
-        tmp = index % 2;
-        if (!tmp.number.empty())
-        {
-            result *= base;
-        }
-        base = base * base;
-        index /= 2;
+        res -= *this;
     }
-    return result;
+    return res;
 }
-*/
+
+BigInt BigInt::Reverse(int length) const
+{
+    vector<uint64_t> reversed((length - 1) / 64 + 1, 0);
+    int min_length = min(length, bit);
+    for (int i = 0; i < min_length; ++i)
+    {
+        reversed[(length - i - 1) / 64] |= static_cast<uint64_t>(GetBitAt(number, i)) << static_cast<uint64_t>((length - i - 1) % 64);
+    }
+    return BigInt(reversed);
+}
+
+BigInt BigInt::RightShift(int length) const
+{
+    if (bit <= length)
+        return zero;
+    int entryDiscarded = length / 64, bitDiscarded = length % 64;
+    vector<uint64_t> v(number.size(), 0);
+    int i = 0;
+    for (; i < number.size() - entryDiscarded - 1; ++i)
+    {
+        uint64_t a = __asm_shr(number[i + entryDiscarded], bitDiscarded);
+        uint64_t b = bitDiscarded == 0 ? 0 : number[i + entryDiscarded + 1] << static_cast<uint64_t>(64 - bitDiscarded);
+        v[i] = a | b;
+    }
+    v[i] = __asm_shr(number[i + entryDiscarded], bitDiscarded);
+    return BigInt(v);
+}
+
+void BigInt::ComputeInverse()
+{
+    vector<uint64_t> xInitBit(number.size() + 1, 0);
+    //初始值设置成2^{-p},p = m_cnt_bits;
+    xInitBit[bit / 64] |= UINT64_C(1) << static_cast<uint64_t>(bit % 64);
+    BigInt x(xInitBit);
+    vector<uint64_t> oneBit(2 * bit / 64 + 1, 0); //one_with_decimal一共2p+1位, LSB是2^{-2p}, 从而MSB表示1
+    oneBit.back() |= UINT64_C(1) << static_cast<uint64_t>((2 * bit) % 64);
+    BigInt oneWithDecimal(oneBit);
+
+    while (true)
+    {
+        BigInt tmp = x * *this;
+        BigInt delta = oneWithDecimal - tmp;
+        //当x与(1 - nx)相乘的时候,需要把LSB变成1才能使用通常意义上的乘法,乘完之后再次反向也就完成了舍入
+        BigInt deltaX = (x.Reverse(2 * bit + 1) * delta.Reverse(2 * bit + 1)).Reverse(2 * bit + 1);
+        if (deltaX.number.empty())
+        {
+            break;
+        }
+        x += deltaX;
+    }
+    x.GetNumber(numberInverse);
+    InverseComputed = true;
+}

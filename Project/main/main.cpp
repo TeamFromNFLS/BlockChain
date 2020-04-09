@@ -16,10 +16,12 @@ int main()
     cout << rsa.publicKey << endl
          << rsa.privateKey << endl;
     */
-    BigInt a, b, c;
-    cin >> a >> b;
-    c = a - b;
-    cout << c << endl;
+    BigInt a, b, c, d;
+    //cin >> a >> b;
+    cin >> a >> b >> c;
+    //c = a * b;
+    d = BigInt::PowMod(a, b, c);
+    cout << d << endl;
     // c = a - b;
     //cout << c << endl;
     //fclose(stdout);
