@@ -5,7 +5,7 @@
 #include <cmath>
 #include <cstring>
 #include <utility>
-
+#include <assert.h>
 /*store carry flag into r15*/
 #define ASM_LOAD "lahf; shr $8, %%ax; mov %%al, %%r15b;"
 #define ASM_RESTORE "mov %%r15b, %%al; sal $8, %%ax; sahf;"
@@ -20,16 +20,26 @@ const BigInt BigInt::two("2");
 /*calculate the bit length of a number*/
 int BigInt::Shrink(vector<uint64_t> &vec)
 {
-    int cntBits = 0;
-    for (int i = 0; i < vec.size(); ++i)
+    int cntBits = 64 * vec.size();
+    /*delete zeros in front of the number*/
+    while (cntBits > 0)
     {
-        uint64_t tmp = vec[i];
-        while (tmp)
+        // now block, wait to be checked
+        uint64_t now = vec[(cntBits - 1) / 64];
+        // << to check whether this bit is zero
+        uint64_t comp = static_cast<uint64_t>(0x1) << static_cast<uint64_t>((cntBits - 1) % 64);
+        if (now & comp) // the first one in the bit
         {
-            cntBits++;
-            tmp >>= 1;
+            break;
+        }
+        cntBits--;
+        /*remove zero block in the end*/
+        if (!(cntBits % 64))
+        {
+            vec.pop_back();
         }
     }
+    cntBits = !cntBits ? 1 : cntBits; // if number is zero then the bit is 1
     return cntBits;
 }
 
@@ -88,11 +98,11 @@ void BigInt::SetBin(string s)
         int now = *it - '0';
         if (now)
         {
-            number[pos] += pow(2, cnt);
+            number[pos] += UINT64_C(1) << cnt;
         }
         len--;
         it--;
-        cnt = (cnt + 1) % 32;
+        cnt = (cnt + 1) % 64;
     }
     check();
     return;
@@ -333,6 +343,10 @@ inline void __asm_sub(vector<uint64_t> &a, vector<uint64_t> &b, vector<uint64_t>
 BigInt BigInt::operator-(const BigInt &bigInt)
 {
     vector<uint64_t> a = number, b = bigInt.number;
+    if (a.empty())
+    {
+        a.push_back(0);
+    }
     int maxLen = max(a.size(), b.size());
     a.resize(maxLen, 0);
     b.resize(maxLen, 0);
@@ -544,7 +558,7 @@ BigInt BigInt::PowMod(BigInt &a, BigInt &e, BigInt &mod)
     }
     else
     {
-        if (a < mod)
+        if (a > mod)
         {
             aMod = a % mod;
         }
@@ -578,6 +592,7 @@ BigInt BigInt::GetResidualWithInverse(BigInt &a, BigInt &inv) const
 {
     //a <= this^2
     BigInt res = (a * inv).RightShift(2 * bit) * *this;
+    assert(a >= res);
     res = a - res;
     while (res >= *this)
     {
@@ -627,6 +642,7 @@ void BigInt::ComputeInverse()
     while (true)
     {
         BigInt tmp = x * *this;
+        assert(oneWithDecimal >= tmp);
         BigInt delta = oneWithDecimal - tmp;
         //当x与(1 - nx)相乘的时候,需要把LSB变成1才能使用通常意义上的乘法,乘完之后再次反向也就完成了舍入
         BigInt deltaX = (x.Reverse(2 * bit + 1) * delta.Reverse(2 * bit + 1)).Reverse(2 * bit + 1);
