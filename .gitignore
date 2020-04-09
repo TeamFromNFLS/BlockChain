@@ -3,5 +3,5 @@
 /Demo/Makefile
 *.o
 *.exe
-Project/Makefile
-Project/main/main.cpp
+/Project/Makefile
+/Project/main/main.cpp
