@@ -31,7 +31,6 @@ public:
     bool GetNumber(vector<uint64_t> &vec) const // use another vector to contain the number
     {
         vec.assign(number.begin(), number.end());
-        reverse(vec.begin(), vec.end());
         return true;
     }
     int GetBit() const

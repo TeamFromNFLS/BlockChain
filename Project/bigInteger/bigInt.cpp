@@ -1,5 +1,6 @@
 #include "bigInt.h"
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <algorithm>
 #include <cmath>
@@ -154,69 +155,14 @@ istream &operator>>(istream &input, BigInt &bigInt)
     return input;
 }
 
-char _hex[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 ostream &operator<<(ostream &output, BigInt &bigInt)
 {
     //freopen("out.txt", "w", stdout);
-    if (bigInt.number.empty())
-    {
-        output << 0;
-        return output;
-    }
-    vector<int> resultBin;
-    int cnt = 0, now = 0;
-    resultBin.resize(64 * bigInt.number.size());
-    for (int i = 0; i < bigInt.number.size(); ++i)
-    {
-        uint32_t tmp = bigInt.number[i];
-        while (tmp)
-        {
-            resultBin[i * 32 + cnt] = tmp & 1;
-            tmp >>= 1;
-            cnt = (cnt + 1) % 32;
-        }
-    }
-    reverse(resultBin.begin(), resultBin.end());
-    bool flag = false; // whether it is the zero in front of the number
-    cnt = 0;
-    output << "Bin: ";
-    for (int i = 0; i < resultBin.size(); ++i)
-    {
-        if (cnt == 4)
-        {
-            output << ends;
-            cnt = 0;
-        }
-        output << resultBin[i];
-        cnt++;
-    }
-    output << endl
-           << "Hex: ";
-    cnt = 0;
     output << "0x";
-    for (int i = 0; i < resultBin.size(); ++i)
+    for (int i = bigInt.number.size() - 1; i >= 0; i--)
     {
-        if (cnt == 4)
-        {
-            if (now || flag)
-            {
-                flag = true;
-                output << _hex[now];
-            }
-            now = 0;
-            cnt = 0;
-        }
-        if (resultBin[i])
-        {
-            now += pow(2, 3 - cnt);
-        }
-        cnt++;
+        output << std::setw(16) << std::setfill('0') << std::hex << bigInt.number[i];
     }
-    if (now || flag)
-    {
-        output << _hex[now];
-    }
-    //fclose(stdout);
     return output;
 }
 
@@ -592,7 +538,7 @@ BigInt BigInt::GetResidualWithInverse(BigInt &a, BigInt &inv) const
 {
     //a <= this^2
     BigInt res = (a * inv).RightShift(2 * bit) * *this;
-    assert(a >= res);
+    //assert(a >= res);
     res = a - res;
     while (res >= *this)
     {
@@ -604,8 +550,8 @@ BigInt BigInt::GetResidualWithInverse(BigInt &a, BigInt &inv) const
 BigInt BigInt::Reverse(int length) const
 {
     vector<uint64_t> reversed((length - 1) / 64 + 1, 0);
-    int min_length = min(length, bit);
-    for (int i = 0; i < min_length; ++i)
+    int minLength = min(length, bit);
+    for (int i = 0; i < minLength; ++i)
     {
         reversed[(length - i - 1) / 64] |= static_cast<uint64_t>(GetBitAt(number, i)) << static_cast<uint64_t>((length - i - 1) % 64);
     }
@@ -622,7 +568,7 @@ BigInt BigInt::RightShift(int length) const
     for (; i < number.size() - entryDiscarded - 1; ++i)
     {
         uint64_t a = __asm_shr(number[i + entryDiscarded], bitDiscarded);
-        uint64_t b = bitDiscarded == 0 ? 0 : number[i + entryDiscarded + 1] << static_cast<uint64_t>(64 - bitDiscarded);
+        uint64_t b = !bitDiscarded ? 0 : number[i + entryDiscarded + 1] << static_cast<uint64_t>(64 - bitDiscarded);
         v[i] = a | b;
     }
     v[i] = __asm_shr(number[i + entryDiscarded], bitDiscarded);
@@ -654,4 +600,29 @@ void BigInt::ComputeInverse()
     }
     x.GetNumber(numberInverse);
     InverseComputed = true;
+}
+
+void TestPowMod()
+{
+    vector<uint64_t> a_bit, d_bit, n_bit;
+    a_bit.push_back(0x4f327b4b23ca1d83);
+    a_bit.push_back(0x757611c9c6f11e1a);
+    a_bit.push_back(0x19bc842d18cc06f4);
+    a_bit.push_back(0x32);
+
+    d_bit.push_back(0x397deba7fedbc1af);
+    d_bit.push_back(0x48e5b8866f883681);
+    d_bit.push_back(0x9e13df545ad88d7f);
+    d_bit.push_back(0x40);
+
+    n_bit.push_back(0x72fbd74ffdb7835f);
+    n_bit.push_back(0x91cb710cdf106d02);
+    n_bit.push_back(0x3c27bea8b5b11afe);
+    n_bit.push_back(0x81);
+    BigInt a(a_bit), d(d_bit), n(n_bit), ans;
+    cout << a << endl
+         << d << endl
+         << n << endl;
+    ans = BigInt::PowMod(a, d, n);
+    cout << ans << endl;
 }
