@@ -4,7 +4,13 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-class BigInt // store in vector, easy to operate
+
+/*store in vector, easy to operate
+learnt from https://github.com/thuliangjz/rsa-DIY
+asm to boost basic calculations
+Newton-Raphson to boost pow with mod*/
+
+class BigInt
 {
 public:
     static int Shrink(vector<uint64_t> &vec); // update bit, calculate the bit length of a number
@@ -31,7 +37,6 @@ public:
     bool GetNumber(vector<uint64_t> &vec) const // use another vector to contain the number
     {
         vec.assign(number.begin(), number.end());
-        reverse(vec.begin(), vec.end());
         return true;
     }
     int GetBit() const
@@ -64,7 +69,7 @@ public:
 
 private:
     /*The LSB of number[0] means one place, and so on*/
-    vector<uint64_t> number;                                         // stored in inverted order, 2^32 system, complement
+    vector<uint64_t> number;                                         // stored in inverted order, 2^64 system, asm
     int bit = 0;                                                     // how many bits are there in number
     string DecToBin(string s);                                       // convert the input
     void SetBin(string s);                                           // set with a binary string

@@ -6,8 +6,8 @@ using namespace std;
 
 int main()
 {
-    //freopen("out.txt", "w", stdout);
-    /* BigInt p("965020263285415169225506842409"), q("415924872698612520126277439911");
+     //freopen("out.txt", "w", stdout);
+     /* BigInt p("965020263285415169225506842409"), q("415924872698612520126277439911");
     RSA rsa;
     rsa.length = 30;
     rsa.setNumber(p, q);
@@ -16,14 +16,14 @@ int main()
     cout << rsa.publicKey << endl
          << rsa.privateKey << endl;
     */
-    BigInt a, b, c, d;
-    //cin >> a >> b;
-    cin >> a >> b >> c;
-    //c = a * b;
-    d = BigInt::PowMod(a, b, c);
-    cout << d << endl;
-    // c = a - b;
-    //cout << c << endl;
-    //fclose(stdout);
-    return 0;
+     BigInt a, b, c, d;
+     cin >> a >> b >> c;
+     //cin >> a;
+     //c = a * b;
+     d = BigInt::PowMod(a, b, c);
+     cout << d << endl;
+     // c = a - b;
+     //cout << c << endl;
+     //fclose(stdout);*/
+     return 0;
 }
