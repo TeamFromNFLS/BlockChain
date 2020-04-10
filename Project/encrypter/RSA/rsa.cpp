@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <windows.h>
+#include <vector>
 using namespace std;
 
 BigInt testList[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107,
@@ -95,8 +96,8 @@ void RSA::Init()
     auto ed = clock();
     cout << p << endl
          << q << endl
-         << Euler << endl
-         << "time:" << ed - st << endl;
+         << Euler << endl;
+    cout << "time:" << ed - st << endl;
 }
 
 bool RSA::IsPrime(const BigInt &num, int k)
@@ -161,36 +162,41 @@ bool RSA::IsPrime(const BigInt &num, int k)
     }
 }
 
+/*For rsa we need two 128-bit integer. Since in bigInt every block stores a 64-bit number, we only need two blocks to form a random number for p and q. For other situation, we just need a random number within 64 bits.*/
 BigInt RSA::CreateRandom(int isOdd)
 {
-    const int digit[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    stringstream ss;
+    vector<uint64_t> random(8, 0);
     srand((unsigned)time(NULL)); //generate seed
-    int tmp = rand() % 10;
-    while (!tmp)
-    {
-        tmp = rand() % 10;
-    }
-    ss << digit[tmp];
+    uint64_t tail = static_cast<uint64_t>(rand()) << 48 | static_cast<uint64_t>(rand()) << 33 | static_cast<uint64_t>(rand()) << 18 | static_cast<uint64_t>(rand()) << 3 | (static_cast<uint64_t>(rand()) % (UINT64_C(1) << 2));
+    random[7] = UINT64_C(1) << 63 | tail; // cover all the numbers from 2^63-6^64
+    uint64_t oddTail = static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
     switch (isOdd)
     {
     case 1: //create random odd
-        for (int i = 1; i < length - 1; i++)
+        for (int i = 1; i < 7; ++i)
         {
-            ss << digit[rand() % 10];
-        }
-        ss << digit[2 * (rand() % 5) + 1];
+            random[i] = static_cast<uint64_t>(rand()) << 49 | static_cast<uint64_t>(rand()) << 34 | static_cast<uint64_t>(rand()) << 19 | static_cast<uint64_t>(rand()) << 4 | static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
+        } // create middle blocks
+        random[0] = static_cast<uint64_t>(rand()) << 49 | static_cast<uint64_t>(rand()) << 34 | static_cast<uint64_t>(rand()) << 19 | static_cast<uint64_t>(rand()) << 4;
+        while (!(oddTail & 1))
+        {
+            oddTail = static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
+        } // create an odd tail for random[0]
+        random[0] |= oddTail;
         break;
 
     case 0: //create random
-        for (int i = 0; i < length; i++)
-        {
-            ss << digit[rand() % 10];
-        }
+        random[0] = static_cast<uint64_t>(rand()) << 49 | static_cast<uint64_t>(rand()) << 34 | static_cast<uint64_t>(rand()) << 19 | static_cast<uint64_t>(rand()) << 4 | static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
         break;
     }
-    BigInt Random(ss.str());
-    return Random;
+    BigInt test(random);
+    return BigInt(random);
+}
+
+void TestRandom()
+{
+    RSA a;
+    a.CreateRandom(1);
 }
 
 int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength)
