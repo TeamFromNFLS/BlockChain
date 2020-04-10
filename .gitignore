@@ -2,4 +2,6 @@
 .vscode/*
 *.o
 *.exe
+/Project/Makefile
+/Project/main/main.cpp
 Demo/RSADemo/.history/*
