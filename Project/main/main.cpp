@@ -9,7 +9,10 @@ void TestRandom();
 int main()
 {
      RSA a;
-     a.Init();
-     //TestRandom();
+     BigInt p = 17, q = 19;
+     a.setNumber(p, q);
+     a.CreateKeys();
+     cout << a.Euler << endl;
+     cout << a.publicKey << " " << a.privateKey << endl;
      return 0;
 }

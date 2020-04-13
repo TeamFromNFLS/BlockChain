@@ -269,19 +269,12 @@ BigInt RSA::CreateRandomSmaller(const BigInt &num)
     return Random;
 }
 
-void RSA::CreateKeys()
+void Extgcd(BigInt a, BigInt n, BigInt &old_s)
 {
-    publicKey = 65537;
-    BigInt gcd, inverse;
-    BigInt old_r, r, old_s, s, old_t, t, q, tmp, _tmp;
-
-    old_r = publicKey;
-    r = Euler;
-    old_s = BigInt::one;
-    s = BigInt::zero;
-    t = BigInt::one;
-    old_t = BigInt::zero;
-
+    BigInt old_r = a, r = n;
+    BigInt s = BigInt::zero;
+    BigInt q, tmp, substract;
+    // s_i+1 = s_i-1 - q_i * s_i
     while (r != BigInt::zero)
     {
         q = old_r / r;
@@ -290,18 +283,22 @@ void RSA::CreateKeys()
         old_r = tmp;
 
         tmp = s;
-        _tmp = tmp * q;
-        s = old_s - _tmp;
+        substract = tmp * q;
+        while (old_s < substract)
+        {
+            old_s += n;
+        }
+        s = old_s - substract;
         old_s = tmp;
-
-        tmp = t;
-        t = old_t - _tmp;
-        old_t = tmp;
     }
+    old_s = (n + old_s % n) % n;
+}
 
-    inverse = old_s % product;
-    inverse += product;
-    privateKey = inverse % product;
+void RSA::CreateKeys()
+{
+    publicKey = 5;
+    privateKey = BigInt::one;
+    Extgcd(publicKey, Euler, privateKey);
 }
 
 BigInt RSA::EncryptByPublic(const BigInt &num)
