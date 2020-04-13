@@ -299,7 +299,7 @@ BigInt RSA::CreateRandomSmaller(const BigInt &num)
     return Random;
 }
 
-void Extgcd(BigInt a, BigInt n, BigInt &old_s)
+void RSA::Extgcd(BigInt a, BigInt n, BigInt &old_s)
 {
     BigInt old_r = a, r = n;
     BigInt s = BigInt::zero;
