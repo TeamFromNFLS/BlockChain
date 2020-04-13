@@ -33,13 +33,11 @@ public:
     bool IsPrime(const BigInt &, int k = 4); //k随便取的，判断错误率是1/4^k
     int Sieve(vector<BigInt> &, const BigInt &, int);
     //const int length = 305;
-    BigInt publicKey, privateKey, Euler, product, p, q;
     //KeyPair public, private;
     void setNumber(BigInt, BigInt);
 
 private:
-    // BigInt privateKey,
-    //     Euler;
+    BigInt publicKey, privateKey, Euler, product, p, q;
 };
 
 #endif
