@@ -1,6 +1,7 @@
 #ifndef RSA_H
 #define RSA_H
 #include <iostream>
+#include <mutex>
 #include "bigInt.h"
 using namespace std;
 
@@ -18,9 +19,11 @@ class RSA
 public:
     RSA() {}
     ~RSA() {}
-    void Init();          //prime & euler & product
-    BigInt CreatePrime(); //create two prime numbers p and q
+    void Init(int worker);                                            //prime & euler & product
+    BigInt CreatePrime(int worker);                                   //create two prime numbers p and q
+    void PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result); // multi-thread
     BigInt CreateRandom(int);
+    void Extgcd(BigInt, BigInt, BigInt &);
     void CreateKeys();                          //use ext gcd to create public and private key
     BigInt CreateRandomSmaller(const BigInt &); //for the private key and the prime test
     BigInt EncryptByPublic(const BigInt &);
@@ -32,7 +35,6 @@ public:
     //const int length = 305;
     BigInt publicKey, privateKey, Euler, product, p, q;
     //KeyPair public, private;
-    int length;
     void setNumber(BigInt, BigInt);
 
 private:

@@ -7,6 +7,11 @@
 #include <ctime>
 #include <windows.h>
 #include <vector>
+#include <random>
+#include <thread>
+#include <mutex>
+#include <chrono>
+#include <utility>
 using namespace std;
 
 BigInt testList[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107,
@@ -80,14 +85,13 @@ BigInt testList[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
                      9679, 9689, 9697, 9719, 9721, 9733, 9739, 9743, 9749, 9767, 9769, 9781, 9787, 9791, 9803, 9811, 9817,
                      9829, 9833, 9839, 9851, 9857, 9859, 9871, 9883, 9887, 9901, 9907, 9923, 9929, 9931, 9941, 9949, 9967, 9973};
 
-void RSA::Init()
+void RSA::Init(int worker)
 {
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
     auto st = clock();
-    p = CreatePrime();
-    Sleep(1000); // Wait to create another seed
-    q = CreatePrime();
+    p = CreatePrime(worker);
+    q = CreatePrime(worker);
     product = p * q;
     p = p - BigInt::one, q = q - BigInt::one;
     //欧拉数
@@ -97,7 +101,7 @@ void RSA::Init()
     cout << p << endl
          << q << endl
          << Euler << endl;
-    cout << "time:" << ed - st << endl;
+    cout << "time:" << dec << ed - st << endl;
 }
 
 bool RSA::IsPrime(const BigInt &num, int k)
@@ -166,27 +170,27 @@ bool RSA::IsPrime(const BigInt &num, int k)
 BigInt RSA::CreateRandom(int isOdd)
 {
     vector<uint64_t> random(8, 0);
-    srand((unsigned)time(NULL)); //generate seed
-    uint64_t tail = static_cast<uint64_t>(rand()) << 48 | static_cast<uint64_t>(rand()) << 33 | static_cast<uint64_t>(rand()) << 18 | static_cast<uint64_t>(rand()) << 3 | (static_cast<uint64_t>(rand()) % (UINT64_C(1) << 2));
-    random[7] = UINT64_C(1) << 63 | tail; // cover all the numbers from 2^63-6^64
-    uint64_t oddTail = static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
+    mt19937 rng;
+    random_device ranDev;
+    rng.seed(ranDev());
+    uniform_int_distribution<uint64_t> largest(UINT64_C(1) << 63, UINT64_MAX); // create a random number in the range of 2^63 - 2^64 - 1 as the largest block of random
+    uniform_int_distribution<uint64_t> middle(0, UINT64_MAX);                  // create a random uint64 number
     switch (isOdd)
     {
     case 1: //create random odd
+        random[7] = largest(rng);
         for (int i = 1; i < 7; ++i)
         {
-            random[i] = static_cast<uint64_t>(rand()) << 49 | static_cast<uint64_t>(rand()) << 34 | static_cast<uint64_t>(rand()) << 19 | static_cast<uint64_t>(rand()) << 4 | static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
-        } // create middle blocks
-        random[0] = static_cast<uint64_t>(rand()) << 49 | static_cast<uint64_t>(rand()) << 34 | static_cast<uint64_t>(rand()) << 19 | static_cast<uint64_t>(rand()) << 4;
-        while (!(oddTail & 1))
+            random[i] = middle(rng);
+        }
+        random[0] = middle(rng);
+        while (!(random[0] & 1))
         {
-            oddTail = static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
-        } // create an odd tail for random[0]
-        random[0] |= oddTail;
+            random[0] = middle(rng);
+        }
         break;
-
     case 0: //create random
-        random[0] = static_cast<uint64_t>(rand()) << 49 | static_cast<uint64_t>(rand()) << 34 | static_cast<uint64_t>(rand()) << 19 | static_cast<uint64_t>(rand()) << 4 | static_cast<uint64_t>(rand()) % (UINT64_C(1) << 3);
+        random[0] = middle(rng);
         break;
     }
     BigInt test(random);
@@ -196,7 +200,7 @@ BigInt RSA::CreateRandom(int isOdd)
 void TestRandom()
 {
     RSA a;
-    a.CreateRandom(1);
+    a.CreateRandom(0);
 }
 
 int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength)
@@ -226,29 +230,55 @@ int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength)
     return cnt;
 }
 
-BigInt RSA::CreatePrime()
+void RSA::PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result)
 {
     vector<BigInt> probablePrime;
     while (1)
     {
+        bool finished;
+        mutex->lock();
+        finished = *finishFlag;
+        mutex->unlock();
+        if (finished)
+        {
+            break;
+        }
         BigInt start = CreateRandom(1);
         int count = Sieve(probablePrime, start, 1000);
         for (int i = 0; i < count; i++)
         {
             if (IsPrime(probablePrime[i]))
             {
-                return probablePrime[i];
+                mutex->lock();
+                *result = probablePrime[i];
+                *finishFlag = true;
+                mutex->unlock();
+                break;
             }
         }
         probablePrime.clear(); //no number passes Miller-Rabin, repeat
     }
+    return;
+}
 
-    /*  BigInt Prime = CreateRandom(1);
-    while (!IsPrime(Prime))
+BigInt RSA::CreatePrime(int worker)
+{
+    mutex mutex;
+    bool finished = false;
+    BigInt result;
+    vector<thread> threads(worker);
+    for (int i = 0; i < worker; ++i)
     {
-        Prime += 2;
+        threads.emplace_back(&RSA::PrimeWorker, this, &mutex, &finished, &result);
     }
-    return Prime; */
+    for (auto &t : threads)
+    {
+        if (t.joinable())
+        {
+            t.join();
+        }
+    }
+    return BigInt(result);
 }
 
 BigInt RSA::CreateRandomSmaller(const BigInt &num)
