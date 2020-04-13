@@ -326,7 +326,7 @@ void RSA::Extgcd(BigInt a, BigInt n, BigInt &old_s)
 
 void RSA::CreateKeys()
 {
-    publicKey = 5;
+    publicKey = 65537;
     privateKey = BigInt::one;
     Extgcd(publicKey, Euler, privateKey);
 }
