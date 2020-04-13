@@ -329,8 +329,8 @@ void RSA::CreateKeys()
     publicKey = 65537;
     privateKey = BigInt::one;
     Extgcd(publicKey, Euler, privateKey);
-    cout << publicKey << endl
-         << privateKey << endl;
+    //cout << publicKey << endl
+    //     << privateKey << endl;
 }
 
 BigInt RSA::EncryptByPublic(const BigInt &num)

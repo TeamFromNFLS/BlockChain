@@ -4,16 +4,14 @@
 #include <random>
 #include <ctime>
 #include "rsa.h"
+#include "wallet.h"
+#include "sha256.h"
+#include "ripemd160.h"
 using namespace std;
 
 void TestRandom();
 int main()
 {
-     RSA a;
-     auto st = clock();
-     a.Init(1);
-     a.CreateKeys();
-     auto ed = clock();
-     cout << "time:" << dec << ed - st << endl;
+     Wallet a(1);
      return 0;
 }

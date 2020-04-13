@@ -16,11 +16,13 @@
 \********************************************************************/
 
 /*  header files */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
 #include "ripemd160.h"
 
+#define RMDsize 160
 /********************************************************************/
 
 void MDinit(dword *MDbuf)
@@ -269,3 +271,60 @@ void MDfinish(dword *MDbuf, byte *strptr, dword lswlen, dword mswlen)
 }
 
 /************************ end of file rmd160.c **********************/
+
+byte *RMD(byte *message)
+/*
+* returns RMD(message)
+* message should be a string terminated by '\0'
+*/
+{
+    dword MDbuf[RMDsize / 32];         /* contains (A, B, C, D(, E))   */
+    static byte hashcode[RMDsize / 8]; /* for final hash-value         */
+    dword X[16];                       /* current 16-word chunk        */
+    unsigned int i;                    /* counter                      */
+    dword length;                      /* length in bytes of message   */
+    dword nbytes;                      /* # of bytes not yet processed */
+
+    /* initialize */
+    MDinit(MDbuf);
+    length = (dword)strlen((char *)message);
+
+    /* process message in 16-word chunks */
+    for (nbytes = length; nbytes > 63; nbytes -= 64)
+    {
+        for (i = 0; i < 16; i++)
+        {
+            X[i] = BYTES_TO_DWORD(message);
+            message += 4;
+        }
+        compress(MDbuf, X);
+    } /* length mod 64 bytes left */
+
+    /* finish: */
+    MDfinish(MDbuf, message, length, 0);
+
+    for (i = 0; i < RMDsize / 8; i += 4)
+    {
+        hashcode[i] = MDbuf[i >> 2];             /* implicit cast to byte  */
+        hashcode[i + 1] = (MDbuf[i >> 2] >> 8);  /*  extracts the 8 least  */
+        hashcode[i + 2] = (MDbuf[i >> 2] >> 16); /*  significant bits.     */
+        hashcode[i + 3] = (MDbuf[i >> 2] >> 24);
+    }
+
+    return (byte *)hashcode;
+}
+
+std::string rmd160(std::string s)
+{
+    byte *b = (byte *)s.c_str();
+    byte *hashcode = RMD(b);
+    char ret[41] = {};
+    for (int j = 0; j < RMDsize / 8; j++)
+    {
+        char c[5];
+        sprintf_s(c, "%02x", hashcode[j]);
+        strcat_s(ret, c);
+    }
+    std::string result = ret;
+    return result;
+}

@@ -18,7 +18,7 @@
 
 #ifndef RMD160H /* make sure this file is read only once */
 #define RMD160H
-
+#include <string>
 /********************************************************************/
 
 /* typedef 8 and 32 bit types, resp.  */
@@ -118,6 +118,7 @@ typedef int the_correct_size_was_chosen[sizeof(dword) == 4 ? 1 : -1];
 /********************************************************************/
 
 /* function prototypes */
+std::string rmd160(std::string s);
 
 void MDinit(dword *MDbuf);
 /*

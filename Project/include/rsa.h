@@ -2,6 +2,8 @@
 #define RSA_H
 #include <iostream>
 #include <mutex>
+#include <utility>
+#include <tuple>
 #include "bigInt.h"
 using namespace std;
 
@@ -24,7 +26,11 @@ public:
     void PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result); // multi-thread
     BigInt CreateRandom(int);
     void Extgcd(BigInt, BigInt, BigInt &);
-    void CreateKeys();                          //use ext gcd to create public and private key
+    void CreateKeys(); //use ext gcd to create public and private key
+    tuple<BigInt, BigInt, BigInt> GetKey()
+    {
+        return make_tuple(publicKey, privateKey, product);
+    }
     BigInt CreateRandomSmaller(const BigInt &); //for the private key and the prime test
     BigInt EncryptByPublic(const BigInt &);
     BigInt EncryptByPrivate(const BigInt &);
