@@ -3,7 +3,8 @@
 #include "Blockchain.h"
 using namespace std;
 
-int main() {
+int main()
+{
     Blockchain bChain = Blockchain();
     cout << "Mining block 1..." << endl;
     bChain.AddBlock(Block(1, "Block 1 Data"));
