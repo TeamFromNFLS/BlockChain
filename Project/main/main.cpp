@@ -4,6 +4,9 @@
 #include <random>
 #include <ctime>
 #include "rsa.h"
+#include "wallet.h"
+#include "sha256.h"
+#include "ripemd160.h"
 using namespace std;
 
 void TestRandom();
@@ -14,5 +17,6 @@ int main()
      a.Init(1);
      a.CreateKeys();
 
+     Wallet b(1);
      return 0;
 }

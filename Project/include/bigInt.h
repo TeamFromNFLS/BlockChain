@@ -1,6 +1,7 @@
 #ifndef BIG_INT_H
 #define BIG_INT_H
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 using namespace std;
@@ -39,6 +40,7 @@ public:
         vec.assign(number.begin(), number.end());
         return true;
     }
+    string ToString();
     int GetBit() const
     {
         return bit;

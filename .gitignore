@@ -3,3 +3,4 @@
 *.o
 *.exe
 main/main.cpp
+Project/Makefile

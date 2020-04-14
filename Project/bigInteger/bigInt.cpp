@@ -1,5 +1,6 @@
 #include "bigInt.h"
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <vector>
 #include <algorithm>
@@ -146,6 +147,17 @@ BigInt::BigInt(const int &x)
     SetNumber(s);
 }
 
+string BigInt::ToString()
+{
+    stringstream ss;
+    for (int i = number.size() - 1; i >= 0; --i)
+    {
+        ss << hex << number[i];
+    }
+    string result = ss.str();
+    return result;
+}
+
 istream &operator>>(istream &input, BigInt &bigInt)
 {
     string s;
@@ -161,7 +173,7 @@ ostream &operator<<(ostream &output, BigInt &bigInt)
     output << "0x";
     for (int i = bigInt.number.size() - 1; i >= 0; i--)
     {
-        output << std::setw(16) << std::setfill('0') << std::hex << bigInt.number[i];
+        output << setw(16) << setfill('0') << hex << bigInt.number[i];
     }
     return output;
 }
