@@ -40,9 +40,11 @@ string Wallet::Base58(string s)
 {
     BigInt x = ToInt(s), base("58");
     string result;
+    vector<uint64_t> now;
     while (x > BigInt::zero)
     {
-        vector<uint64_t> now;
+        /*BigInt tmp = x % base;
+        cout << tmp << endl;*/
         (x % base).GetNumber(now);
         result += Base58String[now[0]];
         x /= base;
