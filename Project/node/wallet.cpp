@@ -61,7 +61,7 @@ string Wallet::Base58(string s)
 
 Wallet::Wallet(int worker)
 {
-    /*RSA a;
+    RSA a;
     a.Init(worker);
     a.CreateKeys();
     tuple<BigInt, BigInt, BigInt> keys;
@@ -72,8 +72,8 @@ Wallet::Wallet(int worker)
     string publicKeyHash = rmd160(sha256(publicKey.ToString() + n.ToString()));
     string versionpublicKeyHash = version + publicKeyHash;
     string tailHash = sha256(sha256(versionpublicKeyHash)).substr(0, 4);
-    string finalHash = versionpublicKeyHash + tailHash;*/
-    address = Base58("006fbc59c843e27e3d0ff68b610cb524e9fbc5003b39e0");
+    string finalHash = versionpublicKeyHash + tailHash;
+    address = Base58(finalHash);
     cout << address << endl;
 }
 
