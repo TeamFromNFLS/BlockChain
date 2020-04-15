@@ -14,22 +14,11 @@
 #include "block.h"
 using namespace std;
 
-void test();
+void TestPowMod();
+void TestMine();
 int main()
 {
-     mutex mutex;
-     int worker = 4;
-     vector<thread> threads(worker);
-     for (int i = 0; i < worker; ++i)
-     {
-          threads.emplace_back(test);
-     }
-     for (auto &t : threads)
-     {
-          if (t.joinable())
-          {
-               t.join();
-          }
-     }
+     TestPowMod();
+     TestMine();
      return 0;
 }

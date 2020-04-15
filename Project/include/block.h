@@ -31,6 +31,10 @@ public:
                   << merkleRoot << std::endl
                   << now << nonce << std::endl;
     }
+    void SetNonce(uint32_t _nonce)
+    {
+        nonce = _nonce;
+    }
 
 private:
     uint32_t version = 0x00;

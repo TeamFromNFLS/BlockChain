@@ -6,13 +6,13 @@ Miner::Miner(int worker)
     Init(worker);
 }
 
-void Miner::PoW()
+bool Miner::PoW(int nonce)
 {
-    for (uint64_t i = 0; i < UINT64_MAX; ++i)
+    if (nonce == 65537)
     {
-        ;
+        return true;
     }
-    return;
+    return false;
 }
 
 bool Miner::Check(const Block &toCheck)
