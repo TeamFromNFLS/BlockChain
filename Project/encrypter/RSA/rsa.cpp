@@ -333,28 +333,32 @@ void RSA::CreateKeys()
     //     << privateKey << endl;
 }
 
-BigInt RSA::EncryptByPublic(const BigInt &num)
+//TODO: slice
+
+BigInt RSA::EncryptByPublic(const BigInt &num, const BigInt &key, const BigInt &N)
 {
-    BigInt B4encrypt = num;
-    BigInt Encrypted = BigInt::PowMod(B4encrypt, publicKey, product);
-    return Encrypted;
+    BigInt b4encrypt = num, exponent = key, mod = N;
+    BigInt encrypted = BigInt::PowMod(b4encrypt, exponent, mod);
+    return encrypted;
 }
 
-BigInt RSA::EncryptByPrivate(const BigInt &num)
+/* for digital signature */
+BigInt RSA::EncryptByPrivate(const BigInt &num, const BigInt &key, const BigInt &N)
 {
-    return DecryptByPrivate(num);
+    return DecryptByPrivate(num, key, N);
 }
 
-BigInt RSA::DecryptByPrivate(const BigInt &num)
+BigInt RSA::DecryptByPrivate(const BigInt &num, const BigInt &key, const BigInt &N)
 {
-    BigInt B4decrypt = num;
-    BigInt Decrypted = BigInt::PowMod(B4decrypt, privateKey, product);
-    return Decrypted;
+    BigInt b4decrypt = num, exponent = key, mod = N;
+    BigInt decrypted = BigInt::PowMod(b4decrypt, exponent, mod);
+    return decrypted;
 }
 
-BigInt RSA::DecryptByPublic(const BigInt &num)
+/* for digital signature */
+BigInt RSA::DecryptByPublic(const BigInt &num, const BigInt &key, const BigInt &N)
 {
-    return EncryptByPublic(num);
+    return EncryptByPublic(num, key, N);
 }
 
 void RSA::setNumber(BigInt a, BigInt b)

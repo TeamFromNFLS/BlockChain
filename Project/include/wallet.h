@@ -7,6 +7,9 @@ class Wallet
 {
 public:
     Wallet(int worker);
+    BigInt GetPri() { return privateKey; }
+    BigInt GetPub() { return publicKey; }
+    BigInt GetN() { return n; }
 
 private:
     BigInt privateKey, publicKey, n;
