@@ -59,7 +59,9 @@ string Wallet::Base58(string s)
     return result;
 }
 
-Wallet::Wallet(int worker)
+vector<pair<string, string>> Wallet::walletInfo;
+
+void Wallet::Init(int worker)
 {
     RSA a;
     a.Init(worker);
@@ -74,7 +76,13 @@ Wallet::Wallet(int worker)
     string tailHash = sha256(sha256(versionpublicKeyHash)).substr(0, 4);
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
+    walletInfo.push_back(make_pair(address, publicKeyHash));
     cout << address << endl;
+}
+
+Wallet::Wallet(int worker)
+{
+    Init(worker);
 }
 
 //00c94696460043b120981f922acd5f3bccefe1a5fdd6d4

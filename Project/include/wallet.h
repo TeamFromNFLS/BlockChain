@@ -1,17 +1,22 @@
 #ifndef WALLET_H
 #define WALLET_H
 #include <string>
+#include <tuple>
 #include "bigInt.h"
 
 class Wallet
 {
 public:
     Wallet(int worker);
-    BigInt GetPri() { return privateKey; }
-    BigInt GetPub() { return publicKey; }
-    BigInt GetN() { return n; }
+    Wallet(){};
+    void Init(int worker);
+    tuple<BigInt, BigInt, BigInt, string> GetKey()
+    {
+        return make_tuple(privateKey, publicKey, n, address);
+    }
+    static vector<pair<string, string>> walletInfo;
 
-private:
+protected:
     BigInt privateKey, publicKey, n;
     string address;
     string version = "00";
