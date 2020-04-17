@@ -57,6 +57,7 @@ public:
     {
         transactionSet.insert(transactionSet.end(), add.begin(), add.end());
         numTransactions += add.size();
+        return true;
     }
     bool GetTransactionSet(vector<Transaction> &result)
     {
