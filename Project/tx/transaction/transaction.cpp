@@ -6,4 +6,6 @@
 #include <iostream>
 using namespace std;
 
+vector<Transaction> Transaction::txPool;
+vector<Transaction> Transaction::toBePackedTx;
 int Transaction::mineReward = 5; //to be set

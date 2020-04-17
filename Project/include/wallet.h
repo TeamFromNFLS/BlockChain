@@ -5,6 +5,7 @@
 #include "bigInt.h"
 #include "transaction.h"
 
+using namespace std;
 class Wallet
 {
 public:
@@ -30,8 +31,8 @@ public:
     void Sign(TxInput &input, string receiverPublicKeyHash, int _value);
     vector<int> FindSpent();
     vector<Transaction> FindUTXO(vector<int> spentTxId);
-    void SetID();
-    bool isCoinbase();
+    void SetID(){};
+    bool isCoinbase(){};
 };
 
 #endif //WALLET_H

@@ -1,18 +1,19 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
-#include "wallet.h"
 #include "bigInt.h"
 #include "txInput.h"
 #include "txOutput.h"
+#include <iostream>
 #include <string>
 #include <vector>
 
+using namespace std;
 class Transaction
 {
 public:
     Transaction(string _senderAdr, string _receiverAdr) : senderAdr(_senderAdr), receiverAdr(_receiverAdr) {}
     void SetID(int ID) { txID = ID; }
-    bool IsCoinbase();
+    bool IsCoinbase(){};
     int GetID() { return txID; }
 
     int txID;
