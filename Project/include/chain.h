@@ -6,11 +6,24 @@
 class Chain
 {
 public:
-    Block GetLatestBlock();
+    Chain(){};
+    Chain(const Chain &p) : difficulty(p.difficulty), end(p.end){};
+    Block *GetLastBlock()
+    {
+        return end;
+    }
+    void AddBlock(Block &newBlock)
+    {
+        Block *newBlockPoint = &newBlock;
+        newBlockPoint->preBlock = end;
+        end = newBlockPoint;
+    }
+    void SetDifficulty(uint32_t difficultyTarget);
+    void print();
 
 private:
-    std::vector<Block> chain;
-    uint32_t difficulty;
+    uint32_t difficulty = 0;
+    Block *end = nullptr;
 };
 
 #endif //CHAIN_H

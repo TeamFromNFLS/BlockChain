@@ -23,6 +23,15 @@ public:
                             difficultyTarget(p.difficultyTarget),
                             height(p.height),
                             nonce(p.nonce){};
+    void SetDifficultyTarget(uint32_t difficulty)
+    {
+        difficultyTarget = difficulty;
+    }
+    void SetNonce(uint32_t _nonce)
+    {
+        nonce = _nonce;
+    }
+    std::string GetHash();
     void show() const
     {
         std::string now = ctime(&time);
@@ -31,10 +40,7 @@ public:
                   << merkleRoot << std::endl
                   << now << nonce << std::endl;
     }
-    void SetNonce(uint32_t _nonce)
-    {
-        nonce = _nonce;
-    }
+    Block *preBlock = nullptr;
 
 private:
     uint32_t version = 0x00;
