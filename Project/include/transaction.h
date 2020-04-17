@@ -10,7 +10,7 @@
 class Transaction
 {
 public:
-    Transaction(string _senderAdr, string _receiverAdr);
+    Transaction(string _senderAdr, string _receiverAdr) : senderAdr(_senderAdr), receiverAdr(_receiverAdr) {}
     void SetID(int ID) { txID = ID; }
     bool IsCoinbase();
     int GetID() { return txID; }

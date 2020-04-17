@@ -2,11 +2,15 @@
 #include <tuple>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 #include "wallet.h"
 #include "rsa.h"
 #include "bigInt.h"
 #include "sha256.h"
 #include "ripemd160.h"
+#include "transaction.h"
+#include "txInput.h"
+#include "txOutput.h"
 using namespace std;
 
 BigInt ToInt(string s)
@@ -71,7 +75,7 @@ void Wallet::Init(int worker)
     publicKey = get<0>(keys);
     privateKey = get<1>(keys);
     n = get<2>(keys);
-    string publicKeyHash = rmd160(sha256(publicKey.ToString() + n.ToString()));
+    publicKeyHash = rmd160(sha256(publicKey.ToString() + n.ToString()));
     string versionpublicKeyHash = version + publicKeyHash;
     string tailHash = sha256(sha256(versionpublicKeyHash)).substr(0, 4);
     string finalHash = versionpublicKeyHash + tailHash;
@@ -86,3 +90,62 @@ Wallet::Wallet(int worker)
 }
 
 //00c94696460043b120981f922acd5f3bccefe1a5fdd6d4
+
+void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
+{
+    Transaction transaction(address, get<0>(receiverInfo));
+    TxInput _input(_value, publicKey);
+    TxOutput _output(_value, get<1>(receiverInfo));
+    transaction.input = _input;
+    transaction.output = _output;
+    Sign(transaction.input, get<1>(receiverInfo), _value);
+    //TODO: find prevTx and set ID
+    vector<Transaction> UTXOTx;
+    for (Transaction tx : UTXOTx)
+    {
+        if (tx.output.GetValue() == _value)
+        {
+            transaction.input.SetPrevID(tx.GetID());
+            transaction.SetID(tx.GetID() + 1);
+            break;
+        }
+    }
+
+    Transaction::txPool.push_back(transaction);
+    Transaction::toBePackedTx.push_back(transaction);
+}
+
+void Wallet::Sign(TxInput &input, string receiverPublicKeyHash, int _value)
+{
+    if (!isCoinbase())
+    {
+        RSA rsa;
+        BigInt signInfo(publicKeyHash + receiverPublicKeyHash + to_string(_value));
+        BigInt _signature = rsa.EncryptByPrivate(signInfo, privateKey, n);
+        input.signature = _signature;
+    }
+}
+
+vector<int> Wallet::FindSpent()
+{
+    vector<int> spentTxID;
+    for (Transaction tx : Transaction::txPool)
+    {
+        if (tx.IsCoinbase())
+        {
+            continue;
+        }
+
+        if (tx.senderAdr == address)
+        {
+            spentTxID.push_back(tx.input.GetPrevID());
+        }
+    }
+    return spentTxID;
+}
+
+vector<Transaction> FindUTXO(vector<int> spentTxId)
+{
+    vector<Transaction> UTXOTxId;
+    //TODO: search blockchain
+}
