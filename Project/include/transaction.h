@@ -10,23 +10,19 @@
 class Transaction
 {
 public:
-    Transaction(TxInput _input, TxOutput _output); //regular tx
-    //Transaction(TxInput _input, TxOutput _output, int _reward); //coinbase tx
-    void SetID();
-    int GetID();
-    static void TxCoinbase(Wallet);
+    Transaction(string _senderAdr, string _receiverAdr) : senderAdr(_senderAdr), receiverAdr(_receiverAdr) {}
+    void SetID(int ID) { txID = ID; }
     bool IsCoinbase();
-    void Sign(Wallet myWallet, const Transaction &preTx);
-    void Clone();
-    void findUTXO();
+    int GetID() { return txID; }
+
     int txID;
     TxInput input;
     TxOutput output;
     string senderAdr;
     string receiverAdr;
     static int mineReward;
-    static int txCount;
     static vector<Transaction> txPool;
+    static vector<Transaction> toBePackedTx;
 };
 
 #endif
