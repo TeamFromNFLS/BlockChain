@@ -19,6 +19,7 @@ public:
         end = newBlockPoint;
     }
     void SetDifficulty(uint32_t difficultyTarget);
+    vector<Transaction> GetTransaction();
     void print();
 
 private:

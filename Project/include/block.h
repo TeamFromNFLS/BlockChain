@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
+#include "transaction.h"
 
 class Block
 {
@@ -50,6 +51,29 @@ private:
     uint32_t difficultyTarget;
     uint32_t height;
     uint32_t nonce;
+
+public:
+    bool AddTransactionSet(vector<Transaction> &add)
+    {
+        transactionSet.insert(transactionSet.end(), add.begin(), add.end());
+        numTransactions += add.size();
+    }
+    bool GetTransactionSet(vector<Transaction> &result)
+    {
+        result.assign(transactionSet.begin(), transactionSet.end());
+        return true;
+    }
+
+private:
+    uint64_t numTransactions = 0;
+    vector<Transaction> transactionSet;
+    struct node
+    {
+        std::string TransactionHash;
+        node *leftTree;
+        node *rightTree;
+
+    } merkleTree;
 };
 
 #endif //BLOCK_H

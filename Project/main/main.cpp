@@ -19,12 +19,10 @@ void TestPowMod();
 void TestMine();
 int main()
 {
-     Block a(1), b(2), c(3);
-     Chain chain;
-     chain.AddBlock(a);
-     chain.AddBlock(b);
-     chain.AddBlock(c);
-     chain.print();
+     vector<int> a;
+     vector<int> b(8, 0);
+     a.insert(a.end(), b.begin(), b.end());
+     cout << a.size() << endl;
 
      return 0;
 }

@@ -5,14 +5,29 @@
 
 void Chain::print()
 {
-    while (end != nullptr)
+    Block *now = end;
+    while (now != nullptr)
     {
-        end->show();
-        end = end->preBlock;
+        now->show();
+        now = now->preBlock;
     }
 }
 
 void Chain::SetDifficulty(uint32_t difficultyTarget)
 {
     difficulty = difficultyTarget;
+}
+
+vector<Transaction> Chain::GetTransaction()
+{
+    vector<Transaction> result;
+    Block *now = end;
+    while (now != nullptr)
+    {
+        vector<Transaction> tmp;
+        now->GetTransactionSet(tmp);
+        result.insert(result.end(), tmp.begin(), tmp.end());
+        now = now->preBlock;
+    }
+    return result;
 }
