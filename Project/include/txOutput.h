@@ -10,8 +10,12 @@
 class TxOutput
 {
 public:
-    TxOutput(int _value, BigInt receiverPublicKey);
-    string getPublicHash();
+    TxOutput() {}
+    TxOutput(int _value, string _receiverPublicHash) : value(_value), publicHash(_receiverPublicHash) {}
+    string GetPublicHash() { return publicHash; }
+    int GetValue() { return value; }
+
+private:
     int value;
     string publicHash;
 };

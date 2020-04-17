@@ -11,16 +11,17 @@ class TxInput
 {
 public:
     TxInput(int _value, BigInt _publicKey);
-    TxInput(); //coinbase
-    void setSignature(BigInt _signature);
+    TxInput() {}
+    //void setSignature(BigInt _signature);
     int GetPrevID();
     int GetValue();
-    BigInt publicKey;
+    void SetPrevID(int ID) { prevID = ID; }
     BigInt signature;
 
 private:
     int prevID;
     int value;
+    BigInt publicKey;
 };
 
 #endif
