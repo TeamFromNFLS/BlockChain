@@ -2,6 +2,7 @@
 #include <tuple>
 #include <vector>
 #include <cmath>
+#include <ctime>
 #include <algorithm>
 #include "wallet.h"
 #include "rsa.h"
@@ -98,7 +99,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     TxOutput _output(_value, get<1>(receiverInfo));
     transaction.input = _input;
     transaction.output = _output;
-    Sign(transaction.input, get<1>(receiverInfo), _value);
+    Sign(transaction, get<1>(receiverInfo), _value);
     //TODO: find prevTx and set ID
     vector<Transaction> UTXOTx;
     for (Transaction tx : UTXOTx)
@@ -115,14 +116,14 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     Transaction::toBePackedTx.push_back(transaction);
 }
 
-void Wallet::Sign(TxInput &input, string receiverPublicKeyHash, int _value)
+void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
 {
-    if (!isCoinbase())
+    if (!tx.IsCoinbase())
     {
         RSA rsa;
         BigInt signInfo(publicKeyHash + receiverPublicKeyHash + to_string(_value));
         BigInt _signature = rsa.EncryptByPrivate(signInfo, privateKey, n);
-        input.signature = _signature;
+        tx.input.signature = _signature;
     }
 }
 
@@ -148,4 +149,13 @@ vector<Transaction> FindUTXO(vector<int> spentTxId)
 {
     vector<Transaction> UTXOTxId;
     //TODO: search blockchain
+}
+
+string GetTxHash(const Transaction &transaction)
+{
+    Transaction tx = transaction;
+    string time = ctime(&tx._time);
+    string hashInfo = time + tx.senderAdr + tx.receiverAdr + to_string(tx.input.GetValue());
+    string txHash = sha256(hashInfo);
+    return txHash;
 }

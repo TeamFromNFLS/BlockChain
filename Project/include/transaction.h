@@ -1,21 +1,25 @@
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
-#include "wallet.h"
 #include "bigInt.h"
 #include "txInput.h"
 #include "txOutput.h"
 #include <string>
 #include <vector>
+#include <ctime>
 
 class Transaction
 {
 public:
-    Transaction(string _senderAdr, string _receiverAdr) : senderAdr(_senderAdr), receiverAdr(_receiverAdr) {}
+    Transaction(string _senderAdr, string _receiverAdr) : senderAdr(_senderAdr), receiverAdr(_receiverAdr)
+    {
+        _time = std::time(0);
+    }
     void SetID(int ID) { txID = ID; }
-    bool IsCoinbase();
+    bool IsCoinbase(){};
     int GetID() { return txID; }
 
     int txID;
+    time_t _time;
     TxInput input;
     TxOutput output;
     string senderAdr;
