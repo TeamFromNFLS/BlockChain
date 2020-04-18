@@ -19,6 +19,7 @@ public:
     void SetID(int ID) { txID = ID; }
     bool IsCoinbase(){};
     int GetID() { return txID; }
+    string GetTxHash();
 
     int txID;
     time_t _time;

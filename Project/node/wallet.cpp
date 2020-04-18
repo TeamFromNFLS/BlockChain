@@ -150,12 +150,3 @@ vector<Transaction> FindUTXO(vector<int> spentTxId)
     vector<Transaction> UTXOTxId;
     //TODO: search blockchain
 }
-
-string GetTxHash(const Transaction &transaction)
-{
-    Transaction tx = transaction;
-    string time = ctime(&tx._time);
-    string hashInfo = time + tx.senderAdr + tx.receiverAdr + to_string(tx.input.GetValue());
-    string txHash = sha256(hashInfo);
-    return txHash;
-}
