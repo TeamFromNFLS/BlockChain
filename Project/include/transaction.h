@@ -16,6 +16,10 @@ public:
     {
         _time = std::time(0);
     }
+    Transaction(string _receiverAdr) : receiverAdr(_receiverAdr)
+    {
+        _time = std::time(0);
+    }
     void SetID(int ID) { txID = ID; }
     bool IsCoinbase(){};
     int GetID() { return txID; }

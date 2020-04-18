@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "wallet.h"
 #include "rsa.h"
+#include "chain.h"
 #include "bigInt.h"
 #include "sha256.h"
 #include "ripemd160.h"
@@ -100,9 +101,11 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     transaction.input = _input;
     transaction.output = _output;
     Sign(transaction, get<1>(receiverInfo), _value);
-    //TODO: find prevTx and set ID
-    vector<Transaction> UTXOTx;
-    for (Transaction tx : UTXOTx)
+
+    /* determine prevTx */
+    vector<int> spentTxId = FindSpent();
+    vector<Transaction> CandidateTx = FindUTXO(spentTxId);
+    for (Transaction tx : CandidateTx)
     {
         if (tx.output.GetValue() == _value)
         {
@@ -112,6 +115,14 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         }
     }
 
+    Transaction::txPool.push_back(transaction);
+    Transaction::toBePackedTx.push_back(transaction);
+}
+
+void Wallet::CreateCoinbase()
+{
+    Transaction transaction(address); //as receiver
+    TxOutput _output(Transaction::mineReward, publicKeyHash);
     Transaction::txPool.push_back(transaction);
     Transaction::toBePackedTx.push_back(transaction);
 }
@@ -145,8 +156,19 @@ vector<int> Wallet::FindSpent()
     return spentTxID;
 }
 
-vector<Transaction> FindUTXO(vector<int> spentTxId)
+vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId)
 {
-    vector<Transaction> UTXOTxId;
-    //TODO: search blockchain
+    Chain chain;
+    vector<Transaction> UTXOTx;
+    vector<Transaction> chainTx = chain.GetTransaction();
+    vector<int>::iterator ret;
+    for (Transaction tx : chainTx)
+    {
+        ret = find(spentTxId.begin(), spentTxId.end(), tx.txID);
+        if (ret == spentTxId.end()) //not found
+        {
+            UTXOTx.push_back(tx);
+        }
+    }
+    return UTXOTx;
 }

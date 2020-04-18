@@ -14,3 +14,11 @@ string Transaction::GetTxHash()
     string txHash = sha256(hashInfo);
     return txHash;
 }
+
+bool Transaction::IsCoinbase()
+{
+    if (input.GetPrevID() == -1 && input.GetValue() == 0)
+    {
+        return true;
+    }
+}

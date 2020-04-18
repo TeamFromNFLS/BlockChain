@@ -30,11 +30,11 @@ protected:
     /* create transaction */
 public:
     void CreateTransaction(pair<string, string> receiverInfo, int _value);
+    void CreateCoinbase();
     void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
     vector<int> FindSpent();
     vector<Transaction> FindUTXO(vector<int> spentTxId);
     void SetID(){};
-    bool isCoinbase(){};
 };
 
 #endif //WALLET_H
