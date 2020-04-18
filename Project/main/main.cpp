@@ -19,10 +19,8 @@ void TestPowMod();
 void TestMine();
 int main()
 {
-     vector<int> a;
-     vector<int> b(8, 0);
-     a.insert(a.end(), b.begin(), b.end());
-     cout << a.size() << endl;
-
+     Block *p = blockChain.GetLastBlock();
+     p->show();
+     cout << Chain::GetCoinBaseIndex() << endl;
      return 0;
 }

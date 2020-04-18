@@ -6,17 +6,16 @@
 #include <ctime>
 #include "transaction.h"
 
+class Chain;
 class Block
 {
 public:
-    void init();
-    Block() : nonce(1)
+    friend Chain;
+    void Pack(vector<Transaction> &vec);
+    Block();
+    Block(int _nonce, int difficulty, vector<Transaction> &vec) : difficultyTarget(difficulty), nonce(_nonce)
     {
-        init();
-    }
-    Block(int _nonce) : nonce(_nonce)
-    {
-        init();
+        Pack(vec);
     }
     Block(const Block &p) : preBlockHash(p.preBlockHash),
                             merkleRoot(p.merkleRoot),
@@ -28,7 +27,7 @@ public:
     {
         difficultyTarget = difficulty;
     }
-    void SetNonce(uint32_t _nonce)
+    void SetNonce(int _nonce)
     {
         nonce = _nonce;
     }
@@ -44,37 +43,39 @@ public:
     Block *preBlock = nullptr;
 
 private:
-    uint32_t version = 0x00;
+    int version = 0x00;
     std::string preBlockHash;
     std::string merkleRoot;
     time_t time;
-    uint32_t difficultyTarget;
-    uint32_t height;
-    uint32_t nonce;
+    int difficultyTarget;
+    int height;
+    int nonce;
 
 public:
-    bool AddTransactionSet(vector<Transaction> &add)
+    bool AddTransactionSet(std::vector<Transaction> &add)
     {
         transactionSet.insert(transactionSet.end(), add.begin(), add.end());
         numTransactions += add.size();
         return true;
     }
-    bool GetTransactionSet(vector<Transaction> &result)
+    bool GetTransactionSet(std::vector<Transaction> &result)
     {
         result.assign(transactionSet.begin(), transactionSet.end());
         return true;
     }
-
-private:
-    uint64_t numTransactions = 0;
-    vector<Transaction> transactionSet;
     struct node
     {
         std::string TransactionHash;
         node *leftTree;
         node *rightTree;
+        node *father;
+    };
+    static node *CreateTree(std::vector<Transaction> &vec);
 
-    } merkleTree;
+private:
+    uint64_t numTransactions = 0;
+    std::vector<Transaction> transactionSet;
+    node *merkleTree;
 };
 
 #endif //BLOCK_H

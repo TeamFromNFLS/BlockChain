@@ -6,8 +6,9 @@
 class Chain
 {
 public:
-    Chain(){};
+    Chain();
     Chain(const Chain &p) : difficulty(p.difficulty), end(p.end){};
+
     Block *GetLastBlock()
     {
         return end;
@@ -18,13 +19,23 @@ public:
         newBlockPoint->preBlock = end;
         end = newBlockPoint;
     }
-    void SetDifficulty(uint32_t difficultyTarget);
-    vector<Transaction> GetTransaction();
+    void SetDifficulty(int difficultyTarget)
+    {
+        difficulty = difficultyTarget;
+    }
+    int GetDifficulty()
+    {
+        return difficulty;
+    }
+    static string GetCoinBaseIndex();
+    static vector<Transaction> GetTransaction();
     void print();
 
 private:
-    uint32_t difficulty = 0;
+    int difficulty = 0;
     Block *end = nullptr;
 };
+
+extern Chain blockChain;
 
 #endif //CHAIN_H
