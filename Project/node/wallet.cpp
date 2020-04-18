@@ -145,7 +145,7 @@ vector<int> Wallet::FindSpent()
     return spentTxID;
 }
 
-vector<Transaction> FindUTXO(vector<int> spentTxId)
+vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId)
 {
     vector<Transaction> UTXOTxId;
     //TODO: search blockchain

@@ -19,13 +19,13 @@ public:
         return make_tuple(publicKey, n, address);
     }
     static vector<pair<string, string>> walletInfo;
+    static string Base58(string s);
 
 protected:
     BigInt privateKey, publicKey, n;
     string publicKeyHash;
     string address;
     string version = "00";
-    string Base58(string s);
 
     /* create transaction */
 public:

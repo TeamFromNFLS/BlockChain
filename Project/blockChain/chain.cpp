@@ -2,6 +2,21 @@
 #include <cstdlib>
 #include "chain.h"
 #include "block.h"
+#include "wallet.h"
+
+using namespace std;
+Block coinBase;
+Chain blockChain;
+
+Chain::Chain()
+{
+    coinBase.preBlockHash = "0";
+    coinBase.merkleRoot = "0";
+    coinBase.difficultyTarget = 0;
+    coinBase.height = 1;
+    coinBase.nonce = 0;
+    end = &coinBase;
+}
 
 void Chain::print()
 {
@@ -13,15 +28,10 @@ void Chain::print()
     }
 }
 
-void Chain::SetDifficulty(uint32_t difficultyTarget)
-{
-    difficulty = difficultyTarget;
-}
-
 vector<Transaction> Chain::GetTransaction()
 {
     vector<Transaction> result;
-    Block *now = end;
+    Block *now = blockChain.end;
     while (now != nullptr)
     {
         vector<Transaction> tmp;
@@ -29,5 +39,17 @@ vector<Transaction> Chain::GetTransaction()
         result.insert(result.end(), tmp.begin(), tmp.end());
         now = now->preBlock;
     }
+    return result;
+}
+
+string Chain::GetCoinBaseIndex()
+{
+    Block *now = blockChain.end;
+    while (now->preBlock != nullptr)
+    {
+        now = now->preBlock;
+    }
+    string result;
+    result = Wallet::Base58(now->GetHash());
     return result;
 }
