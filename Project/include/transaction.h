@@ -3,10 +3,12 @@
 #include "bigInt.h"
 #include "txInput.h"
 #include "txOutput.h"
+#include <iostream>
 #include <string>
 #include <vector>
 #include <ctime>
 
+using namespace std;
 class Transaction
 {
 public:

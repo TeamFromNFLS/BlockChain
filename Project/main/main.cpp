@@ -12,17 +12,17 @@
 #include "sha256.h"
 #include "ripemd160.h"
 #include "block.h"
+#include "chain.h"
 using namespace std;
 
 void TestPowMod();
 void TestMine();
 int main()
 {
-     RSA a;
+     vector<int> a;
+     vector<int> b(8, 0);
+     a.insert(a.end(), b.begin(), b.end());
+     cout << a.size() << endl;
 
-     a.Init(1);
-     a.CreateKeys();
-
-     Wallet b(1);
      return 0;
 }

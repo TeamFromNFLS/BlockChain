@@ -7,6 +7,7 @@
 #include "txInput.h"
 #include "txOutput.h"
 
+using namespace std;
 class Wallet
 {
 public:
@@ -32,8 +33,8 @@ public:
     void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
     vector<int> FindSpent();
     vector<Transaction> FindUTXO(vector<int> spentTxId);
-    void SetID();
-    bool isCoinbase();
+    void SetID(){};
+    bool isCoinbase(){};
 };
 
 #endif //WALLET_H
