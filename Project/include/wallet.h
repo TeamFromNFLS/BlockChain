@@ -35,6 +35,7 @@ public:
     vector<Transaction> FindUTXO(vector<int> spentTxId);
     void SetID(){};
     bool isCoinbase(){};
+    string GetTxHash(const Transaction &transaction);
 };
 
 #endif //WALLET_H
