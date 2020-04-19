@@ -158,9 +158,8 @@ vector<int> Wallet::FindSpent()
 
 vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId)
 {
-    Chain chain;
     vector<Transaction> UTXOTx;
-    vector<Transaction> chainTx = chain.GetTransaction();
+    vector<Transaction> chainTx = Chain::GetTransaction();
     vector<int>::iterator ret;
     for (Transaction tx : chainTx)
     {
