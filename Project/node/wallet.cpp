@@ -42,7 +42,7 @@ BigInt ToInt(string s)
 }
 
 const string Base58String = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-string Wallet::Base58(string s)
+string Base58(string s)
 {
     BigInt x = ToInt(s), base("58");
     string result;
@@ -89,6 +89,7 @@ void Wallet::Init(int worker)
 Wallet::Wallet(int worker)
 {
     Init(worker);
+    cout << "Wallet created" << endl;
 }
 
 //00c94696460043b120981f922acd5f3bccefe1a5fdd6d4
@@ -100,23 +101,30 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     TxOutput _output(_value, get<1>(receiverInfo));
     transaction.input = _input;
     transaction.output = _output;
-    Sign(transaction, get<1>(receiverInfo), _value);
 
     /* determine prevTx */
     vector<int> spentTxId = FindSpent();
     vector<Transaction> CandidateTx = FindUTXO(spentTxId);
-    for (Transaction tx : CandidateTx)
+    if (!CandidateTx.size())
     {
-        if (tx.output.GetValue() == _value)
-        {
-            transaction.input.SetPrevID(tx.GetID());
-            transaction.SetID(tx.GetID() + 1);
-            break;
-        }
+        cout << "Transaction construction failed. No available coins." << endl;
     }
-
-    Transaction::txPool.push_back(transaction);
-    Transaction::toBePackedTx.push_back(transaction);
+    else
+    {
+        for (Transaction tx : CandidateTx)
+        {
+            if (tx.output.GetValue() == _value)
+            {
+                transaction.input.SetPrevID(tx.GetID());
+                transaction.SetID(tx.GetID() + 1);
+                break;
+            }
+        }
+        Sign(transaction, get<1>(receiverInfo), _value);
+        Transaction::txPool.push_back(transaction);
+        Transaction::toBePackedTx.push_back(transaction);
+        cout << "Transaction constructed at " << transaction._time << endl;
+    }
 }
 
 void Wallet::CreateCoinbase()
@@ -125,6 +133,7 @@ void Wallet::CreateCoinbase()
     TxOutput _output(Transaction::mineReward, publicKeyHash);
     Transaction::txPool.push_back(transaction);
     Transaction::toBePackedTx.push_back(transaction);
+    cout << "Coinbase transaction constructed at " << transaction._time << endl;
 }
 
 void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
@@ -136,6 +145,7 @@ void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
         BigInt _signature = rsa.EncryptByPrivate(signInfo, privateKey, n);
         tx.input.signature = _signature;
     }
+    cout << "Digital signature created." << endl;
 }
 
 vector<int> Wallet::FindSpent()

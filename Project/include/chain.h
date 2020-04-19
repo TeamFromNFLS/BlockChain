@@ -1,7 +1,8 @@
 #ifndef CHAIN_H
 #define CHAIN_H
 #include <vector>
-#include "Block.h"
+#include "block.h"
+#include "miner.h"
 
 class Chain
 {
@@ -29,6 +30,7 @@ public:
     }
     static string GetCoinBaseIndex();
     static vector<Transaction> GetTransaction();
+    static vector<Miner> minerSet;
     void print();
 
 private:

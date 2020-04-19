@@ -90,8 +90,10 @@ void RSA::Init(int worker)
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
     //auto st = clock();
+    cout << "loading . . ." << endl;
     p = CreatePrime(worker);
     q = CreatePrime(worker);
+    cout << "Prime numbers found" << endl;
     product = p * q;
     p = p - BigInt::one, q = q - BigInt::one;
     //欧拉数
@@ -329,6 +331,7 @@ void RSA::CreateKeys()
     publicKey = 65537;
     privateKey = BigInt::one;
     Extgcd(publicKey, Euler, privateKey);
+    cout << "Key pair generated" << endl;
     //cout << publicKey << endl
     //     << privateKey << endl;
 }
@@ -339,6 +342,7 @@ BigInt RSA::EncryptByPublic(const BigInt &num, const BigInt &key, const BigInt &
 {
     BigInt b4encrypt = num, exponent = key, mod = N;
     BigInt encrypted = BigInt::PowMod(b4encrypt, exponent, mod);
+    cout << "Data encrypted" << endl;
     return encrypted;
 }
 
@@ -352,6 +356,7 @@ BigInt RSA::DecryptByPrivate(const BigInt &num, const BigInt &key, const BigInt 
 {
     BigInt b4decrypt = num, exponent = key, mod = N;
     BigInt decrypted = BigInt::PowMod(b4decrypt, exponent, mod);
+    cout << "Data decrypted" << endl;
     return decrypted;
 }
 

@@ -19,7 +19,6 @@ public:
         return make_tuple(publicKey, n, address);
     }
     static vector<pair<string, string>> walletInfo;
-    static string Base58(string s);
 
 protected:
     BigInt privateKey, publicKey, n;
@@ -34,7 +33,8 @@ public:
     void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
     vector<int> FindSpent();
     vector<Transaction> FindUTXO(vector<int> spentTxId);
-    void SetID(){};
 };
+
+string Base58(string s);
 
 #endif //WALLET_H

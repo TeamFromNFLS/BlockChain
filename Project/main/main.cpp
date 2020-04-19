@@ -19,8 +19,6 @@ void TestPowMod();
 void TestMine();
 int main()
 {
-     Block *p = blockChain.GetLastBlock();
-     p->show();
-     cout << Chain::GetCoinBaseIndex() << endl;
+     TestMine();
      return 0;
 }

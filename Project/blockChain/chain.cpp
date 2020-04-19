@@ -1,12 +1,16 @@
 #include <iostream>
 #include <cstdlib>
+#include <vector>
 #include "chain.h"
 #include "block.h"
 #include "wallet.h"
+#include "miner.h"
 
 using namespace std;
+
 Block coinBase;
 Chain blockChain;
+vector<Miner> Chain::minerSet;
 
 Chain::Chain()
 {
@@ -50,6 +54,6 @@ string Chain::GetCoinBaseIndex()
         now = now->preBlock;
     }
     string result;
-    result = Wallet::Base58(now->GetHash());
+    result = Base58(now->GetHash());
     return result;
 }

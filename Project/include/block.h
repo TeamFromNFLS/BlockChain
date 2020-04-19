@@ -23,7 +23,7 @@ public:
                             difficultyTarget(p.difficultyTarget),
                             height(p.height),
                             nonce(p.nonce){};
-    void SetDifficultyTarget(uint32_t difficulty)
+    void SetDifficultyTarget(int difficulty)
     {
         difficultyTarget = difficulty;
     }
@@ -70,7 +70,7 @@ public:
         node *rightTree;
         node *father;
     };
-    static node *CreateTree(std::vector<Transaction> &vec);
+    //static node *CreateTree(std::vector<Transaction> &vec);
 
 private:
     uint64_t numTransactions = 0;

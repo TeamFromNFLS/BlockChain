@@ -4,6 +4,7 @@
 #include <ctime>
 #include <queue>
 #include <random>
+#include "chain.h"
 #include "block.h"
 #include "sha256.h"
 #include "transaction.h"
@@ -25,10 +26,6 @@ Block::Block()
     time = std::time(0);
 }
 
-void Block::Pack(vector<Transaction> &vec)
-{
-    return;
-}
 string Block::GetHash()
 {
     string s;
@@ -78,4 +75,15 @@ Block::node *CreateTree(vector<Transaction> &vec)
         q.push(next);
     }
     return next;
+}
+
+void Block::Pack(vector<Transaction> &vec)
+{
+    AddTransactionSet(vec);
+    preBlock = blockChain.GetLastBlock();
+    preBlockHash = preBlock->GetHash();
+    height = preBlock->height + 1;
+    merkleRoot = CreateTree(transactionSet)->TransactionHash;
+    time = std::time(0);
+    return;
 }
