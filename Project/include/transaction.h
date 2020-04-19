@@ -17,7 +17,7 @@ public:
         _time = std::time(0);
     }
     void SetID(int ID) { txID = ID; }
-    bool IsCoinbase(){};
+    bool IsCoinbase() { return true; };
     int GetID() { return txID; }
     string GetTxHash();
 

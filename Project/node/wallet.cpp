@@ -41,7 +41,7 @@ BigInt ToInt(string s)
 }
 
 const string Base58String = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-string Wallet::Base58(string s)
+string Base58(string s)
 {
     BigInt x = ToInt(s), base("58");
     string result;

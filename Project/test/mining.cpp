@@ -12,6 +12,7 @@
 #include "sha256.h"
 #include "ripemd160.h"
 #include "block.h"
+#include "chain.h"
 using namespace std;
 
 void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
@@ -24,7 +25,7 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
     id = *i;
     numberWorker = *worker;
     mutex->unlock();
-    bool flag;
+    bool flag, cntFlag;
     bool checkFlag = false;
     while (true)
     {
@@ -63,13 +64,15 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
         if (now.PoW(nonce))
         {
             mutex->lock();
+            Block found;
             now.SetNonce(nonce);
             *foundFlag = true;
-            *toCheck = now.GetBlock();
+            *toCheck = found;
             *output = id;
             mutex->unlock();
         }
         nonce++;
+        //cout << nonce << endl;
     }
 }
 void TestMine()
@@ -94,5 +97,6 @@ void TestMine()
         }
     }
     toCheck.show();
+    cout << Chain::minerSet.size() << endl;
     cout << output << endl;
 }
