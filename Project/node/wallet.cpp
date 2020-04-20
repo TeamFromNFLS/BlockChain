@@ -52,6 +52,10 @@ string Base58(string s)
         /*BigInt tmp = x % base;
         cout << tmp << endl;*/
         (x % base).GetNumber(now);
+        if (now.empty())
+        {
+            now.push_back(0);
+        }
         result += Base58String[now[0]];
         x /= base;
     }
@@ -83,13 +87,13 @@ void Wallet::Init(int worker)
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
-    cout << address << endl;
+    cout << "Complete. Address: " << address << endl;
 }
 
 Wallet::Wallet(int worker)
 {
+    cout << "Creating a new wallet. Please wait..." << endl;
     Init(worker);
-    cout << "Wallet created" << endl;
 }
 
 //00c94696460043b120981f922acd5f3bccefe1a5fdd6d4

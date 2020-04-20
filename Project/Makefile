@@ -5,7 +5,7 @@ SUBDIRS=$(shell ls -l | grep ^d | awk '{if($$9 != "debug") print $$9}')
 #无需下一行的注释代码，因为我们已经知道debug里的makefile是最后执行的，所以最后直接去debug目录下执行指定的makefile文件就行，具体下面有注释
 #DEBUG=$(shell ls -l | grep ^d | awk '{if($$9 == "debug") print $$9}')
 #记住当前工程的根目录路径
-ROOT_DIR=$(PWD)
+ROOT_DIR=$(shell pwd)
 #最终bin文件的名字，可以更改为自己需要的
 BIN=test
 #目标文件所在的目录
@@ -30,7 +30,7 @@ ECHO:
 	@echo $(SUBDIRS)
 #将c文件编译为o文件，并放在指定放置目标文件的目录中即OBJS_DIR
 $(CUR_OBJS):%.o:%.cpp
-	$(CC) -c $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@
+	$(CC) -c $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@ 
 CLEAN:
 	@rm $(OBJS_DIR)/*.o
 	@rm -rf $(BIN_DIR)/*

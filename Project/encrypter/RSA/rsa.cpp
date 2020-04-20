@@ -5,7 +5,6 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
-#include <windows.h>
 #include <vector>
 #include <random>
 #include <thread>

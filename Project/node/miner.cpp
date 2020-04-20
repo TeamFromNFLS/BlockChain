@@ -4,6 +4,7 @@
 
 Miner::Miner(int worker)
 {
+    cout << "Creating a new miner, please wait..." << endl;
     Init(worker);
     Chain::minerSet.push_back(*this);
 }
