@@ -19,6 +19,9 @@ void TestPowMod();
 void TestMine();
 int main()
 {
-     TestMine();
+     RSA a, b, c;
+     a.Init(1);
+     b.Init(1);
+     c.Init(1);
      return 0;
 }

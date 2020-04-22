@@ -88,7 +88,7 @@ void RSA::Init(int worker)
 {
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
-    //auto st = clock();
+    auto st = clock();
     cout << "loading . . ." << endl;
     p = CreatePrime(worker);
     q = CreatePrime(worker);
@@ -98,11 +98,11 @@ void RSA::Init(int worker)
     //欧拉数
     Euler = p * q;
     p = p + BigInt::one, q = q + BigInt::one;
-    /*auto ed = clock();
+    auto ed = clock();
     cout << p << endl
          << q << endl
          << Euler << endl;
-    cout << "time:" << dec << ed - st << endl;*/
+    cout << "time:" << dec << ed - st << endl;
 }
 
 bool RSA::IsPrime(const BigInt &num, int k)
