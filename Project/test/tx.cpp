@@ -18,7 +18,7 @@ using namespace std;
 
 /* Assume transactions are packed immediately after they are constructed.
 Packed transactions are stored in Transaction::packedTx */
-int main()
+/* int main()
 {
     Wallet a(1), b(1);
 
@@ -27,3 +27,4 @@ int main()
 
     return 0;
 }
+ */

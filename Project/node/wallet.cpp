@@ -87,7 +87,10 @@ void Wallet::Init(int worker)
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
-    cout << "Complete. Address: " << address << endl;
+    cout << "Complete. Address: " << address << endl
+         << publicKey << endl
+         << privateKey << endl
+         << n << endl;
 }
 
 Wallet::Wallet(int worker)
@@ -167,6 +170,11 @@ void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
         RSA rsa;
         BigInt signInfo(publicKeyHash + receiverPublicKeyHash + to_string(_value));
         BigInt _signature = rsa.EncryptByPrivate(signInfo, privateKey, n);
+        BigInt _decrypt = rsa.DecryptByPublic(_signature, privateKey, n);
+        cout << "------------------------------------------" << endl
+             << "Signature information:" << signInfo << endl
+             << "Decrypted: " << _decrypt << endl
+             << "------------------------------------------" << endl;
         tx.input.signature = _signature;
     }
     cout << "Digital signature created." << endl;

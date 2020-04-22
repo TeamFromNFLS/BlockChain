@@ -24,6 +24,19 @@ int main()
 
      a.CreateCoinbase();
      a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
+     /* RSA a;
+     BigInt p, q;
+     while (cin >> p >> q)
+     {
+          a.setNumber(p, q);
+          a.CreateKeys();
+          tuple<BigInt, BigInt, BigInt> key = a.GetKey();
+          cout << get<0>(key) << " " << get<1>(key) << " " << get<2>(key) << endl;
+          BigInt encrypt = a.EncryptByPrivate(123, get<1>(key), get<2>(key));
+          BigInt decrypt = a.DecryptByPublic(encrypt, get<0>(key), get<2>(key));
+          cout << encrypt << endl
+               << decrypt;
+     } */
 
      return 0;
 }

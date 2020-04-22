@@ -101,8 +101,9 @@ void RSA::Init(int worker)
     auto ed = clock();
     cout << p << endl
          << q << endl
-         << Euler << endl;
-    cout << "time:" << dec << ed - st << endl;
+         << Euler << endl
+         << product << endl;
+    //cout << "time:" << dec << ed - st << endl;
 }
 
 bool RSA::IsPrime(const BigInt &num, int k)
@@ -372,9 +373,9 @@ void RSA::setNumber(BigInt a, BigInt b)
     p = a;
     q = b;
     product = p * q;
-    p -= 1;
-    q -= 1;
+    p -= BigInt::one;
+    q -= BigInt::one;
     Euler = p * q;
-    p += 1;
-    q += 1;
+    p += BigInt::one;
+    q += BigInt::one;
 }
