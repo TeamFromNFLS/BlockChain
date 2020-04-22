@@ -34,6 +34,7 @@ public:
     static int mineReward;
     static vector<Transaction> txPool;
     static vector<Transaction> toBePackedTx;
+    static vector<Transaction> packedTx;
 };
 
 #endif

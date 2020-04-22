@@ -111,7 +111,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     }
     else
     {
-        for (Transaction tx : CandidateTx)
+        for (Transaction &tx : CandidateTx)
         {
             if (tx.output.GetValue() == _value)
             {
@@ -123,7 +123,14 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         Sign(transaction, get<1>(receiverInfo), _value);
         Transaction::txPool.push_back(transaction);
         Transaction::toBePackedTx.push_back(transaction);
-        cout << "Transaction constructed at " << transaction._time << endl;
+        Transaction::packedTx.push_back(transaction);
+        cout << "Transaction constructed by " << address << endl;
+        cout << "Transaction log: " << endl
+             << "Value: " << transaction.output.GetValue() << endl
+             << "ID: " << transaction.GetID() << endl
+             << "Transaction Hash: " << transaction.GetTxHash() << endl
+             << "PrevTx ID: " << transaction.input.GetPrevID() << endl
+             << "Signature: " << transaction.input.signature << endl;
     }
 }
 
@@ -133,7 +140,8 @@ void Wallet::CreateCoinbase()
     TxOutput _output(Transaction::mineReward, publicKeyHash);
     Transaction::txPool.push_back(transaction);
     Transaction::toBePackedTx.push_back(transaction);
-    cout << "Coinbase transaction constructed at " << transaction._time << endl;
+    Transaction::packedTx.push_back(transaction);
+    cout << "Coinbase transaction constructed" << endl;
 }
 
 void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
@@ -151,7 +159,7 @@ void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
 vector<int> Wallet::FindSpent()
 {
     vector<int> spentTxID;
-    for (Transaction tx : Transaction::txPool)
+    for (Transaction &tx : Transaction::txPool)
     {
         if (tx.IsCoinbase())
         {
@@ -169,9 +177,9 @@ vector<int> Wallet::FindSpent()
 vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId)
 {
     vector<Transaction> UTXOTx;
-    vector<Transaction> chainTx = Chain::GetTransaction();
+    //vector<Transaction> chainTx = Chain::GetTransaction();
     vector<int>::iterator ret;
-    for (Transaction tx : chainTx)
+    for (Transaction &tx : Transaction::packedTx)
     {
         ret = find(spentTxId.begin(), spentTxId.end(), tx.txID);
         if (ret == spentTxId.end()) //not found

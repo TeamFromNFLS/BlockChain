@@ -3,6 +3,7 @@
 #include <cstring>
 #include <random>
 #include <ctime>
+#include <windows.h>
 #include <thread>
 #include <mutex>
 #include <vector>
@@ -19,6 +20,12 @@ void TestPowMod();
 void TestMine();
 int main()
 {
-     TestMine();
+     Wallet a(1), b(1), c(1);
+
+     a.CreateCoinbase();
+     cout << get<0>(Wallet::walletInfo[1]) << endl
+          << get<1>(Wallet::walletInfo[1]);
+     a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
+
      return 0;
 }
