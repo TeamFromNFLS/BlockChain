@@ -99,9 +99,6 @@ void RSA::Init(int worker)
     Euler = p * q;
     p = p + BigInt::one, q = q + BigInt::one;
     auto ed = clock();
-    cout << p << endl
-         << q << endl
-         << Euler << endl;
     cout << "time:" << dec << ed - st << endl;
 }
 

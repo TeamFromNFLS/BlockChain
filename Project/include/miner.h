@@ -22,5 +22,6 @@ public:
 protected:
     int nonce = 1;
     int difficultyTarget;
+    Block stored;
 };
 #endif //MINER_H

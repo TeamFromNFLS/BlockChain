@@ -32,7 +32,6 @@ public:
         check();
     }
     ~BigInt(){};
-    //operator int();
     BigInt(const int &x);                       // implicit type change from int to BigInt
     void SetNumber(string s);                   // use a string to initialize and adjust the number
     bool GetNumber(vector<uint64_t> &vec) const // use another vector to contain the number
@@ -68,6 +67,7 @@ public:
     static const BigInt zero;
     static const BigInt one;
     static const BigInt two;
+    static BigInt ToInt(string s);
 
 private:
     /*The LSB of number[0] means one place, and so on*/

@@ -3,7 +3,6 @@
 #include <cstring>
 #include <random>
 #include <ctime>
-#include <windows.h>
 #include <thread>
 #include <mutex>
 #include <vector>
@@ -18,12 +17,10 @@ using namespace std;
 
 /* Assume transactions are packed immediately after they are constructed.
 Packed transactions are stored in Transaction::packedTx */
-int main()
+void TxTest()
 {
     Wallet a(1), b(1);
 
     a.CreateCoinbase();
     a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
-
-    return 0;
 }

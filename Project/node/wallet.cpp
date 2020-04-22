@@ -15,36 +15,10 @@
 #include "txOutput.h"
 using namespace std;
 
-BigInt ToInt(string s)
-{
-    vector<uint64_t> result;
-    int len = s.length();
-    uint64_t cnt = 0;
-    for (int i = len - 1; i >= 0; --i)
-    {
-        if (!cnt)
-        {
-            result.push_back(0);
-        }
-        uint64_t now;
-        if (s[i] >= 'a' && s[i] <= 'z')
-        {
-            now = s[i] - 'a' + 10;
-        }
-        else
-        {
-            now = s[i] - '0';
-        }
-        result.back() += now * (uint64_t)pow(UINT64_C(16), cnt);
-        cnt = (cnt + 1) % 16;
-    }
-    return BigInt(result);
-}
-
 const string Base58String = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 string Base58(string s)
 {
-    BigInt x = ToInt(s), base("58");
+    BigInt x = BigInt::ToInt(s), base("58");
     string result;
     vector<uint64_t> now;
     while (x > BigInt::zero)
