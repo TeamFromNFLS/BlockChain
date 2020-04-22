@@ -19,11 +19,13 @@ using namespace std;
 Packed transactions are stored in Transaction::packedTx */
 int main()
 {
-     Wallet a(1), b(1);
+     /*Wallet a(1), b(1);
      a.CreateCoinbase();
      a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
      cout << Transaction::toBePackedTx.size() << endl;
      Block c(1, 2, Transaction::toBePackedTx);
-     c.show();
+     c.show();*/
+     BigInt a("0x123456");
+     cout << a << endl;
      return 0;
 }
