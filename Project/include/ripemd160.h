@@ -29,7 +29,7 @@ typedef unsigned long dword;
 
 /* if this line causes a compiler error,
 adapt the defintion of dword above */
-typedef int the_correct_size_was_chosen[sizeof(dword) == 4 ? 1 : -1];
+//typedef int the_correct_size_was_chosen[sizeof(dword) == 4 ? 1 : -1];
 
 /********************************************************************/
 

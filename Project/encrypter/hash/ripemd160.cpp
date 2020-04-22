@@ -20,6 +20,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
 #include "ripemd160.h"
 
 #define RMDsize 160
@@ -319,12 +322,13 @@ std::string rmd160(std::string s)
     byte *b = (byte *)s.c_str();
     byte *hashcode = RMD(b);
     char ret[41] = {};
+    std::string result;
     for (int j = 0; j < RMDsize / 8; j++)
     {
-        char c[5];
-        sprintf_s(c, "%02x", hashcode[j]);
-        strcat_s(ret, c);
+        int tmp = hashcode[j];
+        std::stringstream ss;
+        ss << std::hex << std::setw(2) << std::setfill('0') << tmp;
+        result += ss.str();
     }
-    std::string result = ret;
     return result;
 }

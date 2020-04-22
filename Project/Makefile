@@ -30,7 +30,7 @@ ECHO:
 	@echo $(SUBDIRS)
 #将c文件编译为o文件，并放在指定放置目标文件的目录中即OBJS_DIR
 $(CUR_OBJS):%.o:%.cpp
-	$(CC) -c $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@
+	$(CC) -c $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@ 
 CLEAN:
 	@rm $(OBJS_DIR)/*.o
 	@rm -rf $(BIN_DIR)/*

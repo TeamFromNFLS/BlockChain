@@ -16,16 +16,19 @@
 #include "chain.h"
 using namespace std;
 
-void TestPowMod();
-void TestMine();
+/* void TestPowMod();
+void TestMine(); */
 int main()
 {
-     Wallet a(1), b(1), c(1);
+     //Wallet a(1), b(1);
+     RSA rsa1, rsa2;
+     rsa1.Init(1);
+     rsa2.Init(1);
 
-     a.CreateCoinbase();
+     /* a.CreateCoinbase();
      cout << get<0>(Wallet::walletInfo[1]) << endl
           << get<1>(Wallet::walletInfo[1]);
-     a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
+     a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward); */
 
      return 0;
 }
