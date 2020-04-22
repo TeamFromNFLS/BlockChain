@@ -171,8 +171,10 @@ bool RSA::IsPrime(const BigInt &num, int k)
 BigInt RSA::CreateRandom(int isOdd)
 {
     vector<uint64_t> random(8, 0);
+    //auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
     mt19937 rng;
     random_device ranDev;
+    //cout << ranDev() << endl;
     rng.seed(ranDev());
     uniform_int_distribution<uint64_t> largest(UINT64_C(1) << 63, UINT64_MAX); // create a random number in the range of 2^63 - 2^64 - 1 as the largest block of random
     uniform_int_distribution<uint64_t> middle(0, UINT64_MAX);                  // create a random uint64 number

@@ -20,14 +20,10 @@ using namespace std;
 Packed transactions are stored in Transaction::packedTx */
 int main()
 {
-<<<<<<< HEAD
-     Wallet a(1), b(1), c(1);
-=======
-     Wallet a(1), b(1);
+    Wallet a(1), b(1);
 
-     a.CreateCoinbase();
-     a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
+    a.CreateCoinbase();
+    a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
 
->>>>>>> 6249ba86fde2613ad61539094cb89ca45353f327
-     return 0;
+    return 0;
 }

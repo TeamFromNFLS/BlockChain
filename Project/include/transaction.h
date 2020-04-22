@@ -20,7 +20,7 @@ public:
     {
         _time = std::time(0);
     }
-    void SetID(int ID) { txID = ID; }
+    void SetID();
     bool IsCoinbase();
     int GetID() { return txID; }
     string GetTxHash();
@@ -34,6 +34,7 @@ public:
     static int mineReward;
     static vector<Transaction> txPool;
     static vector<Transaction> toBePackedTx;
+    static vector<Transaction> packedTx;
 };
 
 #endif

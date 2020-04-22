@@ -6,6 +6,12 @@
 int Transaction::mineReward = 5; //to be set
 vector<Transaction> Transaction::txPool;
 vector<Transaction> Transaction::toBePackedTx;
+vector<Transaction> Transaction::packedTx;
+
+void Transaction::SetID()
+{
+    txID = input.GetPrevID() + 1;
+}
 
 string Transaction::GetTxHash()
 {
