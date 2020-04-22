@@ -19,9 +19,6 @@ void TestPowMod();
 void TestMine();
 int main()
 {
-     RSA a, b, c;
-     a.Init(1);
-     b.Init(1);
-     c.Init(1);
+     Wallet a(1), b(1), c(1);
      return 0;
 }
