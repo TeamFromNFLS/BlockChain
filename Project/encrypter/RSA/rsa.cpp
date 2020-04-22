@@ -92,7 +92,7 @@ void RSA::Init(int worker)
     cout << "loading . . ." << endl;
     p = CreatePrime(worker);
     q = CreatePrime(worker);
-    cout << "Prime numbers found." << endl;
+    cout << "Prime numbers found" << endl;
     product = p * q;
     p = p - BigInt::one, q = q - BigInt::one;
     //欧拉数
@@ -100,7 +100,8 @@ void RSA::Init(int worker)
     p = p + BigInt::one, q = q + BigInt::one;
     auto ed = clock();
     cout << p << endl
-         << q << endl;
+         << q << endl
+         << Euler << endl;
     cout << "time:" << dec << ed - st << endl;
 }
 
@@ -170,8 +171,10 @@ bool RSA::IsPrime(const BigInt &num, int k)
 BigInt RSA::CreateRandom(int isOdd)
 {
     vector<uint64_t> random(8, 0);
+    //auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
     mt19937 rng;
     random_device ranDev;
+    //cout << ranDev() << endl;
     rng.seed(ranDev());
     uniform_int_distribution<uint64_t> largest(UINT64_C(1) << 63, UINT64_MAX); // create a random number in the range of 2^63 - 2^64 - 1 as the largest block of random
     uniform_int_distribution<uint64_t> middle(0, UINT64_MAX);                  // create a random uint64 number

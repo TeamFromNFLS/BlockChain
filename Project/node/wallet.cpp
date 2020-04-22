@@ -120,7 +120,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
             if (tx.output.GetValue() == _value)
             {
                 transaction.input.SetPrevID(tx.GetID());
-                transaction.SetID(tx.GetID() + 1);
+                transaction.SetID();
                 break;
             }
         }
@@ -128,24 +128,36 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         Transaction::txPool.push_back(transaction);
         Transaction::toBePackedTx.push_back(transaction);
         Transaction::packedTx.push_back(transaction);
-        cout << "Transaction constructed by " << address << endl;
+        cout << "Transaction constructed by " << address << endl
+             << "------------------------------------------" << endl;
         cout << "Transaction log: " << endl
+             << "Receiver Address: " << get<0>(receiverInfo) << endl
              << "Value: " << transaction.output.GetValue() << endl
              << "ID: " << transaction.GetID() << endl
-             << "Transaction Hash: " << transaction.GetTxHash() << endl
+             //<< "Transaction Hash: " << transaction.GetTxHash() << endl
              << "PrevTx ID: " << transaction.input.GetPrevID() << endl
-             << "Signature: " << transaction.input.signature << endl;
+             << "Signature: " << transaction.input.signature << endl
+             << "------------------------------------------" << endl;
     }
 }
 
 void Wallet::CreateCoinbase()
 {
-    Transaction transaction(address); //as receiver
+    Transaction transaction("null", address); //as receiver
     TxOutput _output(Transaction::mineReward, publicKeyHash);
+    transaction.output = _output;
+    transaction.SetID();
     Transaction::txPool.push_back(transaction);
     Transaction::toBePackedTx.push_back(transaction);
     Transaction::packedTx.push_back(transaction);
-    cout << "Coinbase transaction constructed" << endl;
+    cout << "Coinbase transaction constructed." << endl
+         << "------------------------------------------" << endl;
+    cout << "Transaction log: " << endl
+         << "Receiver Address: " << address << endl
+         << "Value: " << transaction.output.GetValue() << endl
+         << "ID: " << transaction.GetID() << endl
+         << "PrevTx ID: " << transaction.input.GetPrevID() << endl
+         << "------------------------------------------" << endl;
 }
 
 void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)

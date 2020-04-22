@@ -7,7 +7,7 @@
 #include "bigInt.h"
 using namespace std;
 
-class KeyPair
+/* class KeyPair
 {
 public:
     KeyPair(BigInt _exponent, BigInt _mod) : exponent(_exponent), mod(_mod){};
@@ -15,7 +15,7 @@ public:
 private:
     BigInt exponent, mod;
 };
-
+ */
 class RSA
 {
 public:
