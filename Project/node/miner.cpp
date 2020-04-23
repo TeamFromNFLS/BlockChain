@@ -27,7 +27,7 @@ Miner::Miner()
     rng.seed(randev());
     uniform_int_distribution<int> num(0, INT32_MAX);
     nonce = num(rng);
-    //Miner::minerSet.push_back(this);
+    Miner::minerSet.push_back(this);
 }
 
 bool Miner::TestPoW(int nonce)

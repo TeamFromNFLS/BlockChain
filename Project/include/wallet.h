@@ -18,7 +18,8 @@ public:
     {
         return make_tuple(publicKey, n, address);
     }
-    string GetAddress() {
+    string GetAddress()
+    {
         return address;
     }
     static vector<pair<string, string>> walletInfo;
