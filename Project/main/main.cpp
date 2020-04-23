@@ -23,9 +23,7 @@ int main()
 {
      //freopen("ans.txt", "w", stdout);
      blockChain.SetDifficulty("0000");
-     //TestTx();
-     Transaction tmp("123", "456");
-     Transaction::toBePackedTx.push_back(tmp);
+     TestTx();
      TestMine();
      return 0;
 }
