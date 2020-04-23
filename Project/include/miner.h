@@ -1,6 +1,7 @@
 #ifndef MINER_H
 #define MINER_H
 
+#include <vector>
 #include "wallet.h"
 #include "block.h"
 class Miner : public Wallet
@@ -9,7 +10,8 @@ public:
     Miner(int worker);
     Miner();
     bool Check(const Block &toCheck);
-    bool PoW(int nonce);
+    bool TestPoW(int nonce);
+    void PoW(std::vector<Transaction> &vec);
     uint32_t GetNonce() const
     {
         return nonce;
@@ -18,10 +20,19 @@ public:
     {
         nonce = _nonce;
     }
+    void SetDifficulty(string _difficultyTarget)
+    {
+        difficultyTarget = _difficultyTarget;
+    }
+    void ShowDifficulty()
+    {
+        cout << difficultyTarget << endl;
+    }
+    static vector<Miner *> minerSet;
 
 protected:
-    int nonce = 1;
-    int difficultyTarget;
+    int nonce;
+    string difficultyTarget;
     Block stored;
 };
 #endif //MINER_H

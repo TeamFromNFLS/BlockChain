@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
+#include <queue>
 #include "transaction.h"
 
 class Chain;
@@ -11,16 +12,11 @@ class Block
 {
 public:
     friend Chain;
-    void Pack(vector<Transaction> &vec);
-    Block();
-    Block(int _nonce, int difficulty, vector<Transaction> &vec);
-    Block(const Block &p) : preBlockHash(p.preBlockHash),
-                            merkleRoot(p.merkleRoot),
-                            time(p.time),
-                            difficultyTarget(p.difficultyTarget),
-                            height(p.height),
-                            nonce(p.nonce){};
-    void SetDifficultyTarget(int difficulty)
+    void Pack();
+    Block(){};
+    Block(int _nonce, string difficulty, vector<Transaction> &vec);
+    Block(const Block &p);
+    void SetDifficultyTarget(string difficulty)
     {
         difficultyTarget = difficulty;
     }
@@ -29,22 +25,15 @@ public:
         nonce = _nonce;
     }
     std::string GetHash();
-    void show() const
-    {
-        std::string now = ctime(&time);
-        std::cout << height << std::endl
-                  << preBlockHash << std::endl
-                  << merkleRoot << std::endl
-                  << now << nonce << std::endl;
-    }
+    void Show();
     Block *preBlock = nullptr;
 
 private:
     int version = 0x00;
-    std::string preBlockHash;
+    std::string preBlockHash = "0";
     std::string merkleRoot;
     time_t time;
-    int difficultyTarget;
+    string difficultyTarget;
     int height;
     int nonce;
 
@@ -62,17 +51,18 @@ public:
     }
     struct node
     {
-        std::string TransactionHash;
-        node *leftTree;
-        node *rightTree;
-        node *father;
+        std::string transactionHash;
+        node *leftTree = nullptr;
+        node *rightTree = nullptr;
+        node *father = nullptr;
     };
-    //static node *CreateTree(std::vector<Transaction> &vec);
+    void ShowTree();
 
 private:
     uint64_t numTransactions = 0;
     std::vector<Transaction> transactionSet;
-    node *merkleTree;
+    node *merkleTreeRoot;
+    vector<node *> merkleTree;
 };
 
 #endif //BLOCK_H

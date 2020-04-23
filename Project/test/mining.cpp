@@ -61,7 +61,7 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
                 }
             }
         }
-        if (now.PoW(nonce))
+        if (now.TestPoW(nonce))
         {
             mutex->lock();
             Block found;
@@ -96,7 +96,7 @@ void TestMine()
             t.join();
         }
     }
-    toCheck.show();
-    cout << Chain::minerSet.size() << endl;
+    toCheck.Show();
+    cout << Miner::minerSet.size() << endl;
     cout << output << endl;
 }

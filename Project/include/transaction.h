@@ -20,9 +20,10 @@ public:
     {
         _time = std::time(0);
     }
+    void Show();
     void SetID();
     bool IsCoinbase();
-    int GetID() { return txID; }
+    int GetID() const { return txID; }
     string GetTxHash();
 
     int txID;

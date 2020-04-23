@@ -13,7 +13,7 @@ public:
         publicKey = _publicKey;
     }
     TxInput() : value(0), prevID(-1){};
-    int GetPrevID() { return prevID; }
+    int GetPrevID() const { return prevID; }
     int GetValue() { return value; }
     void SetPrevID(int ID) { prevID = ID; }
     BigInt signature;

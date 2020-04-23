@@ -17,15 +17,13 @@ using namespace std;
 
 /* Assume transactions are packed immediately after they are constructed.
 Packed transactions are stored in Transaction::packedTx */
+void TxTest();
+
 int main()
 {
-     /*Wallet a(1), b(1);
-     a.CreateCoinbase();
-     a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
-     cout << Transaction::toBePackedTx.size() << endl;
-     Block c(1, 2, Transaction::toBePackedTx);
-     c.show();*/
-     BigInt a("0x123456");
-     cout << a << endl;
+     Miner miner(1);
+     blockChain.SetDifficulty("0000");
+     TxTest();
+     miner.PoW(Transaction::toBePackedTx);
      return 0;
 }

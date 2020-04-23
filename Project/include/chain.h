@@ -20,21 +20,17 @@ public:
         newBlockPoint->preBlock = end;
         end = newBlockPoint;
     }
-    void SetDifficulty(int difficultyTarget)
-    {
-        difficulty = difficultyTarget;
-    }
-    int GetDifficulty()
+    void SetDifficulty(string difficultyTarget);
+    std::string GetDifficulty()
     {
         return difficulty;
     }
     static string GetCoinBaseIndex();
     static vector<Transaction> GetTransaction();
-    static vector<Miner> minerSet;
     void print();
 
 private:
-    int difficulty = 0;
+    std::string difficulty = "0000";
     Block *end = nullptr;
 };
 

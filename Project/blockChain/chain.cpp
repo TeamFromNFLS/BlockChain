@@ -10,13 +10,12 @@ using namespace std;
 
 Block coinBase;
 Chain blockChain;
-vector<Miner> Chain::minerSet;
 
 Chain::Chain()
 {
     coinBase.preBlockHash = "0";
     coinBase.merkleRoot = "0";
-    coinBase.difficultyTarget = 0;
+    coinBase.difficultyTarget = "0000";
     coinBase.height = 1;
     coinBase.nonce = 0;
     end = &coinBase;
@@ -27,8 +26,17 @@ void Chain::print()
     Block *now = end;
     while (now != nullptr)
     {
-        now->show();
+        now->Show();
         now = now->preBlock;
+    }
+}
+
+void Chain::SetDifficulty(string difficultyTarget)
+{
+    difficulty = difficultyTarget;
+    for (int i = 0; i < Miner::minerSet.size(); ++i)
+    {
+        Miner::minerSet[i]->SetDifficulty(difficultyTarget);
     }
 }
 
