@@ -4,3 +4,4 @@
 *.exe
 main/main.cpp
 Project/Makefile
+Project/debug/bin/test

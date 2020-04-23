@@ -11,34 +11,6 @@
 
 using namespace std;
 
-Block::Block()
-{
-    mt19937 rng;
-    random_device randev;
-    rng.seed(randev());
-    uniform_int_distribution<int> num(0, INT32_MAX);
-    string tmp = to_string(num(rng));
-    preBlockHash = sha256(tmp);
-    tmp = to_string(num(rng));
-    merkleRoot = sha256(tmp);
-    height = num(rng);
-    nonce = num(rng);
-    time = std::time(0);
-}
-
-string Block::GetHash()
-{
-    string s;
-    s += to_string(version) +
-         preBlockHash +
-         merkleRoot +
-         to_string(difficultyTarget) +
-         to_string(height) +
-         to_string(nonce) +
-         ctime(&time);
-    return sha256(sha256(s));
-}
-
 Block::node *CreateTree(vector<Transaction> &vec)
 {
     int len = vec.size();
@@ -75,6 +47,42 @@ Block::node *CreateTree(vector<Transaction> &vec)
         q.push(next);
     }
     return next;
+}
+
+Block::Block()
+{
+    mt19937 rng;
+    random_device randev;
+    rng.seed(randev());
+    uniform_int_distribution<int> num(0, INT32_MAX);
+    string tmp = to_string(num(rng));
+    preBlockHash = sha256(tmp);
+    tmp = to_string(num(rng));
+    merkleRoot = sha256(tmp);
+    height = num(rng);
+    nonce = num(rng);
+    time = std::time(0);
+}
+
+Block::Block(int _nonce, int difficulty, vector<Transaction> &vec)
+{
+    nonce = _nonce;
+    difficultyTarget = difficulty;
+    AddTransactionSet(vec);
+    merkleRoot = CreateTree(transactionSet)->TransactionHash;
+}
+
+string Block::GetHash()
+{
+    string s;
+    s += to_string(version) +
+         preBlockHash +
+         merkleRoot +
+         to_string(difficultyTarget) +
+         to_string(height) +
+         to_string(nonce) +
+         ctime(&time);
+    return sha256(sha256(s));
 }
 
 void Block::Pack(vector<Transaction> &vec)

@@ -13,10 +13,7 @@ public:
     friend Chain;
     void Pack(vector<Transaction> &vec);
     Block();
-    Block(int _nonce, int difficulty, vector<Transaction> &vec) : difficultyTarget(difficulty), nonce(_nonce)
-    {
-        Pack(vec);
-    }
+    Block(int _nonce, int difficulty, vector<Transaction> &vec);
     Block(const Block &p) : preBlockHash(p.preBlockHash),
                             merkleRoot(p.merkleRoot),
                             time(p.time),

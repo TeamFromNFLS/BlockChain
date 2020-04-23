@@ -3,7 +3,6 @@
 #include <cstring>
 #include <random>
 #include <ctime>
-#include <windows.h>
 #include <thread>
 #include <mutex>
 #include <vector>
@@ -21,7 +20,6 @@ Packed transactions are stored in Transaction::packedTx */
 int main()
 {
      Wallet a(1), b(1);
-
      a.CreateCoinbase();
      a.CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
      /* RSA a;
