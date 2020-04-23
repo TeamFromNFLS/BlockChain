@@ -13,6 +13,7 @@
 #include "ripemd160.h"
 #include "block.h"
 #include "chain.h"
+#include "Transaction.h"
 using namespace std;
 
 void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
@@ -20,6 +21,7 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
     Miner now;
     Block check;
     int nonce = now.GetNonce();
+    now.Load(Transaction::toBePackedTx);
     int id, numberWorker;
     mutex->lock();
     id = *i;
@@ -64,14 +66,14 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
         if (now.TestPoW(nonce))
         {
             mutex->lock();
-            Block found;
-            now.SetNonce(nonce);
+            Block found = now.GetBlock();
+            found.Pack();
             *foundFlag = true;
             *toCheck = found;
             *output = id;
             mutex->unlock();
         }
-        nonce++;
+        nonce = (nonce + 1) % INT32_MAX;
         //cout << nonce << endl;
     }
 }
@@ -82,7 +84,12 @@ void TestMine()
     bool foundFlag = false;
     int checkCnt = 0;
     int worker;
+    cout << "Type in the number of workers：";
     cin >> worker;
+    for (int i = 0; i < worker; ++i)
+    {
+        Miner tmp(1);
+    }
     int output;
     vector<thread> threads(worker);
     for (int i = 0; i < worker; ++i)
@@ -96,7 +103,6 @@ void TestMine()
             t.join();
         }
     }
+    cout << "Found miner address: " << Miner::minerSet[output]->GetAddress() << endl;
     toCheck.Show();
-    cout << Miner::minerSet.size() << endl;
-    cout << output << endl;
 }

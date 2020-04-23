@@ -4,6 +4,8 @@
 #include <vector>
 #include "wallet.h"
 #include "block.h"
+
+using namespace std;
 class Miner : public Wallet
 {
 public:
@@ -12,9 +14,19 @@ public:
     bool Check(const Block &toCheck);
     bool TestPoW(int nonce);
     void PoW(std::vector<Transaction> &vec);
-    uint32_t GetNonce() const
+    int GetNonce() const
     {
         return nonce;
+    }
+    void Load(vector<Transaction> &vec)
+    {
+        int now = nonce;
+        Block tmp(now, difficultyTarget, vec);
+        stored = tmp;
+    }
+    Block GetBlock()
+    {
+        return stored;
     }
     void SetNonce(int _nonce)
     {

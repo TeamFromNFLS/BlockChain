@@ -13,17 +13,19 @@
 #include "ripemd160.h"
 #include "block.h"
 #include "chain.h"
+#include "test.h"
 using namespace std;
 
 /* Assume transactions are packed immediately after they are constructed.
 Packed transactions are stored in Transaction::packedTx */
-void TxTest();
 
 int main()
 {
-     Miner miner(1);
+     //freopen("ans.txt", "w", stdout);
      blockChain.SetDifficulty("0000");
-     TxTest();
-     miner.PoW(Transaction::toBePackedTx);
+     //TestTx();
+     Transaction tmp("123", "456");
+     Transaction::toBePackedTx.push_back(tmp);
+     TestMine();
      return 0;
 }
