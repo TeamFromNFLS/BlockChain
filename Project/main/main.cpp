@@ -56,5 +56,12 @@ int main()
      {
           Wallet::VerifyTx(tx);
      }
+     auto st = clock();
+     freopen("ans.txt", "w", stdout);
+     balance();
+     TestTx();
+     TestMine();
+     auto ed = clock();
+     cout << "Total Time: " << ed - st << endl;
      return 0;
 }

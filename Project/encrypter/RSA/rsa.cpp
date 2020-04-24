@@ -89,7 +89,6 @@ void RSA::Init(int worker)
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
     //auto st = clock();
-    cout << "loading . . ." << endl;
     p = CreatePrime(worker);
     q = CreatePrime(worker);
     //make sure p \neq q

@@ -24,6 +24,10 @@ public:
     {
         nonce = _nonce;
     }
+    int GetHeight()
+    {
+        return height;
+    }
     std::string GetHash();
     void Show();
     Block *preBlock = nullptr;

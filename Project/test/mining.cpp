@@ -68,7 +68,6 @@ void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool
         {
             mutex->lock();
             Block found = now->GetBlock();
-            found.Pack();
             *foundFlag = true;
             *toCheck = found;
             *output = id;
@@ -85,9 +84,9 @@ void TestMine()
     Block toCheck;
     bool foundFlag = false, outputFlag = false;
     int checkCnt = 0;
-    int worker;
+    int worker = 4;
     cout << "Type in the number of workers：";
-    cin >> worker;
+    //cin >> worker;
     int output;
     vector<thread> threads(worker);
     vector<Miner *> miners(worker);
@@ -107,6 +106,7 @@ void TestMine()
             t.join();
         }
     }
+    toCheck.Pack();
     cout << "Found miner address: " << Miner::minerSet[output]->GetAddress() << endl;
     toCheck.Show();
 }
