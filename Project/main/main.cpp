@@ -21,7 +21,7 @@ Packed transactions are stored in Transaction::packedTx */
 
 int main()
 {
-     freopen("ans.txt", "w", stdout);
+     //freopen("ans.txt", "w", stdout);
      blockChain.SetDifficulty("0000");
      TestTx();
      TestMine();
