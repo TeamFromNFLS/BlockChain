@@ -110,11 +110,17 @@ void BigInt::SetBin(string s)
     return;
 }
 
-/*I don't think there's anyone who wants to input a number with hex system*/
+/*I don't think there's anyone who wants to input a number with hex system
+  Now I think so.*/
 void BigInt::SetNumber(string s)
 {
     string::iterator it;
-    bool inputDec = false; // whether input is in dec system
+    bool inputDec = false, inputHex = false; // whether input is in other systems
+    it = s.begin();
+    if (*(++it) == 'x')
+    {
+        inputHex = true;
+    }
     for (it = s.begin(); it != s.end(); ++it)
     {
         if (*it != '0' || *it != '1')
@@ -123,7 +129,12 @@ void BigInt::SetNumber(string s)
             break;
         }
     }
-    if (inputDec)
+    if (inputHex)
+    {
+        s.erase(0, 2);
+        *this = BigInt::ToInt(s);
+    }
+    else if (inputDec)
     {
         string ss = DecToBin(s);
         SetBin(ss);

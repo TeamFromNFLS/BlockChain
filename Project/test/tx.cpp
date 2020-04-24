@@ -17,7 +17,7 @@ using namespace std;
 
 /* Assume transactions are packed immediately after they are constructed.
 Packed transactions are stored in Transaction::packedTx */
-void TxTest()
+void TestTx()
 {
     Wallet a(1), b(1);
 

@@ -1,27 +1,50 @@
 #ifndef MINER_H
 #define MINER_H
 
+#include <vector>
 #include "wallet.h"
 #include "block.h"
+
+using namespace std;
 class Miner : public Wallet
 {
 public:
     Miner(int worker);
     Miner();
     bool Check(const Block &toCheck);
-    bool PoW(int nonce);
-    uint32_t GetNonce() const
+    bool TestPoW(int nonce);
+    void PoW(std::vector<Transaction> &vec);
+    int GetNonce() const
     {
         return nonce;
+    }
+    void Load(vector<Transaction> &vec)
+    {
+        int now = nonce;
+        Block tmp(now, difficultyTarget, vec);
+        stored = tmp;
+    }
+    Block GetBlock()
+    {
+        return stored;
     }
     void SetNonce(int _nonce)
     {
         nonce = _nonce;
     }
+    void SetDifficulty(string _difficultyTarget)
+    {
+        difficultyTarget = _difficultyTarget;
+    }
+    void ShowDifficulty()
+    {
+        cout << difficultyTarget << endl;
+    }
+    static vector<Miner *> minerSet;
 
 protected:
-    int nonce = 1;
-    int difficultyTarget;
+    int nonce;
+    string difficultyTarget;
     Block stored;
 };
 #endif //MINER_H

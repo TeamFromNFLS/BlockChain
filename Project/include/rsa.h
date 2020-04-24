@@ -32,13 +32,13 @@ public:
         return make_tuple(publicKey, privateKey, product);
     }
     BigInt CreateRandomSmaller(const BigInt &); //for the private key and the prime test
-    BigInt EncryptByPublic(const BigInt &, const BigInt &, const BigInt &);
-    BigInt EncryptByPrivate(const BigInt &, const BigInt &, const BigInt &);
-    BigInt DecryptByPublic(const BigInt &, const BigInt &, const BigInt &);
-    BigInt DecryptByPrivate(const BigInt &, const BigInt &, const BigInt &);
+    BigInt EncryptByPublic(const BigInt &);
+    BigInt EncryptByPrivate(const BigInt &);
+    BigInt DecryptByPublic(const BigInt &);
+    BigInt DecryptByPrivate(const BigInt &);
+    static BigInt EncryptAndDecrypt(const BigInt &, const BigInt &, const BigInt &);
     bool IsPrime(const BigInt &, int k = 4);
     int Sieve(vector<BigInt> &, const BigInt &, int);
-    //const int length = 305;
     void setNumber(BigInt, BigInt);
 
 private:

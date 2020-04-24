@@ -18,7 +18,12 @@ public:
     {
         return make_tuple(publicKey, n, address);
     }
+    string GetAddress()
+    {
+        return address;
+    }
     static vector<pair<string, string>> walletInfo;
+    void SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr);
 
 protected:
     BigInt privateKey, publicKey, n;
@@ -31,8 +36,10 @@ public:
     void CreateTransaction(pair<string, string> receiverInfo, int _value);
     void CreateCoinbase();
     void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
-    vector<int> FindSpent();
-    vector<Transaction> FindUTXO(vector<int> spentTxId);
+    vector<int> FindSpent(vector<Transaction> pool);
+    vector<Transaction> FindUTXO(vector<int> spentTxId, vector<Transaction> pool);
+    void FindBalance();
+    static bool VerifyTx(const Transaction &_tx);
 };
 
 string Base58(string s);

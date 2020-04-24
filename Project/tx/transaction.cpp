@@ -28,3 +28,14 @@ bool Transaction::IsCoinbase()
         return true;
     }
 }
+
+void Transaction::Show()
+{
+    cout << "Transaction log: " << endl
+         << "Receiver Address: " << receiverAdr << endl
+         << "Value: " << output.GetValue() << endl
+         << "ID: " << GetID() << endl
+         << "PrevTx ID: " << input.GetPrevID() << endl
+         << "Signature: " << input.signature << endl
+         << "------------------------------------------" << endl;
+}

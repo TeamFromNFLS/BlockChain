@@ -7,21 +7,23 @@
 class TxInput
 {
 public:
-    TxInput(int _value, BigInt _publicKey)
+    TxInput(int _value, BigInt _publicKey, BigInt _N)
     {
         value = _value;
         publicKey = _publicKey;
+        N = _N;
     }
     TxInput() : value(0), prevID(-1){};
-    int GetPrevID() { return prevID; }
+    int GetPrevID() const { return prevID; }
     int GetValue() { return value; }
     void SetPrevID(int ID) { prevID = ID; }
     BigInt signature;
+    BigInt publicKey;
+    BigInt N;
 
 private:
     int prevID;
     int value;
-    BigInt publicKey;
 };
 
 #endif
