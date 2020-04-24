@@ -18,6 +18,7 @@ Chain::Chain()
     coinBase.difficultyTarget = "0000";
     coinBase.height = 1;
     coinBase.nonce = 0;
+    SetDifficulty("0000");
     end = &coinBase;
 }
 

@@ -22,11 +22,13 @@ Miner::Miner(int worker)
 
 Miner::Miner()
 {
+    cout << "Creating a new miner, please wait..." << endl;
     mt19937 rng;
     random_device randev;
     rng.seed(randev());
     uniform_int_distribution<int> num(0, INT32_MAX);
     nonce = num(rng);
+    difficultyTarget = blockChain.GetDifficulty();
     Miner::minerSet.push_back(this);
 }
 

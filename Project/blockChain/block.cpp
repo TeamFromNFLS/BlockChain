@@ -96,7 +96,7 @@ Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
     difficultyTarget = difficulty;
     preBlock = blockChain.GetLastBlock();
     preBlockHash = preBlock->GetHash();
-    height = preBlock->height + 1;
+    height = (preBlock->height) + 1;
     AddTransactionSet(vec);
     int len = transactionSet.size();
     if (len & 1)
