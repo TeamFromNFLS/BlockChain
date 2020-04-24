@@ -243,7 +243,7 @@ int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength)
     return cnt;
 }
 
-void RSA::PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result)
+/*void RSA::PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result)
 {
     vector<BigInt> probablePrime;
     while (1)
@@ -272,11 +272,11 @@ void RSA::PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result)
         probablePrime.clear(); //no number passes Miller-Rabin, repeat
     }
     return;
-}
+}*/
 
 BigInt RSA::CreatePrime(int worker)
 {
-    mutex mutex;
+    /*mutex mutex;
     bool finished = false;
     BigInt result;
     vector<thread> threads(worker);
@@ -290,8 +290,23 @@ BigInt RSA::CreatePrime(int worker)
         {
             t.join();
         }
+    }*/
+    vector<BigInt> probablePrime;
+    bool foundFlag = false;
+    while (1)
+    {
+        BigInt start = CreateRandom(1);
+        int count = Sieve(probablePrime, start, 1000);
+        for (int i = 0; i < count; i++)
+        {
+            if (IsPrime(probablePrime[i]))
+            {
+                return probablePrime[i];
+            }
+        }
+        probablePrime.clear(); //no number passes Miller-Rabin, repeat
     }
-    return BigInt(result);
+    //return BigInt(result);
 }
 
 BigInt RSA::CreateRandomSmaller(const BigInt &num)

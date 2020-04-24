@@ -16,17 +16,18 @@
 #include "Transaction.h"
 using namespace std;
 
-void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
+void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
 {
-    Miner now;
     Block check;
-    int nonce = now.GetNonce();
-    now.Load(Transaction::toBePackedTx);
     int id, numberWorker;
     mutex->lock();
     id = *i;
+    Miner *now = (*miners)[id];
     numberWorker = *worker;
     mutex->unlock();
+    now->Init(1);
+    int nonce = now->GetNonce();
+    now->Load(Transaction::toBePackedTx);
     bool flag, cntFlag;
     bool checkFlag = false;
     while (true)
@@ -46,7 +47,7 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
             mutex->unlock();
             if (!checkFlag)
             {
-                if (now.Check(check))
+                if (now->Check(check))
                 {
                     checkFlag = true;
                     mutex->lock();
@@ -63,10 +64,10 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
                 }
             }
         }
-        if (now.TestPoW(nonce))
+        if (now->TestPoW(nonce))
         {
             mutex->lock();
-            Block found = now.GetBlock();
+            Block found = now->GetBlock();
             found.Pack();
             *foundFlag = true;
             *toCheck = found;
@@ -77,24 +78,27 @@ void MineWorker(int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCn
         //cout << nonce << endl;
     }
 }
+
 void TestMine()
 {
     mutex mutex;
     Block toCheck;
-    bool foundFlag = false;
+    bool foundFlag = false, outputFlag = false;
     int checkCnt = 0;
     int worker;
     cout << "Type in the number of workers：";
     cin >> worker;
-    for (int i = 0; i < worker; ++i)
-    {
-        Miner tmp(1);
-    }
     int output;
     vector<thread> threads(worker);
+    vector<Miner *> miners(worker);
     for (int i = 0; i < worker; ++i)
     {
-        threads.emplace_back(MineWorker, &worker, &mutex, &i, &foundFlag, &checkCnt, &toCheck, &output);
+        Miner *tmp = new Miner;
+        miners[i] = tmp;
+    }
+    for (int i = 0; i < worker; ++i)
+    {
+        threads.emplace_back(MineWorker, &miners, &worker, &mutex, &i, &foundFlag, &checkCnt, &toCheck, &output);
     }
     for (auto &t : threads)
     {
