@@ -95,7 +95,8 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 
     /* determine prevTx */
     vector<int> spentTxId = FindSpent(Transaction::txPool);
-    vector<Transaction> CandidateTx = FindUTXO(spentTxId, Transaction::packedTx); //should be Chain::GetTransaction()
+    vector<Transaction> chainTx = Chain::GetTransaction();
+    vector<Transaction> CandidateTx = FindUTXO(spentTxId, chainTx);
     if (!CandidateTx.size())
     {
         cout << "Transaction construction failed. No matching UTXO." << endl;
@@ -207,7 +208,8 @@ void Wallet::FindBalance()
     vector<Transaction> myPackedTx;
     vector<int> myPackedSpentTxID;
     vector<Transaction> balanceTx;
-    for (Transaction &tx : Transaction::packedTx) //should be Chain::GetTransaction()
+    vector<Transaction> chainTx = Chain::GetTransaction();
+    for (Transaction &tx : chainTx)
     {
         if (tx.receiverAdr == address)
         {
