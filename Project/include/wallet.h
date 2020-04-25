@@ -23,6 +23,7 @@ public:
         return address;
     }
     static vector<pair<string, string>> walletInfo;
+    void SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr);
 
 protected:
     BigInt privateKey, publicKey, n;

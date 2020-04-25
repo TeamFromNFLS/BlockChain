@@ -7,6 +7,7 @@
 #include <mutex>
 #include <vector>
 #include "rsa.h"
+#include "bigInt.h"
 #include "wallet.h"
 #include "miner.h"
 #include "sha256.h"

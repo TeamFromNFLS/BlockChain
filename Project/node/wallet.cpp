@@ -4,6 +4,7 @@
 #include <cmath>
 #include <ctime>
 #include <algorithm>
+#include <iomanip>
 #include "wallet.h"
 #include "rsa.h"
 #include "chain.h"
@@ -61,7 +62,9 @@ void Wallet::Init(int worker)
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
-    cout << "Complete. Address: " << address << endl;
+    cout << "Complete." << endl
+         << "Address: " << address << endl
+         << "------------------------------------------" << endl;
 }
 
 Wallet::Wallet(int worker)
@@ -70,22 +73,33 @@ Wallet::Wallet(int worker)
     Init(worker);
 }
 
+void Wallet::SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr)
+{
+    publicKey = _publicKey;
+    privateKey = _privateKey;
+    n = _N;
+    address = _addr;
+    publicKeyHash = rmd160(sha256(publicKey.ToString() + n.ToString()));
+    walletInfo.push_back(make_pair(address, publicKeyHash));
+}
+
 //00c94696460043b120981f922acd5f3bccefe1a5fdd6d4
 
 void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 {
     Transaction transaction(address, get<0>(receiverInfo));
-    TxInput _input(_value, publicKey);
+    TxInput _input(_value, publicKey, n);
     TxOutput _output(_value, get<1>(receiverInfo));
     transaction.input = _input;
     transaction.output = _output;
 
     /* determine prevTx */
-    vector<int> spentTxId = FindSpent();
-    vector<Transaction> CandidateTx = FindUTXO(spentTxId);
+    vector<int> spentTxId = FindSpent(Transaction::txPool);
+    vector<Transaction> chainTx = Chain::GetTransaction();
+    vector<Transaction> CandidateTx = FindUTXO(spentTxId, chainTx);
     if (!CandidateTx.size())
     {
-        cout << "Transaction construction failed. No available coins." << endl;
+        cout << "Transaction construction failed. No matching UTXO." << endl;
     }
     else
     {
@@ -105,10 +119,11 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         cout << "Transaction constructed by " << address << endl
              << "------------------------------------------" << endl;
         cout << "Transaction log: " << endl
+             << "Type: Normal transaction" << endl
+             << "Sender Address: " << address << endl
              << "Receiver Address: " << get<0>(receiverInfo) << endl
              << "Value: " << transaction.output.GetValue() << endl
              << "ID: " << transaction.GetID() << endl
-             //<< "Transaction Hash: " << transaction.GetTxHash() << endl
              << "PrevTx ID: " << transaction.input.GetPrevID() << endl
              << "Signature: " << transaction.input.signature << endl
              << "------------------------------------------" << endl;
@@ -127,6 +142,7 @@ void Wallet::CreateCoinbase()
     cout << "Coinbase transaction constructed." << endl
          << "------------------------------------------" << endl;
     cout << "Transaction log: " << endl
+         << "Type: Coinbase transaction" << endl
          << "Receiver Address: " << address << endl
          << "Value: " << transaction.output.GetValue() << endl
          << "ID: " << transaction.GetID() << endl
@@ -139,17 +155,25 @@ void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
     if (!tx.IsCoinbase())
     {
         RSA rsa;
-        BigInt signInfo(publicKeyHash + receiverPublicKeyHash + to_string(_value));
-        BigInt _signature = rsa.EncryptByPrivate(signInfo, privateKey, n);
+        /* cout << "publicKeyHash: " << publicKeyHash << endl
+             << "receiverPublicKeyHash: " << receiverPublicKeyHash << endl; */
+        string signStr = "0x" + publicKeyHash + receiverPublicKeyHash;
+        BigInt signInfo(signStr);
+        BigInt _signature = RSA::EncryptAndDecrypt(signInfo, privateKey, n);
+        BigInt _decrypt = RSA::EncryptAndDecrypt(_signature, publicKey, n);
+        bool isSame = (signInfo == _decrypt);
+        cout << "------------------------------------------" << endl
+             << "The decrypted signature is the same as the hash value: " << isSame << endl
+             << "------------------------------------------" << endl;
         tx.input.signature = _signature;
     }
     cout << "Digital signature created." << endl;
 }
 
-vector<int> Wallet::FindSpent()
+vector<int> Wallet::FindSpent(vector<Transaction> pool) //to be iterated over
 {
     vector<int> spentTxID;
-    for (Transaction &tx : Transaction::txPool)
+    for (Transaction &tx : pool)
     {
         if (tx.IsCoinbase())
         {
@@ -164,12 +188,11 @@ vector<int> Wallet::FindSpent()
     return spentTxID;
 }
 
-vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId)
+vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId, vector<Transaction> pool)
 {
     vector<Transaction> UTXOTx;
-    //vector<Transaction> chainTx = Chain::GetTransaction();
     vector<int>::iterator ret;
-    for (Transaction &tx : Transaction::packedTx)
+    for (Transaction &tx : pool)
     {
         ret = find(spentTxId.begin(), spentTxId.end(), tx.txID);
         if (ret == spentTxId.end()) //not found
@@ -231,4 +254,3 @@ bool Wallet::VerifyTx(const Transaction &_tx)
         }
     }
 }
-// ready to be packed

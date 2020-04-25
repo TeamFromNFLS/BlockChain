@@ -88,19 +88,31 @@ void RSA::Init(int worker)
 {
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
-    auto st = clock();
-    cout << "loading . . ." << endl;
+    //auto st = clock();
     p = CreatePrime(worker);
     q = CreatePrime(worker);
+    //make sure p \neq q
+    while (p == q)
+    {
+        q = CreatePrime(worker);
+    }
+
     cout << "Prime numbers found" << endl;
+
     product = p * q;
     p = p - BigInt::one, q = q - BigInt::one;
     //欧拉数
     Euler = p * q;
     p = p + BigInt::one, q = q + BigInt::one;
-    auto ed = clock();
-    cout << "time:" << dec << ed - st << endl;
+    //auto ed = clock();
+    /* cout << "Euler: " << Euler << endl
+         << "------------------------------------------" << endl; */
 }
+/* cout << p << endl
+         << q << endl
+         << Euler << endl
+         << product << endl; */
+//cout << "time:" << dec << ed - st << endl;
 
 bool RSA::IsPrime(const BigInt &num, int k)
 {
@@ -345,38 +357,53 @@ void RSA::CreateKeys()
     privateKey = BigInt::one;
     Extgcd(publicKey, Euler, privateKey);
     cout << "Key pair generated" << endl;
+    BigInt result = publicKey * privateKey;
+    result = result % Euler;
+    bool smaller = privateKey < Euler;
+    /* cout << "mod result: " << result << endl;
+    cout << "private is smaller than Euler: " << smaller << endl; */
+
     //cout << publicKey << endl
     //     << privateKey << endl;
 }
 
 //TODO: slice
 
-BigInt RSA::EncryptByPublic(const BigInt &num, const BigInt &key, const BigInt &N)
+BigInt RSA::EncryptByPublic(const BigInt &num)
 {
-    BigInt b4encrypt = num, exponent = key, mod = N;
-    BigInt encrypted = BigInt::PowMod(b4encrypt, exponent, mod);
-    cout << "Data encrypted" << endl;
+    BigInt b4encrypt = num;
+    BigInt encrypted = BigInt::PowMod(b4encrypt, publicKey, product);
     return encrypted;
 }
 
 /* for digital signature */
-BigInt RSA::EncryptByPrivate(const BigInt &num, const BigInt &key, const BigInt &N)
+BigInt RSA::EncryptByPrivate(const BigInt &num)
 {
-    return DecryptByPrivate(num, key, N);
+    BigInt ans;
+    ans = DecryptByPrivate(num);
+    return ans;
 }
 
-BigInt RSA::DecryptByPrivate(const BigInt &num, const BigInt &key, const BigInt &N)
+BigInt RSA::DecryptByPrivate(const BigInt &num)
 {
-    BigInt b4decrypt = num, exponent = key, mod = N;
-    BigInt decrypted = BigInt::PowMod(b4decrypt, exponent, mod);
-    cout << "Data decrypted" << endl;
+    BigInt b4decrypt = num;
+    BigInt decrypted = BigInt::PowMod(b4decrypt, privateKey, product);
     return decrypted;
 }
 
 /* for digital signature */
-BigInt RSA::DecryptByPublic(const BigInt &num, const BigInt &key, const BigInt &N)
+BigInt RSA::DecryptByPublic(const BigInt &num)
 {
-    return EncryptByPublic(num, key, N);
+    BigInt ans;
+    ans = EncryptByPublic(num);
+    return ans;
+}
+
+BigInt RSA::EncryptAndDecrypt(const BigInt &num, const BigInt &key, const BigInt &N)
+{
+    BigInt data = num, exponent = key, mod = N;
+    BigInt ans = BigInt::PowMod(data, exponent, mod);
+    return ans;
 }
 
 void RSA::setNumber(BigInt a, BigInt b)
@@ -384,9 +411,9 @@ void RSA::setNumber(BigInt a, BigInt b)
     p = a;
     q = b;
     product = p * q;
-    p -= 1;
-    q -= 1;
+    p -= BigInt::one;
+    q -= BigInt::one;
     Euler = p * q;
-    p += 1;
-    q += 1;
+    p += BigInt::one;
+    q += BigInt::one;
 }
