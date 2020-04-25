@@ -12,14 +12,15 @@
 
 using namespace std;
 
-Block::node *CreateTree(vector<Transaction> &vec)
+Block::node *Block::CreateTree(vector<Transaction> &vec)
 {
     bool evenFlag = false;
     int len = vec.size();
+    vector<Transaction> newVec = vec;
     if (len & 1)
     {
         len++;
-        vec.push_back(vec.back());
+        newVec.push_back(newVec.back());
         evenFlag = true;
     }
     Block::node *now, *next;
@@ -27,7 +28,7 @@ Block::node *CreateTree(vector<Transaction> &vec)
     for (int i = 0; i < len; i++)
     {
         string s;
-        s = vec[i].GetTxHash();
+        s = newVec[i].GetTxHash();
         now = new Block::node;
         now->transactionHash = s;
         q.push(now);
@@ -36,22 +37,18 @@ Block::node *CreateTree(vector<Transaction> &vec)
     {
         string a, b;
         next = new Block::node;
-        now = q.back();
+        now = q.front();
         now->father = next;
         next->leftTree = now;
         a = now->transactionHash;
         q.pop();
-        now = q.back();
+        now = q.front();
         now->father = next;
         next->rightTree = now;
         b = now->transactionHash;
         q.pop();
         next->transactionHash = sha256(a + b);
         q.push(next);
-    }
-    if (evenFlag)
-    {
-        vec.pop_back();
     }
     return next;
 }
@@ -78,23 +75,9 @@ void Block::ShowTree()
             q.push(make_pair(newCnt, tmp.second->rightTree));
         }
     }
+    cout << "------------------------------------------" << endl;
     return;
 }
-
-/*Block::Block()
-{
-    mt19937 rng;
-    random_device randev;
-    rng.seed(randev());
-    uniform_int_distribution<int> num(0, INT32_MAX);
-    string tmp = to_string(num(rng));
-    preBlockHash = sha256(tmp);
-    tmp = to_string(num(rng));
-    merkleRoot = sha256(tmp);
-    height = num(rng);
-    nonce = num(rng);
-    time = std::time(0);
-}*/
 
 Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
 {
@@ -206,4 +189,5 @@ void Block::Show()
     }
     cout << "Merkle Tree: " << endl;
     ShowTree();
+    cout << "------------------------------------------" << endl;
 }

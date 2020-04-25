@@ -11,9 +11,9 @@ using namespace std;
 class Wallet
 {
 public:
-    Wallet(int worker);
-    Wallet() { cout << "Creating a new wallet. Please wait..." << endl; }
-    void Init(int worker);
+    Wallet(int worker) { Init(worker); }
+    Wallet(){};
+    virtual void Init(int worker);
     tuple<BigInt, BigInt, string> GetKey()
     {
         return make_tuple(publicKey, n, address);
