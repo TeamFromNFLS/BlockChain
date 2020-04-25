@@ -48,6 +48,7 @@ vector<pair<string, string>> Wallet::walletInfo;
 
 void Wallet::Init(int worker)
 {
+    cout << "Creating a new wallet. Please wait..." << endl;
     RSA a;
     a.Init(worker);
     a.CreateKeys();
@@ -65,12 +66,6 @@ void Wallet::Init(int worker)
     cout << "Complete." << endl
          << "Address: " << address << endl
          << "------------------------------------------" << endl;
-}
-
-Wallet::Wallet(int worker)
-{
-    cout << "Creating a new wallet. Please wait..." << endl;
-    Init(worker);
 }
 
 void Wallet::SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr)
@@ -95,8 +90,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 
     /* determine prevTx */
     vector<int> spentTxId = FindSpent(Transaction::txPool);
-    vector<Transaction> chainTx = Chain::GetTransaction();
-    vector<Transaction> CandidateTx = FindUTXO(spentTxId, chainTx);
+    vector<Transaction> CandidateTx = FindUTXO(spentTxId, Transaction::packedTx);
     if (!CandidateTx.size())
     {
         cout << "Transaction construction failed. No matching UTXO." << endl;
@@ -250,4 +244,6 @@ bool Wallet::VerifyTx(const Transaction &_tx)
             return false;
         }
     }
+    cout << "Valid Transaction. To be packed." << endl;
+    return true;
 }

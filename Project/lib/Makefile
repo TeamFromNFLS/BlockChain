@@ -1,12 +1,12 @@
 CC = g++
 
 OBJS = $(wildcard *.cpp)
-
+INC = -I../include
 TARGET = blockChain.dll
 LIB = blockChain.lib
  
 all:
-	$(CC) $(OBJS) -shared -o $(TARGET) -Wl,--out-implib,$(LIB) -pthread
+	$(CC) $(INC) $(OBJS) -shared -o $(TARGET) -Wl,--out-implib,$(LIB) -pthread
 
 clean:
 	rm $(SRCS) $(headfile)
