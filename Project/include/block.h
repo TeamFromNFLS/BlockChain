@@ -60,6 +60,11 @@ public:
         node *rightTree = nullptr;
         node *father = nullptr;
     };
+    static node *CreateTree(vector<Transaction> &vec);
+    string GetTreeRoot()
+    {
+        return merkleRoot;
+    }
     void ShowTree();
 
 private:
