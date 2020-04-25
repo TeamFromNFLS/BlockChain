@@ -1,0 +1,154 @@
+Creating a new wallet. Please wait...
+Creating a new wallet. Please wait...
+Creating a new wallet. Please wait...
+Prime numbers found
+Key pair generated
+Complete.
+Address: 1125bhuYecxrcupCSoa2JZqidaU1vArVh
+------------------------------------------
+Prime numbers found
+Key pair generated
+Complete.
+Address: 11vybnLLhnXawN6SVdsSxwDsKCH8ctKP
+------------------------------------------
+Prime numbers found
+Key pair generated
+Complete.
+Address: 11bv5fqfi92sf3V27A9EFh2GxWQcsrp9
+------------------------------------------
+Coinbase transaction constructed.
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 11vybnLLhnXawN6SVdsSxwDsKCH8ctKP
+Value: 5
+ID: 0
+PrevTx ID: -1
+------------------------------------------
+Coinbase transaction constructed.
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 11bv5fqfi92sf3V27A9EFh2GxWQcsrp9
+Value: 5
+ID: 0
+PrevTx ID: -1
+------------------------------------------
+Creating a new wallet. Please wait...
+Creating a new miner, please wait...
+Block Log:
+Head:
+------------------------------------------
+Height: 2
+PreBlockHash: 60d5764c47ae804750d292cf565acfee6aeddd1db8085dd9b7e815e04d9072c2
+MerkleRoot: 9bfa78498610de40c47cc288a841da4c3edb13da54f93d1652e9bf9f490832e1
+Date: Sat Apr 25 15:31:51 2020
+nonce: 671825766
+------------------------------------------
+Transaction:
+------------------------------------------
+Transaction log: 
+Receiver Address: 11vybnLLhnXawN6SVdsSxwDsKCH8ctKP
+Value: 5
+ID: 0
+PrevTx ID: -1
+Signature: 0x
+------------------------------------------
+Transaction log: 
+Receiver Address: 11bv5fqfi92sf3V27A9EFh2GxWQcsrp9
+Value: 5
+ID: 0
+PrevTx ID: -1
+Signature: 0x
+------------------------------------------
+Merkle Tree: 
+Depth: 0 Hash: 9bfa78498610de40c47cc288a841da4c3edb13da54f93d1652e9bf9f490832e1
+Depth: 1 Hash: 8a9a8dcdf75c2693cc60899694df83f2c52a636331d14be2c5630b5f60765cb3
+Depth: 1 Hash: 505c52ca9606c4bb4d8bb820dd4c20fc0ab176f67e3d18a4746f458ac2f677bb
+------------------------------------------
+The decrypted signature is the same as the hash value: 1
+------------------------------------------
+Digital signature created.
+Transaction constructed by 11vybnLLhnXawN6SVdsSxwDsKCH8ctKP
+------------------------------------------
+Transaction log: 
+Type: Normal transaction
+Sender Address: 11vybnLLhnXawN6SVdsSxwDsKCH8ctKP
+Receiver Address: 1125bhuYecxrcupCSoa2JZqidaU1vArVh
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0xa0282a7a99070db5532c294c5be1fc18447e2cd2240c13ebe70bf0f8ce2444b51df6655f46507d65ee2359dca192aeca750df5d6072cd6bc9b76b4f6c0986826b2e52bc03a2bc083c0a9c374ae69ead5d6c949577774ad1194961369725c385eeb1d554384ac55578c752ce7dac669eae3fd0167f8e9096ca207d936d3be9280
+------------------------------------------
+------------------------------------------
+The decrypted signature is the same as the hash value: 1
+------------------------------------------
+Digital signature created.
+Transaction constructed by 11bv5fqfi92sf3V27A9EFh2GxWQcsrp9
+------------------------------------------
+Transaction log: 
+Type: Normal transaction
+Sender Address: 11bv5fqfi92sf3V27A9EFh2GxWQcsrp9
+Receiver Address: 1125bhuYecxrcupCSoa2JZqidaU1vArVh
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0x218992614bdfb2276b1dba6173ceffa8747c02f5a0fc021f1381d4e3bde9e418b1cb17c07efc1fbc66b448ee35fdb93be1caf0048181b06f2d6b2ff72127d66468278e729f1cf468c4268a674285e192d69aeb3664d47a95262969712e0f98480537cd1cc786aa29ff6ed1997d11be548c86462cd758a24dc2b99c082405b9e9
+------------------------------------------
+Coinbase transaction constructed.
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 1125bhuYecxrcupCSoa2JZqidaU1vArVh
+Value: 5
+ID: 0
+PrevTx ID: ffffffff
+------------------------------------------
+Block Log:
+Head:
+------------------------------------------
+Height: 1
+PreBlockHash: c5e3cb980ee22a5b7150e88263efe6a13baa54e98a0cfdb8d22b751c1679aacc
+MerkleRoot: 74359f7ab48598a7b0acbaecc5a0d476da1b5d6c142bd941c99e2a8a9e844f5a
+Date: Sat Apr 25 15:31:51 2020
+nonce: 79d3adc
+------------------------------------------
+Transaction:
+------------------------------------------
+Transaction log: 
+Receiver Address: 1125bhuYecxrcupCSoa2JZqidaU1vArVh
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0xa0282a7a99070db5532c294c5be1fc18447e2cd2240c13ebe70bf0f8ce2444b51df6655f46507d65ee2359dca192aeca750df5d6072cd6bc9b76b4f6c0986826b2e52bc03a2bc083c0a9c374ae69ead5d6c949577774ad1194961369725c385eeb1d554384ac55578c752ce7dac669eae3fd0167f8e9096ca207d936d3be9280
+------------------------------------------
+Transaction log: 
+Receiver Address: 1125bhuYecxrcupCSoa2JZqidaU1vArVh
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0x218992614bdfb2276b1dba6173ceffa8747c02f5a0fc021f1381d4e3bde9e418b1cb17c07efc1fbc66b448ee35fdb93be1caf0048181b06f2d6b2ff72127d66468278e729f1cf468c4268a674285e192d69aeb3664d47a95262969712e0f98480537cd1cc786aa29ff6ed1997d11be548c86462cd758a24dc2b99c082405b9e9
+------------------------------------------
+Transaction log: 
+Receiver Address: 1125bhuYecxrcupCSoa2JZqidaU1vArVh
+Value: 5
+ID: 0
+PrevTx ID: ffffffff
+Signature: 0x
+------------------------------------------
+Merkle Tree: 
+Depth: 0 Hash: 74359f7ab48598a7b0acbaecc5a0d476da1b5d6c142bd941c99e2a8a9e844f5a
+Depth: 1 Hash: a0894e78ff6bb15c42c454e9b4dca6c2f9e2b9dc2aa33dd962ba16e688b58b6b
+Depth: 1 Hash: 65742a88bd78eb043f69f39a734d4ff87f1a4959dd52cbcaba1f54e219b3d1e8
+Depth: 2 Hash: 7a172e199fe58e50001e9b6dd4472b524099b629fabdedc29f516fb67aa7e79c
+Depth: 2 Hash: caa305cf0eddceac0f7c457139bbae2911502972ddc1b6ed1787de654df62f71
+Depth: 2 Hash: c1ed42b18b69f1c126d2704ca0c9d656a12c588705d33859cfc9d4aa3b0bbfe4
+Depth: 2 Hash: c1ed42b18b69f1c126d2704ca0c9d656a12c588705d33859cfc9d4aa3b0bbfe4
+UTXO information:
+Sequence number     	UTXO value
+1                   	5
+2                   	5
+3                   	5
+Valid Transaction. To be packed.
+Valid Transaction. To be packed.
+Total time: 27.5459s.
