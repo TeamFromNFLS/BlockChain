@@ -42,3 +42,5 @@ public:
 string Base58(string s);
 
 #endif //WALLET_H
+
+//ready

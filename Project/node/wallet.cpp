@@ -179,3 +179,56 @@ vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId)
     }
     return UTXOTx;
 }
+
+void Wallet::FindBalance()
+{
+    vector<Transaction> myPackedTx;
+    vector<int> myPackedSpentTxID;
+    vector<Transaction> balanceTx;
+    vector<Transaction> chainTx = Chain::GetTransaction();
+    for (Transaction &tx : chainTx)
+    {
+        if (tx.receiverAdr == address)
+        {
+            myPackedTx.push_back(tx);
+        }
+    }
+
+    myPackedSpentTxID = FindSpent(myPackedTx);
+    balanceTx = FindUTXO(myPackedSpentTxID, myPackedTx);
+
+    cout << "UTXO information:" << endl;
+    cout << setiosflags(ios::left) << setfill(' ') << setw(20) << "Sequence number"
+         << "\t"
+         << "UTXO value" << endl;
+    int count = 1;
+    for (Transaction &tx : balanceTx)
+    {
+        cout << setiosflags(ios::left) << setfill(' ') << setw(20) << count << "\t" << tx.output.GetValue() << endl;
+        count++;
+    }
+}
+
+bool Wallet::VerifyTx(const Transaction &_tx)
+{
+    Transaction tx = _tx;
+    if (!tx.IsCoinbase())
+    {
+        string senderHash = rmd160(sha256(tx.input.publicKey.ToString() + tx.input.N.ToString()));
+        string receiverHash = tx.output.GetPublicHash();
+        string info = "0x" + senderHash + receiverHash;
+        BigInt infoInt(info);
+        BigInt decrypted = RSA::EncryptAndDecrypt(tx.input.signature, tx.input.publicKey, tx.input.N);
+        if (decrypted == infoInt)
+        {
+            cout << "Valid Transaction. To be packed." << endl;
+            return true;
+        }
+        else
+        {
+            cout << "Invalid Transaction. Refuse to pack." << endl;
+            return false;
+        }
+    }
+}
+// ready to be packed
