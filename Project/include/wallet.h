@@ -12,7 +12,7 @@ class Wallet
 {
 public:
     Wallet(int worker);
-    Wallet(){};
+    Wallet() { cout << "Creating a new wallet. Please wait..." << endl; }
     void Init(int worker);
     tuple<BigInt, BigInt, string> GetKey()
     {
