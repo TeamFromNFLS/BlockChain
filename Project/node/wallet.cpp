@@ -115,7 +115,6 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         Sign(transaction, get<1>(receiverInfo), _value);
         Transaction::txPool.push_back(transaction);
         Transaction::toBePackedTx.push_back(transaction);
-        Transaction::packedTx.push_back(transaction);
         cout << "Transaction constructed by " << address << endl
              << "------------------------------------------" << endl;
         cout << "Transaction log: " << endl
@@ -138,7 +137,6 @@ void Wallet::CreateCoinbase()
     transaction.SetID();
     Transaction::txPool.push_back(transaction);
     Transaction::toBePackedTx.push_back(transaction);
-    Transaction::packedTx.push_back(transaction);
     cout << "Coinbase transaction constructed." << endl
          << "------------------------------------------" << endl;
     cout << "Transaction log: " << endl
@@ -208,7 +206,7 @@ void Wallet::FindBalance()
     vector<Transaction> myPackedTx;
     vector<int> myPackedSpentTxID;
     vector<Transaction> balanceTx;
-    vector<Transaction> chainTx = Chain::GetTransaction();
+    vector<Transaction> chainTx = Transaction::packedTx;
     for (Transaction &tx : chainTx)
     {
         if (tx.receiverAdr == address)

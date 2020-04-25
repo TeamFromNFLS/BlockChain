@@ -11,6 +11,7 @@ class Miner : public Wallet
 public:
     Miner(int worker);
     Miner();
+    void Reset();
     Miner(const Miner &p) : nonce(p.nonce), difficultyTarget(p.difficultyTarget), stored(p.stored){};
     bool Check(const Block &toCheck);
     bool TestPoW(int nonce);

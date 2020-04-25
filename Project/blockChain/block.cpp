@@ -14,11 +14,13 @@ using namespace std;
 
 Block::node *CreateTree(vector<Transaction> &vec)
 {
+    bool evenFlag = false;
     int len = vec.size();
     if (len & 1)
     {
         len++;
         vec.push_back(vec.back());
+        evenFlag = true;
     }
     Block::node *now, *next;
     queue<Block::node *> q;
@@ -46,6 +48,10 @@ Block::node *CreateTree(vector<Transaction> &vec)
         q.pop();
         next->transactionHash = sha256(a + b);
         q.push(next);
+    }
+    if (evenFlag)
+    {
+        vec.pop_back();
     }
     return next;
 }
@@ -92,6 +98,7 @@ void Block::ShowTree()
 
 Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
 {
+    bool evenFlag = false;
     nonce = _nonce;
     difficultyTarget = difficulty;
     preBlock = blockChain.GetLastBlock();
@@ -103,6 +110,7 @@ Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
     {
         len++;
         transactionSet.push_back(transactionSet.back());
+        evenFlag = true;
     }
     Block::node *now, *next;
     queue<Block::node *> q;
@@ -136,6 +144,10 @@ Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
     merkleTree.push_back(next);
     merkleTreeRoot = next;
     merkleRoot = merkleTreeRoot->transactionHash;
+    if (evenFlag)
+    {
+        transactionSet.pop_back();
+    }
 }
 
 Block::Block(const Block &p) : preBlockHash(p.preBlockHash),
@@ -150,6 +162,7 @@ Block::Block(const Block &p) : preBlockHash(p.preBlockHash),
     transactionSet.assign(p.transactionSet.begin(), p.transactionSet.end());
     merkleTree.assign(p.merkleTree.begin(), p.merkleTree.end());
 }
+
 string Block::GetHash()
 {
     string s;
@@ -166,6 +179,11 @@ void Block::Pack()
 {
     time = std::time(0);
     blockChain.AddBlock(*this);
+    for (auto &tx : transactionSet)
+    {
+        Transaction::packedTx.push_back(tx);
+    }
+    Transaction::toBePackedTx.clear();
     return;
 }
 

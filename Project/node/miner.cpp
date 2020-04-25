@@ -32,6 +32,16 @@ Miner::Miner()
     Miner::minerSet.push_back(this);
 }
 
+void Miner::Reset()
+{
+    Block tmp;
+    stored = tmp;
+    mt19937 rng;
+    random_device randev;
+    rng.seed(randev());
+    uniform_int_distribution<int> num(0, INT32_MAX);
+    nonce = num(rng);
+}
 bool Miner::TestPoW(int nonce)
 {
     stored.SetNonce(nonce);
@@ -61,6 +71,7 @@ void Miner::PoW(vector<Transaction> &vec)
         now = (now + 1) % INT32_MAX;
     }
 }
+
 bool Miner::Check(const Block &toCheck)
 {
     return true;
