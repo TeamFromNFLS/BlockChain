@@ -65,20 +65,27 @@ int balance()
             t.join();
         }
     }
+    vector<Wallet *> newWallets;
     for (int i = 0; i < 3; ++i)
     {
-        cout << Wallet::walletInfo[i].first << endl;
+        for (int j = 0; j < 3; ++j)
+        {
+            if (Wallet::walletInfo[i].first == wallets[j]->GetAddress())
+            {
+                newWallets.push_back(wallets[j]);
+            }
+        }
     }
-    wallets[1]->CreateCoinbase();
-    wallets[2]->CreateCoinbase();
+    newWallets[1]->CreateCoinbase();
+    newWallets[2]->CreateCoinbase();
     Miner tmpMiner;
     tmpMiner.PoW(Transaction::toBePackedTx);
-    wallets[1]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
-    wallets[2]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
-    wallets[0]->CreateCoinbase();
+    newWallets[1]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
+    newWallets[2]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
+    newWallets[0]->CreateCoinbase();
     tmpMiner.Reset();
     tmpMiner.PoW(Transaction::toBePackedTx);
-    wallets[0]->FindBalance();
+    newWallets[0]->FindBalance();
 
     for (Transaction &tx : Transaction::packedTx)
     {

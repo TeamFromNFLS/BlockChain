@@ -168,7 +168,7 @@ void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
     cout << "Digital signature created." << endl;
 }
 
-vector<int> Wallet::FindSpent(vector<Transaction> pool) //to be iterated over
+vector<int> Wallet::FindSpent(vector<Transaction> &pool) //to be iterated over
 {
     vector<int> spentTxID;
     for (Transaction &tx : pool)
@@ -186,7 +186,7 @@ vector<int> Wallet::FindSpent(vector<Transaction> pool) //to be iterated over
     return spentTxID;
 }
 
-vector<Transaction> Wallet::FindUTXO(vector<int> spentTxId, vector<Transaction> pool)
+vector<Transaction> Wallet::FindUTXO(vector<int> &spentTxId, vector<Transaction> &pool)
 {
     vector<Transaction> UTXOTx;
     vector<int>::iterator ret;
@@ -206,8 +206,7 @@ void Wallet::FindBalance()
     vector<Transaction> myPackedTx;
     vector<int> myPackedSpentTxID;
     vector<Transaction> balanceTx;
-    vector<Transaction> chainTx = Transaction::packedTx;
-    for (Transaction &tx : chainTx)
+    for (Transaction &tx : Transaction::packedTx)
     {
         if (tx.receiverAdr == address)
         {
