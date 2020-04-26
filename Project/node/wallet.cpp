@@ -270,17 +270,20 @@ bool Wallet::VerifyTx(const Transaction &_tx)
         string info = "0x" + senderHash + receiverHash;
         BigInt infoInt(info);
         BigInt decrypted = RSA::EncryptAndDecrypt(tx.input.signature, tx.input.publicKey, tx.input.N);
+        cout << "Signature decrypted." << endl;
         if (decrypted == infoInt)
         {
-            cout << "Valid Transaction. To be packed." << endl;
+            cout << "Signature matches identity"
+                 << "Valid transaction. To be packed." << endl;
             return true;
         }
         else
         {
-            cout << "Invalid Transaction. Refuse to pack." << endl;
+            cout << "Signature does not match identity."
+                 << "Invalid transaction. Refuse to pack." << endl;
             return false;
         }
     }
-    cout << "Valid Transaction. To be packed." << endl;
+    cout << "Valid coinbase transaction. To be packed." << endl;
     return true;
 }
