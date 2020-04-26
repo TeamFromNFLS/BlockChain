@@ -12,34 +12,38 @@
 
 using namespace std;
 
-Block::node *CreateTree(vector<Transaction> &vec)
+Block::node *Block::CreateTree(vector<Transaction> &vec)
 {
+    bool evenFlag = false;
     int len = vec.size();
+    vector<Transaction> newVec = vec;
     if (len & 1)
     {
         len++;
-        vec.push_back(vec.back());
+        newVec.push_back(newVec.back());
+        evenFlag = true;
     }
     Block::node *now, *next;
     queue<Block::node *> q;
     for (int i = 0; i < len; i++)
     {
         string s;
-        s = vec[i].GetTxHash();
+        s = newVec[i].GetTxHash();
         now = new Block::node;
         now->transactionHash = s;
+        now->id = i;
         q.push(now);
     }
     while (q.size() > 1)
     {
         string a, b;
         next = new Block::node;
-        now = q.back();
+        now = q.front();
         now->father = next;
         next->leftTree = now;
         a = now->transactionHash;
         q.pop();
-        now = q.back();
+        now = q.front();
         now->father = next;
         next->rightTree = now;
         b = now->transactionHash;
@@ -48,6 +52,70 @@ Block::node *CreateTree(vector<Transaction> &vec)
         q.push(next);
     }
     return next;
+}
+
+/*Assume that only one tx is corrupted.*/
+pair<bool, Block::node *> Block::CreateTreeCheck()
+{
+    bool evenFlag = false;
+    vector<Transaction> vec;
+    GetTransactionSet(vec);
+    int len = vec.size();
+    vector<Transaction> newVec = vec;
+    if (len & 1)
+    {
+        len++;
+        newVec.push_back(newVec.back());
+        evenFlag = true;
+    }
+    Block::node *now, *next;
+    queue<Block::node *> q;
+    for (int i = 0; i < len; i++)
+    {
+        string s;
+        s = newVec[i].GetTxHash();
+        now = new Block::node;
+        now->transactionHash = s;
+        now->id = i;
+        q.push(now);
+    }
+    while (q.size() > 1)
+    {
+        string a, b;
+        next = new Block::node;
+        now = q.front();
+        now->father = next;
+        next->leftTree = now;
+        a = now->transactionHash;
+        q.pop();
+        now = q.front();
+        now->father = next;
+        next->rightTree = now;
+        b = now->transactionHash;
+        q.pop();
+        next->transactionHash = sha256(a + b);
+        q.push(next);
+    }
+    if (next->transactionHash != merkleRoot)
+    {
+        now = next;
+        next = merkleTreeRoot;
+        while (now->id < 0)
+        {
+            if (now->leftTree != next->leftTree)
+            {
+                now = now->leftTree;
+                next = next->leftTree;
+            }
+            else
+            {
+                now = now->rightTree;
+                next = next->rightTree;
+            }
+        }
+        return make_pair(false, now);
+    }
+    return make_pair(true, next);
 }
 
 void Block::ShowTree()
@@ -72,26 +140,13 @@ void Block::ShowTree()
             q.push(make_pair(newCnt, tmp.second->rightTree));
         }
     }
+    cout << "------------------------------------------" << endl;
     return;
 }
 
-/*Block::Block()
-{
-    mt19937 rng;
-    random_device randev;
-    rng.seed(randev());
-    uniform_int_distribution<int> num(0, INT32_MAX);
-    string tmp = to_string(num(rng));
-    preBlockHash = sha256(tmp);
-    tmp = to_string(num(rng));
-    merkleRoot = sha256(tmp);
-    height = num(rng);
-    nonce = num(rng);
-    time = std::time(0);
-}*/
-
 Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
 {
+    bool evenFlag = false;
     nonce = _nonce;
     difficultyTarget = difficulty;
     preBlock = blockChain.GetLastBlock();
@@ -103,6 +158,7 @@ Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
     {
         len++;
         transactionSet.push_back(transactionSet.back());
+        evenFlag = true;
     }
     Block::node *now, *next;
     queue<Block::node *> q;
@@ -112,6 +168,7 @@ Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
         s = transactionSet[i].GetTxHash();
         now = new Block::node;
         now->transactionHash = s;
+        now->id = i;
         q.push(now);
     }
     while (q.size() > 1)
@@ -136,6 +193,10 @@ Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
     merkleTree.push_back(next);
     merkleTreeRoot = next;
     merkleRoot = merkleTreeRoot->transactionHash;
+    if (evenFlag)
+    {
+        transactionSet.pop_back();
+    }
 }
 
 Block::Block(const Block &p) : preBlockHash(p.preBlockHash),
@@ -150,6 +211,7 @@ Block::Block(const Block &p) : preBlockHash(p.preBlockHash),
     transactionSet.assign(p.transactionSet.begin(), p.transactionSet.end());
     merkleTree.assign(p.merkleTree.begin(), p.merkleTree.end());
 }
+
 string Block::GetHash()
 {
     string s;
@@ -166,6 +228,11 @@ void Block::Pack()
 {
     time = std::time(0);
     blockChain.AddBlock(*this);
+    for (auto &tx : transactionSet)
+    {
+        Transaction::packedTx.push_back(tx);
+    }
+    Transaction::toBePackedTx.clear();
     return;
 }
 
@@ -173,8 +240,8 @@ void Block::Show()
 {
     string now = ctime(&time);
     cout << "Block Log:" << endl
-         << "Head:" << endl
          << "------------------------------------------" << endl
+         << "Head:" << endl
          << "Height: " << height << endl
          << "PreBlockHash: " << preBlockHash << endl
          << "MerkleRoot: " << merkleRoot << endl
@@ -188,4 +255,5 @@ void Block::Show()
     }
     cout << "Merkle Tree: " << endl;
     ShowTree();
+    cout << "------------------------------------------" << endl;
 }

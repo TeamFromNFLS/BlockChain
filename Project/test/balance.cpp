@@ -6,6 +6,7 @@
 #include <thread>
 #include <mutex>
 #include <vector>
+#include <utility>
 #include "rsa.h"
 #include "bigInt.h"
 #include "wallet.h"
@@ -19,6 +20,10 @@ using namespace std;
 
 /* Assume transactions are packed immediately after they are constructed.
 Packed transactions are stored in Transaction::packedTx */
+void WalletCreator(Wallet *wallet)
+{
+    wallet->Init(1);
+}
 
 int balance()
 {
@@ -44,19 +49,44 @@ int balance()
      bool IsSame = (decrypted == signInfo);
      cout << encrypted << endl
           << IsSame << endl; */
-    Wallet a(1), b(1), c(1);
-    b.CreateCoinbase();
-    c.CreateCoinbase();
-    TestMine();
-    b.CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
-    c.CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
-    a.CreateCoinbase();
-    TestMine();
-    a.FindBalance();
-
-    for (Transaction &tx : Transaction::packedTx)
+    vector<Wallet *> wallets;
+    vector<thread> threads;
+    Wallet *tmp;
+    for (int i = 0; i < 3; ++i)
     {
-        Wallet::VerifyTx(tx);
+        tmp = new Wallet;
+        wallets.push_back(tmp);
+        threads.emplace_back(WalletCreator, tmp);
     }
+    for (auto &t : threads)
+    {
+        if (t.joinable())
+        {
+            t.join();
+        }
+    }
+    vector<Wallet *> newWallets;
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            if (Wallet::walletInfo[i].first == wallets[j]->GetAddress())
+            {
+                newWallets.push_back(wallets[j]);
+            }
+        }
+    }
+    Miner tmpMiner(1);
+    newWallets[1]->CreateCoinbase();
+    tmpMiner.PoW(Transaction::toBePackedTx);
+    newWallets[2]->CreateCoinbase();
+    tmpMiner.Reset();
+    tmpMiner.PoW(Transaction::toBePackedTx);
+    newWallets[1]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
+    newWallets[2]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
+    newWallets[0]->CreateCoinbase();
+    tmpMiner.Reset();
+    tmpMiner.PoW(Transaction::toBePackedTx);
+    newWallets[0]->FindBalance();
     return 0;
 }

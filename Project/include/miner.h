@@ -11,8 +11,10 @@ class Miner : public Wallet
 public:
     Miner(int worker);
     Miner();
+    virtual void Init(int worker);
+    void Reset();
     Miner(const Miner &p) : nonce(p.nonce), difficultyTarget(p.difficultyTarget), stored(p.stored){};
-    bool Check(const Block &toCheck);
+    bool Check(Block &toCheck);
     bool TestPoW(int nonce);
     void PoW(std::vector<Transaction> &vec);
     int GetNonce() const
