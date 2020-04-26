@@ -5,6 +5,7 @@
 #include <cstring>
 #include <ctime>
 #include <queue>
+#include <utility>
 #include "transaction.h"
 
 class Chain;
@@ -55,15 +56,21 @@ public:
     }
     struct node
     {
+        int id = -1;
         std::string transactionHash;
         node *leftTree = nullptr;
         node *rightTree = nullptr;
         node *father = nullptr;
     };
     static node *CreateTree(vector<Transaction> &vec);
+    pair<bool, node *> CreateTreeCheck();
     string GetTreeRoot()
     {
         return merkleRoot;
+    }
+    node *GetTreeRootPt()
+    {
+        return merkleTreeRoot;
     }
     void ShowTree();
 

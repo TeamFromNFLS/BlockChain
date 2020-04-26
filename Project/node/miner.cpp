@@ -112,7 +112,7 @@ bool Miner::Check(Block &toCheck)
         return false;
     }
     cout << "Passed Proof of Work test. Hash: " << hash << endl
-         << "------------------------------------------" << endl;
+         << endl;
     vector<Transaction> checkTx;
     toCheck.GetTransactionSet(checkTx);
     if (Block::CreateTree(checkTx)->transactionHash != toCheck.GetTreeRoot())
@@ -121,7 +121,7 @@ bool Miner::Check(Block &toCheck)
         return false;
     }
     cout << "Passed merkle tree root test. Merkle tree root hash: " << toCheck.GetTreeRoot() << endl
-         << "------------------------------------------" << endl;
+         << endl;
     bool checkFlag = false;
     for (auto &tx : checkTx)
     {
@@ -139,7 +139,7 @@ bool Miner::Check(Block &toCheck)
         }
     }
     cout << "Passed one coinBase test. Only one reward received." << endl
-         << "------------------------------------------" << endl;
+         << endl;
     for (auto &tx : checkTx)
     {
         cout << "Now transaction: " << tx.GetID() << endl;
@@ -149,6 +149,7 @@ bool Miner::Check(Block &toCheck)
         }
     }
     cout << "Passed transaction test. All transactions are correct." << endl
+         << endl
          << "All tests passed! Ready to be packed." << endl
          << "------------------------------------------" << endl;
     return true;
