@@ -46,6 +46,33 @@ string Base58(string s)
 
 vector<pair<string, string>> Wallet::walletInfo;
 
+bool Wallet::CheckChain()
+{
+    Block *now = chain.GetLastBlock();
+    /*if the chain only contains the first block*/
+    if (now->GetTreeRoot() == "0")
+    {
+        return true;
+    }
+    /*check merkle tree in every block*/
+    bool flag = true;
+    while (now != nullptr)
+    {
+        pair<bool, Block::node *> check = now->CreateTreeCheck();
+        if (check.first = false)
+        {
+            flag = false;
+            cout << "Incorrect block on tx: " << check.second << endl;
+        }
+        now = now->preBlock;
+    }
+    if (!flag)
+    {
+        return false;
+    }
+    return true;
+}
+
 void Wallet::Init(int worker)
 {
     cout << "Creating a new wallet. Please wait..." << endl;
@@ -63,6 +90,16 @@ void Wallet::Init(int worker)
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
+    chain = blockChain;
+    cout << "Begin checking blockchain in this wallet..." << endl;
+    if (!CheckChain())
+    {
+        cout << "Incorrect chain in this wallet." << endl;
+    }
+    else
+    {
+        cout << "Passed blockchain test in this wallet." << endl;
+    }
     cout << "Complete." << endl
          << "Address: " << address << endl
          << "------------------------------------------" << endl;

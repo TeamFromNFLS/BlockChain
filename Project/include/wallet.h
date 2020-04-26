@@ -2,6 +2,7 @@
 #define WALLET_H
 #include <string>
 #include <tuple>
+#include "chain.h"
 #include "bigInt.h"
 #include "transaction.h"
 #include "txInput.h"
@@ -24,12 +25,14 @@ public:
     }
     static vector<pair<string, string>> walletInfo;
     void SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr);
+    bool CheckChain();
 
 protected:
     BigInt privateKey, publicKey, n;
     string publicKeyHash;
     string address;
     string version = "00";
+    Chain chain;
 
     /* create transaction */
 public:

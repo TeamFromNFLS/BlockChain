@@ -31,6 +31,7 @@ Block::node *Block::CreateTree(vector<Transaction> &vec)
         s = newVec[i].GetTxHash();
         now = new Block::node;
         now->transactionHash = s;
+        now->id = i;
         q.push(now);
     }
     while (q.size() > 1)
@@ -51,6 +52,70 @@ Block::node *Block::CreateTree(vector<Transaction> &vec)
         q.push(next);
     }
     return next;
+}
+
+/*Assume that only one tx is corrupted.*/
+pair<bool, Block::node *> Block::CreateTreeCheck()
+{
+    bool evenFlag = false;
+    vector<Transaction> vec;
+    GetTransactionSet(vec);
+    int len = vec.size();
+    vector<Transaction> newVec = vec;
+    if (len & 1)
+    {
+        len++;
+        newVec.push_back(newVec.back());
+        evenFlag = true;
+    }
+    Block::node *now, *next;
+    queue<Block::node *> q;
+    for (int i = 0; i < len; i++)
+    {
+        string s;
+        s = newVec[i].GetTxHash();
+        now = new Block::node;
+        now->transactionHash = s;
+        now->id = i;
+        q.push(now);
+    }
+    while (q.size() > 1)
+    {
+        string a, b;
+        next = new Block::node;
+        now = q.front();
+        now->father = next;
+        next->leftTree = now;
+        a = now->transactionHash;
+        q.pop();
+        now = q.front();
+        now->father = next;
+        next->rightTree = now;
+        b = now->transactionHash;
+        q.pop();
+        next->transactionHash = sha256(a + b);
+        q.push(next);
+    }
+    if (next->transactionHash != merkleRoot)
+    {
+        now = next;
+        next = merkleTreeRoot;
+        while (now->id < 0)
+        {
+            if (now->leftTree != next->leftTree)
+            {
+                now = now->leftTree;
+                next = next->leftTree;
+            }
+            else
+            {
+                now = now->rightTree;
+                next = next->rightTree;
+            }
+        }
+        return make_pair(false, now);
+    }
+    return make_pair(true, next);
 }
 
 void Block::ShowTree()
@@ -103,6 +168,7 @@ Block::Block(int _nonce, string difficulty, vector<Transaction> &vec)
         s = transactionSet[i].GetTxHash();
         now = new Block::node;
         now->transactionHash = s;
+        now->id = i;
         q.push(now);
     }
     while (q.size() > 1)
@@ -174,8 +240,8 @@ void Block::Show()
 {
     string now = ctime(&time);
     cout << "Block Log:" << endl
-         << "Head:" << endl
          << "------------------------------------------" << endl
+         << "Head:" << endl
          << "Height: " << height << endl
          << "PreBlockHash: " << preBlockHash << endl
          << "MerkleRoot: " << merkleRoot << endl

@@ -2,7 +2,6 @@
 #define CHAIN_H
 #include <vector>
 #include "block.h"
-#include "miner.h"
 
 class Chain
 {
