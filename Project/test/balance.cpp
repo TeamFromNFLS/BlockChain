@@ -47,9 +47,11 @@ int balance()
     Wallet a(1), b(1), c(1);
     b.CreateCoinbase();
     c.CreateCoinbase();
+    TestMine();
     b.CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
     c.CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
     a.CreateCoinbase();
+    TestMine();
     a.FindBalance();
 
     for (Transaction &tx : Transaction::packedTx)

@@ -85,7 +85,7 @@ void TestMine()
     bool foundFlag = false, outputFlag = false;
     int checkCnt = 0;
     int worker = 4;
-    cout << "Type in the number of workers：";
+    //cout << "Type in the number of workers：";
     //cin >> worker;
     int output;
     vector<thread> threads(worker);
