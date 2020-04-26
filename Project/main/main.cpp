@@ -16,7 +16,7 @@ Packed transactions are stored in Transaction::packedTx */
 
 int main()
 {
-     freopen("ans.txt", "w", stdout);
+     freopen("log.txt", "w", stdout);
      struct timeval timeStart, timeEnd;
      double runtime = 0;
      gettimeofday(&timeStart, NULL);

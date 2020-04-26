@@ -61,7 +61,15 @@ void Miner::Init(int worker)
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
     chain = blockChain;
-    CheckChain();
+    cout << "Begin checking blockchain in this miner..." << endl;
+    if (!CheckChain())
+    {
+        cout << "Incorrect chain in this miner." << endl;
+    }
+    else
+    {
+        cout << "Passed blockchain test in this miner." << endl;
+    }
     cout << "Complete." << endl
          << "Address: " << address << endl
          << "------------------------------------------" << endl;

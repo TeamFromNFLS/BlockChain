@@ -76,7 +76,7 @@ int balance()
             }
         }
     }
-    Miner tmpMiner;
+    Miner tmpMiner(1);
     newWallets[1]->CreateCoinbase();
     tmpMiner.PoW(Transaction::toBePackedTx);
     newWallets[2]->CreateCoinbase();

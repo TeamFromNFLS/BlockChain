@@ -25,7 +25,7 @@ public:
     }
     static vector<pair<string, string>> walletInfo;
     void SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr);
-    void CheckChain();
+    bool CheckChain();
 
 protected:
     BigInt privateKey, publicKey, n;
