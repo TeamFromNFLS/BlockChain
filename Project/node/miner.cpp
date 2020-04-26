@@ -60,6 +60,8 @@ void Miner::Init(int worker)
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
+    chain = blockChain;
+    CheckChain();
     cout << "Complete." << endl
          << "Address: " << address << endl
          << "------------------------------------------" << endl;
