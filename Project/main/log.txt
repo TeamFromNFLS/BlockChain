@@ -1,0 +1,235 @@
+Creating a new wallet. Please wait...
+Creating a new wallet. Please wait...
+Creating a new wallet. Please wait...
+Prime numbers found
+Key pair generated
+Begin checking blockchain in this wallet...
+Passed blockchain test in this wallet.
+Complete.
+Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+------------------------------------------
+Prime numbers found
+Key pair generated
+Begin checking blockchain in this wallet...
+Passed blockchain test in this wallet.
+Complete.
+Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+------------------------------------------
+Prime numbers found
+Key pair generated
+Begin checking blockchain in this wallet...
+Passed blockchain test in this wallet.
+Complete.
+Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+------------------------------------------
+Creating a new miner. Please wait...
+Prime numbers found
+Key pair generated
+Begin checking blockchain in this miner...
+Passed blockchain test in this miner.
+Complete.
+Address: 11qfdxqNHDS1PDVo5zQDd6nzcqkh3UdL
+------------------------------------------
+Coinbase transaction constructed.
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Value: 5
+ID: 0
+PrevTx ID: -1
+------------------------------------------
+Begin checking block...
+
+Passed Proof of Work test. Hash: 5d5b6133a4d6bc00a6597547eecd5db932a51df1459f9017c4be450961205235
+
+Passed merkle tree root test. Merkle tree root hash: 2cc35f7a433ff10eba236c4a23dde894b0098b76e5c76b00ea6a0d612881043a
+
+Passed one coinBase test. Only one reward received.
+
+Now transaction: 0
+Valid Transaction. To be packed.
+Passed transaction test. All transactions are correct.
+
+All tests passed! Ready to be packed.
+------------------------------------------
+Block Log:
+------------------------------------------
+Head:
+Height: 2
+PreBlockHash: 60d5764c47ae804750d292cf565acfee6aeddd1db8085dd9b7e815e04d9072c2
+MerkleRoot: 2cc35f7a433ff10eba236c4a23dde894b0098b76e5c76b00ea6a0d612881043a
+Date: Sun Apr 26 12:42:04 2020
+nonce: 719736072
+------------------------------------------
+Transaction:
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Value: 5
+ID: 0
+PrevTx ID: -1
+------------------------------------------
+Merkle Tree: 
+Depth: 0 Hash: 2cc35f7a433ff10eba236c4a23dde894b0098b76e5c76b00ea6a0d612881043a
+Depth: 1 Hash: 144bae0d6844e9d97524968d18672a8c5e9d2cc46a2eb75d65c9fa88bcd9d769
+Depth: 1 Hash: 144bae0d6844e9d97524968d18672a8c5e9d2cc46a2eb75d65c9fa88bcd9d769
+------------------------------------------
+------------------------------------------
+Coinbase transaction constructed.
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Value: 5
+ID: 0
+PrevTx ID: -1
+------------------------------------------
+Begin checking block...
+
+Passed Proof of Work test. Hash: cbb30f03ba0991b5e9d41f6d0629613768d1f9d0e3072e693e6d4a31b7532de9
+
+Passed merkle tree root test. Merkle tree root hash: 1d36347895f9b51e18f5eceaf34cf9b23082ac43758482c662a2c43e6add326a
+
+Passed one coinBase test. Only one reward received.
+
+Now transaction: 0
+Valid Transaction. To be packed.
+Passed transaction test. All transactions are correct.
+
+All tests passed! Ready to be packed.
+------------------------------------------
+Block Log:
+------------------------------------------
+Head:
+Height: 3
+PreBlockHash: 4bd0b0739728739da77628eec6cfd99053913e98cc3f442d0a91107ba7f6b812
+MerkleRoot: 1d36347895f9b51e18f5eceaf34cf9b23082ac43758482c662a2c43e6add326a
+Date: Sun Apr 26 12:42:04 2020
+nonce: 1029676874
+------------------------------------------
+Transaction:
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Value: 5
+ID: 0
+PrevTx ID: -1
+------------------------------------------
+Merkle Tree: 
+Depth: 0 Hash: 1d36347895f9b51e18f5eceaf34cf9b23082ac43758482c662a2c43e6add326a
+Depth: 1 Hash: f6ed31dddafe7afab6e4c8438da5713d18e0553e5918cbf80f564675cc83c607
+Depth: 1 Hash: f6ed31dddafe7afab6e4c8438da5713d18e0553e5918cbf80f564675cc83c607
+------------------------------------------
+------------------------------------------
+------------------------------------------
+The decrypted signature is the same as the hash value: 1
+------------------------------------------
+Digital signature created.
+Transaction constructed by 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+------------------------------------------
+Transaction log: 
+Type: Normal transaction
+Sender Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0x3bb908e57aca93fc7e591ceeaaa222a6637ab7a87b6751a62c0eeb9c9b9d399e4f0d9634260f6b145a1a3d7b460110e5a6be8fe67240071d23df5d84c6957457b08d4d376cfce72c769df2b7807a0f28d565b0a58bfe5245bb6dda176c7462592512fe8245913aeee1b833355202a4d902d36ca4715e2780b3360ef856867674
+------------------------------------------
+------------------------------------------
+The decrypted signature is the same as the hash value: 1
+------------------------------------------
+Digital signature created.
+Transaction constructed by 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+------------------------------------------
+Transaction log: 
+Type: Normal transaction
+Sender Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0x18f0029886188a3ad2cd34e8a27bc3e4a504ded5da5a7d78e3fa3bad5081c3fde26a7393471b82463178c1c06bc0ef144e1dd1368189d213466face4bacd32414e727b17221a317da09916bd2dfd53636a1f67879b1181e110d194659e373758d4c9526f5d7a8e45c22f2d5162d41dd289ad49c145ca3fc2d083d657c1c4e1e7
+------------------------------------------
+Coinbase transaction constructed.
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Value: 5
+ID: 0
+PrevTx ID: ffffffff
+------------------------------------------
+Begin checking block...
+
+Passed Proof of Work test. Hash: 1c9c869b78a26b4bf3d6f2d0fc37c32de63757de70d47c9970f121b1a1839555
+
+Passed merkle tree root test. Merkle tree root hash: b29a5680f68664e679dc38abe5559d90983719e72f32d0f7be57f321d87e8331
+
+Passed one coinBase test. Only one reward received.
+
+Now transaction: 1
+Valid Transaction. To be packed.
+Now transaction: 1
+Valid Transaction. To be packed.
+Now transaction: 0
+Valid Transaction. To be packed.
+Passed transaction test. All transactions are correct.
+
+All tests passed! Ready to be packed.
+------------------------------------------
+Block Log:
+------------------------------------------
+Head:
+Height: 1
+PreBlockHash: c5e3cb980ee22a5b7150e88263efe6a13baa54e98a0cfdb8d22b751c1679aacc
+MerkleRoot: b29a5680f68664e679dc38abe5559d90983719e72f32d0f7be57f321d87e8331
+Date: Sun Apr 26 12:42:04 2020
+nonce: 2fcde228
+------------------------------------------
+Transaction:
+------------------------------------------
+Transaction log: 
+Type: Normal transaction
+Sender Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0x3bb908e57aca93fc7e591ceeaaa222a6637ab7a87b6751a62c0eeb9c9b9d399e4f0d9634260f6b145a1a3d7b460110e5a6be8fe67240071d23df5d84c6957457b08d4d376cfce72c769df2b7807a0f28d565b0a58bfe5245bb6dda176c7462592512fe8245913aeee1b833355202a4d902d36ca4715e2780b3360ef856867674
+------------------------------------------
+Transaction log: 
+Type: Normal transaction
+Sender Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Value: 5
+ID: 1
+PrevTx ID: 0
+Signature: 0x18f0029886188a3ad2cd34e8a27bc3e4a504ded5da5a7d78e3fa3bad5081c3fde26a7393471b82463178c1c06bc0ef144e1dd1368189d213466face4bacd32414e727b17221a317da09916bd2dfd53636a1f67879b1181e110d194659e373758d4c9526f5d7a8e45c22f2d5162d41dd289ad49c145ca3fc2d083d657c1c4e1e7
+------------------------------------------
+Transaction log: 
+Type: Coinbase transaction
+Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Value: 5
+ID: 0
+PrevTx ID: ffffffff
+------------------------------------------
+Merkle Tree: 
+Depth: 0 Hash: b29a5680f68664e679dc38abe5559d90983719e72f32d0f7be57f321d87e8331
+Depth: 1 Hash: 201343dfc9c7422924c8771d67a87ffab7be878de981a7a052d05eef4fd58fbf
+Depth: 1 Hash: 7e9279a5c9bdbffefa5024d5a3c25197a4753b33777fd6a8ea6c63ea9601a239
+Depth: 2 Hash: 033947bbf121206522ca9948b787b90dba12637a79cf0664432a5b5c43fc049a
+Depth: 2 Hash: b4edccb2b3f94826999a62b4ce8654f0f91b271cda9f3147d4738e9aee4d2955
+Depth: 2 Hash: d08be3fc79269a5257fbf06f5aa246a96957f18e749a9b8426c899f1b947353e
+Depth: 2 Hash: d08be3fc79269a5257fbf06f5aa246a96957f18e749a9b8426c899f1b947353e
+------------------------------------------
+------------------------------------------
+UTXO information:
+Sequence number     	UTXO value
+1                   	5
+2                   	5
+3                   	5
+Total time: 53.553s.

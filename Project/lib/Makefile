@@ -6,7 +6,6 @@ TARGET = blockChain.dll
 LIB = blockChain.lib
  
 all:
-	$(CC) $(INC) $(OBJS) -shared -o $(TARGET) -Wl,--out-implib,$(LIB) -pthread
-
+	$(CC) $(INC) $(OBJS) -shared -o $(TARGET) -Wl,--out-implib,$(LIB)
 clean:
 	rm $(SRCS) $(headfile)
