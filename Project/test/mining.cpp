@@ -90,10 +90,9 @@ void TestMine()
     int output;
     vector<thread> threads(worker);
     vector<Miner *> miners(worker);
-    Miner *tmp;
     for (int i = 0; i < worker; ++i)
     {
-        tmp = new Miner;
+        Miner *tmp = new Miner;
         miners[i] = tmp;
     }
     for (int i = 0; i < worker; ++i)
