@@ -85,15 +85,14 @@ void TestMine()
     bool foundFlag = false, outputFlag = false;
     int checkCnt = 0;
     int worker = 4;
-    cout << "Type in the number of workers：";
+    //cout << "Type in the number of workers：";
     //cin >> worker;
     int output;
     vector<thread> threads(worker);
     vector<Miner *> miners(worker);
-    Miner *tmp;
     for (int i = 0; i < worker; ++i)
     {
-        tmp = new Miner;
+        Miner *tmp = new Miner;
         miners[i] = tmp;
     }
     for (int i = 0; i < worker; ++i)
