@@ -6,21 +6,21 @@ Key pair generated
 Begin checking blockchain in this wallet...
 Passed blockchain test in this wallet.
 Complete.
-Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Address: 1128KKHAWnW6ZDLqNTjrMSepHBCTxYuWe
 ------------------------------------------
 Prime numbers found
 Key pair generated
 Begin checking blockchain in this wallet...
 Passed blockchain test in this wallet.
 Complete.
-Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Address: 11hbwMbX72ifMRH9iQamuqs9aVmd6r9W
 ------------------------------------------
 Prime numbers found
 Key pair generated
 Begin checking blockchain in this wallet...
 Passed blockchain test in this wallet.
 Complete.
-Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Address: 1127Rp1whESfvFjqUQsS2eitErAaRko66
 ------------------------------------------
 Creating a new miner. Please wait...
 Prime numbers found
@@ -28,27 +28,27 @@ Key pair generated
 Begin checking blockchain in this miner...
 Passed blockchain test in this miner.
 Complete.
-Address: 11qfdxqNHDS1PDVo5zQDd6nzcqkh3UdL
+Address: 11chTQVhsnf59TNCMQudme6GtrC3nVU4
 ------------------------------------------
 Coinbase transaction constructed.
 ------------------------------------------
 Transaction log: 
 Type: Coinbase transaction
-Receiver Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Receiver Address: 11hbwMbX72ifMRH9iQamuqs9aVmd6r9W
 Value: 5
 ID: 0
 PrevTx ID: -1
 ------------------------------------------
 Begin checking block...
 
-Passed Proof of Work test. Hash: 5d5b6133a4d6bc00a6597547eecd5db932a51df1459f9017c4be450961205235
+Passed Proof of Work test. Hash: d4b189afdde07a2b399c0328dae3c11a81f52164db4140438d1969d3cc0043ff
 
-Passed merkle tree root test. Merkle tree root hash: 2cc35f7a433ff10eba236c4a23dde894b0098b76e5c76b00ea6a0d612881043a
+Passed merkle tree root test. Merkle tree root hash: b502f0911aee085b8b29d90c6c633dba83f26c3b32013fcbc54e8b933a52e948
 
 Passed one coinBase test. Only one reward received.
 
 Now transaction: 0
-Valid Transaction. To be packed.
+Valid coinbase transaction. To be packed.
 Passed transaction test. All transactions are correct.
 
 All tests passed! Ready to be packed.
@@ -58,44 +58,44 @@ Block Log:
 Head:
 Height: 2
 PreBlockHash: 60d5764c47ae804750d292cf565acfee6aeddd1db8085dd9b7e815e04d9072c2
-MerkleRoot: 2cc35f7a433ff10eba236c4a23dde894b0098b76e5c76b00ea6a0d612881043a
-Date: Sun Apr 26 12:42:04 2020
-nonce: 719736072
+MerkleRoot: b502f0911aee085b8b29d90c6c633dba83f26c3b32013fcbc54e8b933a52e948
+Date: Sun Apr 26 12:50:59 2020
+nonce: 1777017998
 ------------------------------------------
 Transaction:
 ------------------------------------------
 Transaction log: 
 Type: Coinbase transaction
-Receiver Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Receiver Address: 11hbwMbX72ifMRH9iQamuqs9aVmd6r9W
 Value: 5
 ID: 0
 PrevTx ID: -1
 ------------------------------------------
 Merkle Tree: 
-Depth: 0 Hash: 2cc35f7a433ff10eba236c4a23dde894b0098b76e5c76b00ea6a0d612881043a
-Depth: 1 Hash: 144bae0d6844e9d97524968d18672a8c5e9d2cc46a2eb75d65c9fa88bcd9d769
-Depth: 1 Hash: 144bae0d6844e9d97524968d18672a8c5e9d2cc46a2eb75d65c9fa88bcd9d769
+Depth: 0 Hash: b502f0911aee085b8b29d90c6c633dba83f26c3b32013fcbc54e8b933a52e948
+Depth: 1 Hash: 1f5e455c17c50a2464b6e1d983e25037082e14365f47c677dae622253645f254
+Depth: 1 Hash: 1f5e455c17c50a2464b6e1d983e25037082e14365f47c677dae622253645f254
 ------------------------------------------
 ------------------------------------------
 Coinbase transaction constructed.
 ------------------------------------------
 Transaction log: 
 Type: Coinbase transaction
-Receiver Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Receiver Address: 1127Rp1whESfvFjqUQsS2eitErAaRko66
 Value: 5
 ID: 0
 PrevTx ID: -1
 ------------------------------------------
 Begin checking block...
 
-Passed Proof of Work test. Hash: cbb30f03ba0991b5e9d41f6d0629613768d1f9d0e3072e693e6d4a31b7532de9
+Passed Proof of Work test. Hash: c587e07718a9e6cd1eaebc917a1148d78bf43f66e0ab6e0097909dd2d118d9c9
 
-Passed merkle tree root test. Merkle tree root hash: 1d36347895f9b51e18f5eceaf34cf9b23082ac43758482c662a2c43e6add326a
+Passed merkle tree root test. Merkle tree root hash: 627f8c41a4268ffd364a74c6f2138040516c9a34b6e86e1cf28f81121169ee71
 
 Passed one coinBase test. Only one reward received.
 
 Now transaction: 0
-Valid Transaction. To be packed.
+Valid coinbase transaction. To be packed.
 Passed transaction test. All transactions are correct.
 
 All tests passed! Ready to be packed.
@@ -104,79 +104,81 @@ Block Log:
 ------------------------------------------
 Head:
 Height: 3
-PreBlockHash: 4bd0b0739728739da77628eec6cfd99053913e98cc3f442d0a91107ba7f6b812
-MerkleRoot: 1d36347895f9b51e18f5eceaf34cf9b23082ac43758482c662a2c43e6add326a
-Date: Sun Apr 26 12:42:04 2020
-nonce: 1029676874
+PreBlockHash: 3e81fb9795f7826011da8654783a10fcb2ef884642f4c9fad1cb6ccd8113c8ac
+MerkleRoot: 627f8c41a4268ffd364a74c6f2138040516c9a34b6e86e1cf28f81121169ee71
+Date: Sun Apr 26 12:50:59 2020
+nonce: 1925313548
 ------------------------------------------
 Transaction:
 ------------------------------------------
 Transaction log: 
 Type: Coinbase transaction
-Receiver Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Receiver Address: 1127Rp1whESfvFjqUQsS2eitErAaRko66
 Value: 5
 ID: 0
 PrevTx ID: -1
 ------------------------------------------
 Merkle Tree: 
-Depth: 0 Hash: 1d36347895f9b51e18f5eceaf34cf9b23082ac43758482c662a2c43e6add326a
-Depth: 1 Hash: f6ed31dddafe7afab6e4c8438da5713d18e0553e5918cbf80f564675cc83c607
-Depth: 1 Hash: f6ed31dddafe7afab6e4c8438da5713d18e0553e5918cbf80f564675cc83c607
+Depth: 0 Hash: 627f8c41a4268ffd364a74c6f2138040516c9a34b6e86e1cf28f81121169ee71
+Depth: 1 Hash: 397e98902c652d41e32b6d9ce086e999e236b7c59cdb41e20c51b21ca3205e72
+Depth: 1 Hash: 397e98902c652d41e32b6d9ce086e999e236b7c59cdb41e20c51b21ca3205e72
 ------------------------------------------
 ------------------------------------------
 ------------------------------------------
 The decrypted signature is the same as the hash value: 1
 ------------------------------------------
 Digital signature created.
-Transaction constructed by 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
+Transaction constructed by 11hbwMbX72ifMRH9iQamuqs9aVmd6r9W
 ------------------------------------------
 Transaction log: 
 Type: Normal transaction
-Sender Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
-Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Sender Address: 11hbwMbX72ifMRH9iQamuqs9aVmd6r9W
+Receiver Address: 1128KKHAWnW6ZDLqNTjrMSepHBCTxYuWe
 Value: 5
 ID: 1
 PrevTx ID: 0
-Signature: 0x3bb908e57aca93fc7e591ceeaaa222a6637ab7a87b6751a62c0eeb9c9b9d399e4f0d9634260f6b145a1a3d7b460110e5a6be8fe67240071d23df5d84c6957457b08d4d376cfce72c769df2b7807a0f28d565b0a58bfe5245bb6dda176c7462592512fe8245913aeee1b833355202a4d902d36ca4715e2780b3360ef856867674
+Signature: 0x482ea41cfaeac4e5493bb6231b9d7753a98967fafd69250db3dca4ea235078a34dd1729e7014949d019ee60308b03360b5e878eede7000a84f52351e123daaec76a9c71c8dfaeb4158060a88a06aac7caae5e63854ef864996136dd0ec04eedafc0d75c0d14a4992b3258f1e890aaf96d164fe4516cccbcf56e69d6410a7ce5d
 ------------------------------------------
 ------------------------------------------
 The decrypted signature is the same as the hash value: 1
 ------------------------------------------
 Digital signature created.
-Transaction constructed by 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
+Transaction constructed by 1127Rp1whESfvFjqUQsS2eitErAaRko66
 ------------------------------------------
 Transaction log: 
 Type: Normal transaction
-Sender Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
-Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Sender Address: 1127Rp1whESfvFjqUQsS2eitErAaRko66
+Receiver Address: 1128KKHAWnW6ZDLqNTjrMSepHBCTxYuWe
 Value: 5
 ID: 1
 PrevTx ID: 0
-Signature: 0x18f0029886188a3ad2cd34e8a27bc3e4a504ded5da5a7d78e3fa3bad5081c3fde26a7393471b82463178c1c06bc0ef144e1dd1368189d213466face4bacd32414e727b17221a317da09916bd2dfd53636a1f67879b1181e110d194659e373758d4c9526f5d7a8e45c22f2d5162d41dd289ad49c145ca3fc2d083d657c1c4e1e7
+Signature: 0x0cd3fb9f623db4cb48fba07339681d678197e653e4982637ac84707e1617790fc3b163c2a1066ba280fbd3037d9c4b240fc35e80ac1c2cccad4f23cf8b57649691c25dbbced7bdda621daf89d0c4befe3c945a58a89e9413510e610b28f0700cbbcaf25b172cb43aed3d8ce76f1713337fedf326f663d949391df5626515ae56
 ------------------------------------------
 Coinbase transaction constructed.
 ------------------------------------------
 Transaction log: 
 Type: Coinbase transaction
-Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Receiver Address: 1128KKHAWnW6ZDLqNTjrMSepHBCTxYuWe
 Value: 5
 ID: 0
 PrevTx ID: ffffffff
 ------------------------------------------
 Begin checking block...
 
-Passed Proof of Work test. Hash: 1c9c869b78a26b4bf3d6f2d0fc37c32de63757de70d47c9970f121b1a1839555
+Passed Proof of Work test. Hash: 9371f5864ede7b81d26654d9c8c8722b329bb34817f8d16d39d332e6e9c26e7c
 
-Passed merkle tree root test. Merkle tree root hash: b29a5680f68664e679dc38abe5559d90983719e72f32d0f7be57f321d87e8331
+Passed merkle tree root test. Merkle tree root hash: b5910eb16a77a5f825b2a788d543b0a1411c52351722e9516d51ee0a566f9d21
 
 Passed one coinBase test. Only one reward received.
 
 Now transaction: 1
-Valid Transaction. To be packed.
+Signature decrypted.
+Signature matches identityValid transaction. To be packed.
 Now transaction: 1
-Valid Transaction. To be packed.
+Signature decrypted.
+Signature matches identityValid transaction. To be packed.
 Now transaction: 0
-Valid Transaction. To be packed.
+Valid coinbase transaction. To be packed.
 Passed transaction test. All transactions are correct.
 
 All tests passed! Ready to be packed.
@@ -186,45 +188,45 @@ Block Log:
 Head:
 Height: 1
 PreBlockHash: c5e3cb980ee22a5b7150e88263efe6a13baa54e98a0cfdb8d22b751c1679aacc
-MerkleRoot: b29a5680f68664e679dc38abe5559d90983719e72f32d0f7be57f321d87e8331
-Date: Sun Apr 26 12:42:04 2020
-nonce: 2fcde228
+MerkleRoot: b5910eb16a77a5f825b2a788d543b0a1411c52351722e9516d51ee0a566f9d21
+Date: Sun Apr 26 12:50:59 2020
+nonce: 24778469
 ------------------------------------------
 Transaction:
 ------------------------------------------
 Transaction log: 
 Type: Normal transaction
-Sender Address: 1124YvuzE1kHDh1DHRtZ8gY4SJfA3mcZL
-Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Sender Address: 11hbwMbX72ifMRH9iQamuqs9aVmd6r9W
+Receiver Address: 1128KKHAWnW6ZDLqNTjrMSepHBCTxYuWe
 Value: 5
 ID: 1
 PrevTx ID: 0
-Signature: 0x3bb908e57aca93fc7e591ceeaaa222a6637ab7a87b6751a62c0eeb9c9b9d399e4f0d9634260f6b145a1a3d7b460110e5a6be8fe67240071d23df5d84c6957457b08d4d376cfce72c769df2b7807a0f28d565b0a58bfe5245bb6dda176c7462592512fe8245913aeee1b833355202a4d902d36ca4715e2780b3360ef856867674
+Signature: 0x482ea41cfaeac4e5493bb6231b9d7753a98967fafd69250db3dca4ea235078a34dd1729e7014949d019ee60308b03360b5e878eede7000a84f52351e123daaec76a9c71c8dfaeb4158060a88a06aac7caae5e63854ef864996136dd0ec04eedafc0d75c0d14a4992b3258f1e890aaf96d164fe4516cccbcf56e69d6410a7ce5d
 ------------------------------------------
 Transaction log: 
 Type: Normal transaction
-Sender Address: 11ULBCp3y8KMfNUyRegvY2sGNYrLChje
-Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Sender Address: 1127Rp1whESfvFjqUQsS2eitErAaRko66
+Receiver Address: 1128KKHAWnW6ZDLqNTjrMSepHBCTxYuWe
 Value: 5
 ID: 1
 PrevTx ID: 0
-Signature: 0x18f0029886188a3ad2cd34e8a27bc3e4a504ded5da5a7d78e3fa3bad5081c3fde26a7393471b82463178c1c06bc0ef144e1dd1368189d213466face4bacd32414e727b17221a317da09916bd2dfd53636a1f67879b1181e110d194659e373758d4c9526f5d7a8e45c22f2d5162d41dd289ad49c145ca3fc2d083d657c1c4e1e7
+Signature: 0x0cd3fb9f623db4cb48fba07339681d678197e653e4982637ac84707e1617790fc3b163c2a1066ba280fbd3037d9c4b240fc35e80ac1c2cccad4f23cf8b57649691c25dbbced7bdda621daf89d0c4befe3c945a58a89e9413510e610b28f0700cbbcaf25b172cb43aed3d8ce76f1713337fedf326f663d949391df5626515ae56
 ------------------------------------------
 Transaction log: 
 Type: Coinbase transaction
-Receiver Address: 118mVWuH6CQYtAVuDkV3pQKYFrEDYAUq
+Receiver Address: 1128KKHAWnW6ZDLqNTjrMSepHBCTxYuWe
 Value: 5
 ID: 0
 PrevTx ID: ffffffff
 ------------------------------------------
 Merkle Tree: 
-Depth: 0 Hash: b29a5680f68664e679dc38abe5559d90983719e72f32d0f7be57f321d87e8331
-Depth: 1 Hash: 201343dfc9c7422924c8771d67a87ffab7be878de981a7a052d05eef4fd58fbf
-Depth: 1 Hash: 7e9279a5c9bdbffefa5024d5a3c25197a4753b33777fd6a8ea6c63ea9601a239
-Depth: 2 Hash: 033947bbf121206522ca9948b787b90dba12637a79cf0664432a5b5c43fc049a
-Depth: 2 Hash: b4edccb2b3f94826999a62b4ce8654f0f91b271cda9f3147d4738e9aee4d2955
-Depth: 2 Hash: d08be3fc79269a5257fbf06f5aa246a96957f18e749a9b8426c899f1b947353e
-Depth: 2 Hash: d08be3fc79269a5257fbf06f5aa246a96957f18e749a9b8426c899f1b947353e
+Depth: 0 Hash: b5910eb16a77a5f825b2a788d543b0a1411c52351722e9516d51ee0a566f9d21
+Depth: 1 Hash: a20ffeea3718a2932c03a6d96533366e7dba6b1ca459c9f6e13ed87dd7cc6130
+Depth: 1 Hash: 2f8e4f0e2a5ba5c5c8d10a13faf22230ad3f7a9487fbd0f23e6e74b8c16334c7
+Depth: 2 Hash: b61808cc37bb6ce2f4ec0402a88ca67393446e3a4c12d8171a7549d236d5f9e5
+Depth: 2 Hash: 025b5ce831374f8d038698c4f06dbb0291caec71388e180aee7257f4535adec7
+Depth: 2 Hash: d6b17e7e510a3233c3f162b981d56e9cd0a943f671cc67482241b1859fc21f2f
+Depth: 2 Hash: d6b17e7e510a3233c3f162b981d56e9cd0a943f671cc67482241b1859fc21f2f
 ------------------------------------------
 ------------------------------------------
 UTXO information:
@@ -232,4 +234,4 @@ Sequence number     	UTXO value
 1                   	5
 2                   	5
 3                   	5
-Total time: 53.553s.
+Total time: 52.8432s.
