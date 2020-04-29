@@ -40,10 +40,6 @@ public:
         return true;
     }
     string ToString();
-    int GetBit() const
-    {
-        return bit;
-    }
     friend istream &operator>>(istream &input, BigInt &bigInt);
     friend ostream &operator<<(ostream &output, BigInt &bigInt);
     // overload operators
@@ -82,6 +78,10 @@ private:
     void ComputeInverse();
     bool InverseComputed = false;
     vector<uint64_t> numberInverse; // numberInverse的LSB表示2^{-2p}, p = m_cnt_bits
+    int GetBit() const
+    {
+        return bit;
+    }
 };
 
 #endif
