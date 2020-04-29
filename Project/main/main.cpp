@@ -1,5 +1,6 @@
 #include <sys/time.h>
 #include <unistd.h>
+#include <set>
 #include "rsa.h"
 #include "bigInt.h"
 #include "wallet.h"
@@ -11,17 +12,93 @@
 #include "test.h"
 using namespace std;
 
-/* Assume transactions are packed immediately after they are constructed.
-Packed transactions are stored in Transaction::packedTx */
+const int INF = 0x3f3f3f3f;
+set<string> commendSet{"demo", "help", "add", "delete", "wallet", "miner", "find", "make", "exist", "exit"};
+
+string EditDistance(string &s)
+{
+     int dp[15][15];
+     int now = INF;
+     string result;
+     string check = s;
+     check.insert(0, "0");
+     int lenCheck = check.length() - 1;
+     set<string>::iterator it;
+     for (it = commendSet.begin(); it != commendSet.end(); ++it)
+     {
+          string commend = *it;
+          commend.insert(0, "0");
+          int lenCommend = commend.length() - 1;
+          for (int i = 1; i <= lenCheck; ++i)
+          {
+               for (int j = 1; j <= lenCommend; ++j)
+               {
+                    dp[i][j] = INF;
+               }
+          }
+          for (int i = 1; i <= lenCheck; ++i)
+          {
+               dp[i][0] = i;
+          }
+          for (int j = 1; j <= lenCommend; ++j)
+          {
+               dp[0][j] = j;
+          }
+          for (int i = 1; i <= lenCheck; ++i)
+          {
+               for (int j = 1; j <= lenCommend; ++j)
+               {
+                    bool flag = check[i] != commend[j];
+                    dp[i][j] = min(dp[i - 1][j] + 1, min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + flag));
+               }
+          }
+          if (dp[lenCheck][lenCommend] <= now)
+          {
+               result = *it;
+               now = dp[lenCheck][lenCommend];
+          }
+     }
+     return result;
+}
 
 int main()
 {
-     freopen("log.txt", "w", stdout);
+     //freopen("log.txt", "w", stdout);
      struct timeval timeStart, timeEnd;
      double runtime = 0;
      gettimeofday(&timeStart, NULL);
-     balance();
+     //balance();
      //TestMine();
+     string cmd;
+     while (cin >> cmd)
+     {
+          set<string>::iterator it = commendSet.find(cmd);
+          if (it != commendSet.end())
+          {
+               if (*it == "demo")
+               {
+                    cout << "Run demo..." << endl;
+                    balance();
+               }
+               if (*it == "help")
+               {
+                    cout << "List of classes of commands:" << endl
+                         << "add -- add a wallet or miner." << endl
+                         << endl
+                         << "Type \"help\" followed by command name for full documentation." << endl;
+               }
+               if (*it == "exit")
+               {
+                    break;
+               }
+          }
+          else
+          {
+               string guess = EditDistance(cmd);
+               cout << "Undefined command: \"" << cmd << "\". Do you mean \"" << guess << "\" ?" << endl
+                    << "Try \"help\"." << endl;
+          }
+     }
      gettimeofday(&timeEnd, NULL);
      runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
      cout << "Total time: " << runtime << "s." << endl;
