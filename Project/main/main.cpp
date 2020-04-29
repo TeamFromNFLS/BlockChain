@@ -63,10 +63,7 @@ string EditDistance(string &s)
 
 int main()
 {
-     //freopen("log.txt", "w", stdout);
      struct timeval timeStart, timeEnd;
-     double runtime = 0;
-     gettimeofday(&timeStart, NULL);
      //balance();
      //TestMine();
      string cmd;
@@ -77,8 +74,16 @@ int main()
           {
                if (*it == "demo")
                {
+                    freopen("log.txt", "w", stdout);
                     cout << "Run demo..." << endl;
+                    double runtime = 0;
+                    gettimeofday(&timeStart, NULL);
                     balance();
+                    gettimeofday(&timeEnd, NULL);
+                    runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
+                    cout << "Total time: " << runtime << "s." << endl;
+                    fclose(stdout);
+                    cout << "Demo exited normally. Please check \"log.txt\" for details." << endl;
                }
                if (*it == "help")
                {
@@ -99,9 +104,5 @@ int main()
                     << "Try \"help\"." << endl;
           }
      }
-     gettimeofday(&timeEnd, NULL);
-     runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
-     cout << "Total time: " << runtime << "s." << endl;
-     fclose(stdout);
      return 0;
 }
