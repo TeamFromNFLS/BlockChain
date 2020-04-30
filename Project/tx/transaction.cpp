@@ -4,6 +4,7 @@
 #include "sha256.h"
 
 int Transaction::mineReward = 5; //to be set
+int Transaction::cnt = -1;
 vector<Transaction> Transaction::txPool;
 vector<Transaction> Transaction::toBePackedTx;
 vector<Transaction> Transaction::packedTx;

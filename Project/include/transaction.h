@@ -15,10 +15,12 @@ public:
     Transaction(string _senderAdr, string _receiverAdr) : senderAdr(_senderAdr), receiverAdr(_receiverAdr)
     {
         _time = std::time(0);
+        txID = ++cnt;
     }
     Transaction(string _receiverAdr) : receiverAdr(_receiverAdr)
     {
         _time = std::time(0);
+        txID = ++cnt;
     }
     void Show();
     void SetID();
@@ -33,6 +35,7 @@ public:
     string senderAdr;
     string receiverAdr;
     static int mineReward;
+    static int cnt;
     static vector<Transaction> txPool;
     static vector<Transaction> toBePackedTx;
     static vector<Transaction> packedTx;
