@@ -128,6 +128,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     /* determine prevTx */
     vector<int> spentTxId = FindSpent(Transaction::txPool);
     vector<Transaction> CandidateTx = FindUTXO(spentTxId, Transaction::packedTx);
+
     if (!CandidateTx.size())
     {
         cout << "Transaction construction failed. No matching UTXO." << endl;
@@ -139,15 +140,18 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
             if (tx.output.GetValue() == _value)
             {
                 transaction.input.SetPrevID(tx.GetID());
-                transaction.SetID();
+                cout << "Transaction ID: " << transaction.GetID() << endl;
+                //transaction.SetID();
                 break;
             }
         }
         Sign(transaction, get<1>(receiverInfo), _value);
         Transaction::txPool.push_back(transaction);
         Transaction::toBePackedTx.push_back(transaction);
+
         cout << "Transaction constructed by " << address << endl
              << "------------------------------------------" << endl;
+
         cout << "Transaction log: " << endl
              << "Type: Normal transaction" << endl
              << "Sender Address: " << address << endl
@@ -165,17 +169,19 @@ void Wallet::CreateCoinbase()
     Transaction transaction("null", address); //as receiver
     TxOutput _output(Transaction::mineReward, publicKeyHash);
     transaction.output = _output;
-    transaction.SetID();
+    //transaction.SetID();
     Transaction::txPool.push_back(transaction);
+
     Transaction::toBePackedTx.push_back(transaction);
     cout << "Coinbase transaction constructed." << endl
          << "------------------------------------------" << endl;
+
     cout << "Transaction log: " << endl
          << "Type: Coinbase transaction" << endl
          << "Receiver Address: " << address << endl
          << "Value: " << transaction.output.GetValue() << endl
          << "ID: " << transaction.GetID() << endl
-         << "PrevTx ID: " << transaction.input.GetPrevID() << endl
+         //<< "PrevTx ID: " << transaction.input.GetPrevID() << endl
          << "------------------------------------------" << endl;
 }
 
@@ -189,11 +195,11 @@ void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
         string signStr = "0x" + publicKeyHash + receiverPublicKeyHash;
         BigInt signInfo(signStr);
         BigInt _signature = RSA::EncryptAndDecrypt(signInfo, privateKey, n);
-        BigInt _decrypt = RSA::EncryptAndDecrypt(_signature, publicKey, n);
+        /* BigInt _decrypt = RSA::EncryptAndDecrypt(_signature, publicKey, n);
         bool isSame = (signInfo == _decrypt);
         cout << "------------------------------------------" << endl
              << "The decrypted signature is the same as the hash value: " << isSame << endl
-             << "------------------------------------------" << endl;
+             << "------------------------------------------" << endl; */
         tx.input.signature = _signature;
     }
     cout << "Digital signature created." << endl;
@@ -217,13 +223,15 @@ vector<int> Wallet::FindSpent(vector<Transaction> &pool) //to be iterated over
     return spentTxID;
 }
 
-vector<Transaction> Wallet::FindUTXO(vector<int> &spentTxId, vector<Transaction> &pool)
+vector<Transaction> Wallet::FindUTXO(const vector<int> &spentTxId, const vector<Transaction> &pool)
 {
-    vector<Transaction> UTXOTx;
+    vector<Transaction> txPool = pool, UTXOTx;
+    vector<int> spent = spentTxId;
     vector<int>::iterator ret;
-    for (Transaction &tx : pool)
+
+    for (Transaction &tx : txPool)
     {
-        ret = find(spentTxId.begin(), spentTxId.end(), tx.txID);
+        ret = find(spent.begin(), spent.end(), tx.txID);
         if (ret == spentTxId.end()) //not found
         {
             UTXOTx.push_back(tx);
@@ -249,14 +257,14 @@ void Wallet::FindBalance()
     balanceTx = FindUTXO(myPackedSpentTxID, myPackedTx);
 
     cout << "UTXO information:" << endl;
-    cout << setiosflags(ios::left) << setfill(' ') << setw(20) << "Sequence number"
+    cout << setiosflags(ios::left) << setfill(' ') << setw(20) << "Transaction ID"
          << "\t"
          << "UTXO value" << endl;
-    int count = 1;
+    //int count = 1;
     for (Transaction &tx : balanceTx)
     {
-        cout << setiosflags(ios::left) << setfill(' ') << setw(20) << count << "\t" << tx.output.GetValue() << endl;
-        count++;
+        cout << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
+        //count++;
     }
 }
 

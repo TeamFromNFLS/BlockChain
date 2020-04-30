@@ -63,7 +63,8 @@ string EditDistance(string &s)
 
 int main()
 {
-     struct timeval timeStart, timeEnd;
+     balance();
+     /* struct timeval timeStart, timeEnd;
      //balance();
      //TestMine();
      string cmd;
@@ -104,5 +105,5 @@ int main()
                     << "Try \"help\"." << endl;
           }
      }
-     return 0;
+     return 0; */
 }
