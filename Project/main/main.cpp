@@ -13,7 +13,7 @@
 using namespace std;
 
 const int INF = 0x3f3f3f3f;
-set<string> commendSet{"demo", "help", "add", "delete", "wallet", "miner", "find", "make", "check", "exit"};
+set<string> commendSet{"demo", "help", "add", "delete", "find", "make", "check", "exit"};
 
 string EditDistance(string &s)
 {
@@ -115,12 +115,49 @@ int main()
                     }
                     else
                     {
-                         if (commendSet.find(cmdList[1]) == commendSet.end())
+                         it = commendSet.find(cmdList[1]);
+                         if (it == commendSet.end())
                          {
                               string guess = EditDistance(cmdList[1]);
                               cout << "Undefined command: \"" << cmdList[1] << "\". Do you mean \"" << guess << "\" ?" << endl;
                          }
+                         else
+                         {
+                              if (*it == "demo")
+                              {
+                                   cout << "Run a demo which shows how this program works with pictures and a log file." << endl;
+                              }
+                              if (*it == "add")
+                              {
+                                   cout << "add [wallet/miner] [number of nodes]: add some nodes to the net." << endl;
+                              }
+                              if (*it == "delete")
+                              {
+                                   cout << "delete [wallet/miner]: delete the last wallet or miner which is added into the net." << endl;
+                              }
+                              if (*it == "help")
+                              {
+                                   cout << "NO MATRYOSHKA!" << endl;
+                              }
+                              if (*it == "find")
+                              {
+                                   cout << "find [wallet address]: find the remainder of a wallet and related transactions." << endl;
+                              }
+                              if (*it == "make")
+                              {
+                                   cout << "make [walletA address] [walletB address]: make a transaction from walletA to walletB." << endl;
+                              }
+                              if (*it == "check")
+                              {
+                                   cout << "check [wallet address]: check whether the blockchain in this wallet is true." << endl;
+                              }
+                              if (*it == "exit")
+                              {
+                                   cout << "Exit the program." << endl;
+                              }
+                         }
                     }
+                    continue;
                }
                if (*it == "exit")
                {
@@ -129,8 +166,8 @@ int main()
           }
           else
           {
-               string guess = EditDistance(cmd);
-               cout << "Undefined command: \"" << cmd << "\". Do you mean \"" << guess << "\" ?" << endl
+               string guess = EditDistance(cmdList[0]);
+               cout << "Undefined command: \"" << cmdList[0] << "\". Do you mean \"" << guess << "\" ?" << endl
                     << "Try \"help\"." << endl;
           }
      }
