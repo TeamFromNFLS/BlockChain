@@ -71,6 +71,11 @@ string EditDistance(string &s)
      return result;
 }
 
+inline void Clean()
+{
+     fstream clean("log.txt", ios::out);
+}
+
 int main()
 {
      ofstream fileOut;
@@ -89,7 +94,7 @@ int main()
      {
           if (demoFlag)
           {
-               fstream clean("log.txt", ios::out);
+               Clean();
                demoFlag = false;
           }
           cmd.insert(cmd.end(), ' ');
@@ -109,6 +114,7 @@ int main()
           {
                if (*it == "demo")
                {
+                    Clean();
                     cout << "Run demo..." << endl;
                     cout.rdbuf(fileBackup);
                     double runtime = 0;
@@ -287,6 +293,7 @@ int main()
                }
                if (*it == "exit")
                {
+                    fileOut.close();
                     break;
                }
           }
