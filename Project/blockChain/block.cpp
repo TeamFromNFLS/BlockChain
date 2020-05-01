@@ -128,7 +128,7 @@ void Block::ShowTree()
     while (!q.empty())
     {
         tmp = q.front();
-        cout << "Depth: " << tmp.first << ' ' << "Hash: " << tmp.second->transactionHash << endl;
+        LOGOUT << "Depth: " << tmp.first << ' ' << "Hash: " << tmp.second->transactionHash << endl;
         q.pop();
         int newCnt = tmp.first + 1;
         if (tmp.second->leftTree != nullptr)
@@ -227,7 +227,7 @@ string Block::GetHash()
 void Block::Pack()
 {
     time = std::time(0);
-    blockChain.AddBlock(*this);
+    blockChain.AddBlock(this);
     for (auto &tx : transactionSet)
     {
         Transaction::packedTx.push_back(tx);
@@ -239,21 +239,21 @@ void Block::Pack()
 void Block::Show()
 {
     string now = ctime(&time);
-    cout << "Block Log:" << endl
-         << "------------------------------------------" << endl
-         << "Head:" << endl
-         << "Height: " << height << endl
-         << "PreBlockHash: " << preBlockHash << endl
-         << "MerkleRoot: " << merkleRoot << endl
-         << "Date: " << now << "nonce: " << nonce << endl
-         << "------------------------------------------" << endl
-         << "Transaction:" << endl
-         << "------------------------------------------" << endl;
+    LOGOUT << "Block Log:" << endl
+           << "------------------------------------------" << endl;
+    LOGOUT << "Head:" << endl;
+    LOGOUT << "Height: " << height << endl;
+    LOGOUT << "PreBlockHash: " << preBlockHash << endl;
+    LOGOUT << "MerkleRoot: " << merkleRoot << endl;
+    LOGOUT << "Date: " << now << "nonce: " << nonce << endl
+           << "------------------------------------------" << endl;
+    LOGOUT << "Transaction:" << endl
+           << "------------------------------------------" << endl;
     for (int i = 0; i < transactionSet.size(); ++i)
     {
         transactionSet[i].Show();
     }
-    cout << "Merkle Tree: " << endl;
+    LOGOUT << "Merkle Tree: " << endl;
     ShowTree();
     cout << "------------------------------------------" << endl;
 }

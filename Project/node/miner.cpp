@@ -45,7 +45,7 @@ void Miner::Reset()
 
 void Miner::Init(int worker)
 {
-    cout << "Creating a new miner. Please wait..." << endl;
+    LOGOUT << "Creating a new miner. Please wait..." << endl;
     RSA a;
     a.Init(worker);
     a.CreateKeys();
@@ -61,18 +61,18 @@ void Miner::Init(int worker)
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
     chain = blockChain;
-    cout << "Begin checking blockchain in this miner..." << endl;
+    LOGOUT << "Begin checking blockchain in this miner..." << endl;
     if (!CheckChain())
     {
-        cout << "Incorrect chain in this miner." << endl;
+        LOGOUT << "Incorrect chain in this miner." << endl;
     }
     else
     {
-        cout << "Passed blockchain test in this miner." << endl;
+        LOGOUT << "Passed blockchain test in this miner." << endl;
     }
-    cout << "Complete." << endl
-         << "Address: " << address << endl
-         << "------------------------------------------" << endl;
+    LOGOUT << "Complete." << endl;
+    LOGOUT << "Address: " << address << endl
+           << "------------------------------------------" << endl;
 }
 
 bool Miner::TestPoW(int nonce)
@@ -111,27 +111,27 @@ void Miner::PoW(vector<Transaction> &vec)
 
 bool Miner::Check(Block &toCheck)
 {
-    cout << "Begin checking block..." << endl
-         << endl;
+    LOGOUT << "Begin checking block..." << endl
+           << endl;
     int len = difficultyTarget.length();
     string hash = toCheck.GetHash();
     string check = hash.substr(0, len);
     if (check != difficultyTarget)
     {
-        cout << "Failed Proof of Work test. Refuse to pack." << endl;
+        LOGOUT << "Failed Proof of Work test. Refuse to pack." << endl;
         return false;
     }
-    cout << "Passed Proof of Work test. Hash: " << hash << endl
-         << endl;
+    LOGOUT << "Passed Proof of Work test. Hash: " << hash << endl
+           << endl;
     vector<Transaction> checkTx;
     toCheck.GetTransactionSet(checkTx);
     if (Block::CreateTree(checkTx)->transactionHash != toCheck.GetTreeRoot())
     {
-        cout << "Failed merkle tree root test. Refuse to pack." << endl;
+        LOGOUT << "Failed merkle tree root test. Refuse to pack." << endl;
         return false;
     }
-    cout << "Passed merkle tree root test. Merkle tree root hash: " << toCheck.GetTreeRoot() << endl
-         << endl;
+    LOGOUT << "Passed merkle tree root test. Merkle tree root hash: " << toCheck.GetTreeRoot() << endl
+           << endl;
     bool checkFlag = false;
     for (auto &tx : checkTx)
     {
@@ -143,24 +143,24 @@ bool Miner::Check(Block &toCheck)
             }
             else
             {
-                cout << "Failed one coinBase test. Refuse to pack." << endl;
+                LOGOUT << "Failed one coinBase test. Refuse to pack." << endl;
                 return false;
             }
         }
     }
-    cout << "Passed one coinBase test. Only one reward received." << endl
-         << endl;
+    LOGOUT << "Passed one coinBase test. Only one reward received." << endl
+           << endl;
     for (auto &tx : checkTx)
     {
-        cout << "Now transaction: " << tx.GetID() << endl;
+        LOGOUT << "Now transaction: " << tx.GetID() << endl;
         if (!Wallet::VerifyTx(tx))
         {
             return false;
         }
     }
-    cout << "Passed transaction test. All transactions are correct." << endl
-         << endl
-         << "All tests passed! Ready to be packed." << endl
-         << "------------------------------------------" << endl;
+    LOGOUT << "Passed transaction test. All transactions are correct." << endl
+           << endl;
+    LOGOUT << "All tests passed! Ready to be packed." << endl
+           << "------------------------------------------" << endl;
     return true;
 }

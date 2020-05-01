@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <set>
 #include <sstream>
+#include <fstream>
 #include <thread>
 #include "rsa.h"
 #include "bigInt.h"
@@ -12,9 +13,15 @@
 #include "block.h"
 #include "chain.h"
 #include "test.h"
+
 using namespace std;
 
 void WalletCreator(Wallet *wallet);
+void MinerCreator(Miner *miner)
+{
+     miner->Init(1);
+}
+
 const int INF = 0x3f3f3f3f;
 set<string> commendSet{"demo", "help", "add", "delete", "mine", "find", "make", "check", "exit"};
 
@@ -66,14 +73,25 @@ string EditDistance(string &s)
 
 int main()
 {
+     ofstream fileOut;
+     fileOut.open("log.txt", ios::app);
+     streambuf *coutBackup, *fileBackup;
+     coutBackup = cout.rdbuf();
+     fileBackup = fileOut.rdbuf();
      struct timeval timeStart, timeEnd;
-     cout << "Welcome to Prometheus, a blockchain simulation program." << endl
-          << "For bug reporting instructions, please see:" << endl
-          << "N/A" << endl
+     cout << "Welcome to P.R.O.M.E.T.H.U.S, a blockchain simulation program." << endl
+          << "For bug reporting instructions, please send email to:" << endl
+          << "panh19@mails.tsinghua.edu.cn" << endl
           << "For help, type \"help\"." << endl;
      string cmd;
+     bool demoFlag = false;
      while (getline(cin, cmd))
      {
+          if (demoFlag)
+          {
+               fstream clean("log.txt", ios::out);
+               demoFlag = false;
+          }
           cmd.insert(cmd.end(), ' ');
           vector<string> cmdList;
           int pos = 0;
@@ -91,16 +109,18 @@ int main()
           {
                if (*it == "demo")
                {
-                    freopen("log.txt", "w", stdout);
                     cout << "Run demo..." << endl;
+                    cout.rdbuf(fileBackup);
                     double runtime = 0;
                     gettimeofday(&timeStart, NULL);
-                    //balance();
+                    balance();
                     gettimeofday(&timeEnd, NULL);
                     runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
                     cout << "Total time: " << runtime << "s." << endl;
-                    fclose(stdout);
-                    cout << "Demo exited normally. Please check \"log.txt\" for details." << endl;
+                    cout.rdbuf(coutBackup);
+                    cout << "Demo exited normally. Please check \"log.txt\" for details." << endl
+                         << "Log would be cleaned after next commend." << endl;
+                    demoFlag = true;
                     continue;
                }
                if (*it == "help")
@@ -197,47 +217,72 @@ int main()
                     }
                     else
                     {
-                         freopen("log.txt", "w", stdout);
-                         vector<Wallet *> wallets;
-                         vector<thread> threads;
-                         Wallet *tmp;
                          int loop = t / 8;
                          int remainder = t - loop * 8;
-                         for (int i = 0; i < loop; ++i)
+                         if (cmdList[1] == "wallet")
                          {
-                              for (int j = 0; j < 8; ++j)
+                              cout << "adding wallets, please wait..." << endl;
+                              cout.rdbuf(fileBackup);
+                              vector<Wallet *> wallets;
+                              vector<thread> threads;
+                              Wallet *tmp;
+                              for (int i = 0; i < loop; ++i)
+                              {
+                                   for (int j = 0; j < 8; ++j)
+                                   {
+                                        tmp = new Wallet;
+                                        wallets.push_back(tmp);
+                                        threads.emplace_back(WalletCreator, tmp);
+                                   }
+                              }
+                              for (int i = 0; i < remainder; ++i)
                               {
                                    tmp = new Wallet;
                                    wallets.push_back(tmp);
                                    threads.emplace_back(WalletCreator, tmp);
                               }
-                         }
-                         for (int i = 0; i < remainder; ++i)
-                         {
-                              tmp = new Wallet;
-                              wallets.push_back(tmp);
-                              threads.emplace_back(WalletCreator, tmp);
-                         }
-                         for (auto &t : threads)
-                         {
-                              if (t.joinable())
+                              for (auto &t : threads)
                               {
-                                   t.join();
-                              }
-                         }
-                         vector<Wallet *> newWallets;
-                         for (int i = 0; i < t; ++i)
-                         {
-                              for (int j = 0; j < t; ++j)
-                              {
-                                   if (Wallet::walletInfo[i].first == wallets[j]->GetAddress())
+                                   if (t.joinable())
                                    {
-                                        newWallets.push_back(wallets[j]);
+                                        t.join();
                                    }
                               }
+                              cout.rdbuf(coutBackup);
+                              cout << "Add wallets complete." << endl;
                          }
-                         fclose(stdout);
-                         cout << "Add wallet complete." << endl;
+                         else
+                         {
+                              cout << "adding miners, please wait..." << endl;
+                              cout.rdbuf(fileBackup);
+                              vector<Miner *> miners;
+                              vector<thread> threads;
+                              Miner *tmp;
+                              for (int i = 0; i < loop; ++i)
+                              {
+                                   for (int j = 0; j < 8; ++j)
+                                   {
+                                        tmp = new Miner;
+                                        miners.push_back(tmp);
+                                        threads.emplace_back(WalletCreator, tmp);
+                                   }
+                              }
+                              for (int i = 0; i < remainder; ++i)
+                              {
+                                   tmp = new Miner;
+                                   miners.push_back(tmp);
+                                   threads.emplace_back(MinerCreator, tmp);
+                              }
+                              for (auto &t : threads)
+                              {
+                                   if (t.joinable())
+                                   {
+                                        t.join();
+                                   }
+                              }
+                              cout.rdbuf(coutBackup);
+                              cout << "Add miners complete." << endl;
+                         }
                     }
                }
                if (*it == "exit")

@@ -1,5 +1,6 @@
 #include "rsa.h"
 #include "bigInt.h"
+#include "log.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -97,7 +98,7 @@ void RSA::Init(int worker)
         q = CreatePrime(worker);
     }
 
-    cout << "Prime numbers found" << endl;
+    LOGOUT << "Prime numbers found" << endl;
 
     product = p * q;
     p = p - BigInt::one, q = q - BigInt::one;
@@ -356,7 +357,7 @@ void RSA::CreateKeys()
     publicKey = 65537;
     privateKey = BigInt::one;
     Extgcd(publicKey, Euler, privateKey);
-    cout << "Key pair generated" << endl;
+    LOGOUT << "Key pair generated" << endl;
     BigInt result = publicKey * privateKey;
     result = result % Euler;
     bool smaller = privateKey < Euler;

@@ -8,6 +8,10 @@
 
 using namespace std;
 
+time_t _time_;
+string _s;
+
+/*define for log*/
 Block coinBase;
 Chain blockChain;
 

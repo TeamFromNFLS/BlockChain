@@ -62,7 +62,7 @@ bool Wallet::CheckChain()
         if (check.first = false)
         {
             flag = false;
-            cout << "Incorrect block on tx: " << check.second << endl;
+            LOGOUT << "Incorrect block on tx: " << check.second << endl;
         }
         now = now->preBlock;
     }
@@ -75,7 +75,7 @@ bool Wallet::CheckChain()
 
 void Wallet::Init(int worker)
 {
-    cout << "Creating a new wallet. Please wait..." << endl;
+    LOGOUT << "Creating a new wallet. Please wait..." << endl;
     RSA a;
     a.Init(worker);
     a.CreateKeys();
@@ -91,18 +91,18 @@ void Wallet::Init(int worker)
     address = Base58(finalHash);
     walletInfo.push_back(make_pair(address, publicKeyHash));
     chain = blockChain;
-    cout << "Begin checking blockchain in this wallet..." << endl;
+    LOGOUT << "Begin checking blockchain in this wallet..." << endl;
     if (!CheckChain())
     {
-        cout << "Incorrect chain in this wallet." << endl;
+        LOGOUT << "Incorrect chain in this wallet." << endl;
     }
     else
     {
-        cout << "Passed blockchain test in this wallet." << endl;
+        LOGOUT << "Passed blockchain test in this wallet." << endl;
     }
-    cout << "Complete." << endl
-         << "Address: " << address << endl
-         << "------------------------------------------" << endl;
+    LOGOUT << "Complete." << endl;
+    LOGOUT << "Address: " << address << endl
+           << "------------------------------------------" << endl;
 }
 
 void Wallet::SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr)
@@ -131,7 +131,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 
     if (!CandidateTx.size())
     {
-        cout << "Transaction construction failed. No matching UTXO." << endl;
+        LOGOUT << "Transaction construction failed. No matching UTXO." << endl;
     }
     else
     {
@@ -140,7 +140,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
             if (tx.output.GetValue() == _value)
             {
                 transaction.input.SetPrevID(tx.GetID());
-                cout << "Transaction ID: " << transaction.GetID() << endl;
+                LOGOUT << "Transaction ID: " << transaction.GetID() << endl;
                 //transaction.SetID();
                 break;
             }
@@ -149,18 +149,18 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         Transaction::txPool.push_back(transaction);
         Transaction::toBePackedTx.push_back(transaction);
 
-        cout << "Transaction constructed by " << address << endl
-             << "------------------------------------------" << endl;
+        LOGOUT << "Transaction constructed by " << address << endl
+               << "------------------------------------------" << endl;
 
-        cout << "Transaction log: " << endl
-             << "Type: Normal transaction" << endl
-             << "Sender Address: " << address << endl
-             << "Receiver Address: " << get<0>(receiverInfo) << endl
-             << "Value: " << transaction.output.GetValue() << endl
-             << "ID: " << transaction.GetID() << endl
-             << "PrevTx ID: " << transaction.input.GetPrevID() << endl
-             << "Signature: " << transaction.input.signature << endl
-             << "------------------------------------------" << endl;
+        LOGOUT << "Transaction log: " << endl;
+        LOGOUT << "Type: Normal transaction" << endl;
+        LOGOUT << "Sender Address: " << address << endl;
+        LOGOUT << "Receiver Address: " << get<0>(receiverInfo) << endl;
+        LOGOUT << "Value: " << transaction.output.GetValue() << endl;
+        LOGOUT << "ID: " << transaction.GetID() << endl;
+        LOGOUT << "PrevTx ID: " << transaction.input.GetPrevID() << endl;
+        LOGOUT << "Signature: " << transaction.input.signature << endl
+               << "------------------------------------------" << endl;
     }
 }
 
@@ -173,16 +173,16 @@ void Wallet::CreateCoinbase()
     Transaction::txPool.push_back(transaction);
 
     Transaction::toBePackedTx.push_back(transaction);
-    cout << "Coinbase transaction constructed." << endl
-         << "------------------------------------------" << endl;
+    LOGOUT << "Coinbase transaction constructed." << endl
+           << "------------------------------------------" << endl;
 
-    cout << "Transaction log: " << endl
-         << "Type: Coinbase transaction" << endl
-         << "Receiver Address: " << address << endl
-         << "Value: " << transaction.output.GetValue() << endl
-         << "ID: " << transaction.GetID() << endl
-         //<< "PrevTx ID: " << transaction.input.GetPrevID() << endl
-         << "------------------------------------------" << endl;
+    LOGOUT << "Transaction log: " << endl;
+    LOGOUT << "Type: Coinbase transaction" << endl;
+    LOGOUT << "Receiver Address: " << address << endl;
+    LOGOUT << "Value: " << transaction.output.GetValue() << endl;
+    LOGOUT << "ID: " << transaction.GetID() << endl
+           //<< "PrevTx ID: " << transaction.input.GetPrevID() << endl
+           << "------------------------------------------" << endl;
 }
 
 void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
@@ -202,7 +202,7 @@ void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
              << "------------------------------------------" << endl; */
         tx.input.signature = _signature;
     }
-    cout << "Digital signature created." << endl;
+    LOGOUT << "Digital signature created." << endl;
 }
 
 vector<int> Wallet::FindSpent(vector<Transaction> &pool) //to be iterated over
@@ -256,14 +256,14 @@ void Wallet::FindBalance()
     myPackedSpentTxID = FindSpent(myPackedTx);
     balanceTx = FindUTXO(myPackedSpentTxID, myPackedTx);
 
-    cout << "UTXO information:" << endl;
-    cout << setiosflags(ios::left) << setfill(' ') << setw(20) << "Transaction ID"
-         << "\t"
-         << "UTXO value" << endl;
+    LOGOUT << "UTXO information:" << endl;
+    LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << "Transaction ID"
+           << "\t"
+           << "UTXO value" << endl;
     //int count = 1;
     for (Transaction &tx : balanceTx)
     {
-        cout << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
+        LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
         //count++;
     }
 }
@@ -278,20 +278,20 @@ bool Wallet::VerifyTx(const Transaction &_tx)
         string info = "0x" + senderHash + receiverHash;
         BigInt infoInt(info);
         BigInt decrypted = RSA::EncryptAndDecrypt(tx.input.signature, tx.input.publicKey, tx.input.N);
-        cout << "Signature decrypted." << endl;
+        LOGOUT << "Signature decrypted." << endl;
         if (decrypted == infoInt)
         {
-            cout << "Signature matches identity"
-                 << "Valid transaction. To be packed." << endl;
+            LOGOUT << "Signature matches identity." << endl;
+            LOGOUT << "Valid transaction. To be packed." << endl;
             return true;
         }
         else
         {
-            cout << "Signature does not match identity."
-                 << "Invalid transaction. Refuse to pack." << endl;
+            LOGOUT << "Signature does not match identity. " << endl;
+            LOGOUT << "Invalid transaction. Refuse to pack." << endl;
             return false;
         }
     }
-    cout << "Valid coinbase transaction. To be packed." << endl;
+    LOGOUT << "Valid coinbase transaction. To be packed." << endl;
     return true;
 }

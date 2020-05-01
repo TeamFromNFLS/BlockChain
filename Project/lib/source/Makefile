@@ -1,7 +1,7 @@
 CC = g++
 
 OBJS = $(wildcard *.cpp)
-INC = -I../include
+INC = -I../../include
 TARGET = blockChain.dll
 LIB = blockChain.lib
 SO = libChain.so

@@ -13,11 +13,10 @@ public:
     {
         return end;
     }
-    void AddBlock(Block &newBlock)
+    void AddBlock(Block *newBlock)
     {
-        Block *newBlockPoint = &newBlock;
-        newBlockPoint->preBlock = end;
-        end = newBlockPoint;
+        blocks.push_back(*newBlock);
+        end = &blocks[blocks.size() - 1];
     }
     void SetDifficulty(string difficultyTarget);
     std::string GetDifficulty()
@@ -31,6 +30,7 @@ public:
 private:
     std::string difficulty = "0000";
     Block *end = nullptr;
+    std::vector<Block> blocks;
 };
 
 extern Chain blockChain;

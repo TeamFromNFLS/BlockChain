@@ -2,6 +2,7 @@
 #include <string>
 #include "transaction.h"
 #include "sha256.h"
+#include "log.h"
 
 int Transaction::mineReward = 5; //to be set
 int Transaction::cnt = -1;
@@ -34,24 +35,24 @@ void Transaction::Show()
 {
     if (senderAdr == "null")
     {
-        cout << "Transaction log: " << endl
-             << "Type: Coinbase transaction" << endl
-             << "Receiver Address: " << receiverAdr << endl
-             << "Value: " << output.GetValue() << endl
-             << "ID: " << GetID() << endl
-             << "PrevTx ID: " << input.GetPrevID() << endl
-             << "------------------------------------------" << endl;
+        LOGOUT << "Transaction log: " << endl;
+        LOGOUT << "Type: Coinbase transaction" << endl;
+        LOGOUT << "Receiver Address: " << receiverAdr << endl;
+        LOGOUT << "Value: " << output.GetValue() << endl;
+        LOGOUT << "ID: " << GetID() << endl;
+        LOGOUT << "PrevTx ID: " << input.GetPrevID() << endl
+               << "------------------------------------------" << endl;
     }
     else
     {
-        cout << "Transaction log: " << endl
-             << "Type: Normal transaction" << endl
-             << "Sender Address: " << senderAdr << endl
-             << "Receiver Address: " << receiverAdr << endl
-             << "Value: " << output.GetValue() << endl
-             << "ID: " << GetID() << endl
-             << "PrevTx ID: " << input.GetPrevID() << endl
-             << "Signature: " << input.signature << endl
-             << "------------------------------------------" << endl;
+        LOGOUT << "Transaction log: " << endl;
+        LOGOUT << "Type: Normal transaction" << endl;
+        LOGOUT << "Sender Address: " << senderAdr << endl;
+        LOGOUT << "Receiver Address: " << receiverAdr << endl;
+        LOGOUT << "Value: " << output.GetValue() << endl;
+        LOGOUT << "ID: " << GetID() << endl;
+        LOGOUT << "PrevTx ID: " << input.GetPrevID() << endl;
+        LOGOUT << "Signature: " << input.signature << endl
+               << "------------------------------------------" << endl;
     }
 }

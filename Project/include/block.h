@@ -7,6 +7,7 @@
 #include <queue>
 #include <utility>
 #include "transaction.h"
+#include "log.h"
 
 class Chain;
 class Block
