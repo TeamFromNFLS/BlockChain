@@ -1,6 +1,8 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <set>
+#include <sstream>
+#include <thread>
 #include "rsa.h"
 #include "bigInt.h"
 #include "wallet.h"
@@ -12,8 +14,9 @@
 #include "test.h"
 using namespace std;
 
+void WalletCreator(Wallet *wallet);
 const int INF = 0x3f3f3f3f;
-set<string> commendSet{"demo", "help", "add", "delete", "find", "make", "check", "exit"};
+set<string> commendSet{"demo", "help", "add", "delete", "mine", "find", "make", "check", "exit"};
 
 string EditDistance(string &s)
 {
@@ -82,6 +85,7 @@ int main()
                     pos = i + 1;
                }
           }
+          cmd.erase(cmd.end() - 1);
           set<string>::iterator it = commendSet.find(cmdList[0]);
           if (it != commendSet.end())
           {
@@ -97,6 +101,7 @@ int main()
                     cout << "Total time: " << runtime << "s." << endl;
                     fclose(stdout);
                     cout << "Demo exited normally. Please check \"log.txt\" for details." << endl;
+                    continue;
                }
                if (*it == "help")
                {
@@ -106,6 +111,7 @@ int main()
                               << "demo -- run demo." << endl
                               << "add -- add a wallet or miner." << endl
                               << "delete -- delete a wallet or miner." << endl
+                              << "mine -- use miners to pack transactions into blockchain." << endl
                               << "find -- find the balance of a wallet." << endl
                               << "make -- make a transaction." << endl
                               << "check -- check whether the wallet contains a right blockchain." << endl
@@ -143,6 +149,10 @@ int main()
                               {
                                    cout << "find [wallet address]: find the remainder of a wallet and related transactions." << endl;
                               }
+                              if (*it == "mine")
+                              {
+                                   cout << "Only packed transactions could be avalidable for spending. This commend would ask all the miners in the net to try to pack transactions." << endl;
+                              }
                               if (*it == "make")
                               {
                                    cout << "make [walletA address] [walletB address]: make a transaction from walletA to walletB." << endl;
@@ -158,6 +168,77 @@ int main()
                          }
                     }
                     continue;
+               }
+               if (*it == "add")
+               {
+                    if (cmdList.size() != 3)
+                    {
+                         cout << "Ambiguous commend "
+                              << "\"" << cmd << "\":"
+                              << "add [wallet/miner] [number of nodes]." << endl;
+                         continue;
+                    }
+                    stringstream ss(cmdList[2]);
+                    int t;
+                    char p;
+                    if (cmdList[1] != "wallet" && cmdList[1] != "miner")
+                    {
+                         cout << "Ambiguous commend "
+                              << "\"" << cmd << "\":"
+                              << "add [wallet/miner] [number of nodes]." << endl;
+                         continue;
+                    }
+                    else if (!(ss >> t) || ss >> p)
+                    {
+                         cout << "Ambiguous commend "
+                              << "\"" << cmd << "\":"
+                              << "add [wallet/miner] [number of nodes]." << endl;
+                         continue;
+                    }
+                    else
+                    {
+                         freopen("log.txt", "w", stdout);
+                         vector<Wallet *> wallets;
+                         vector<thread> threads;
+                         Wallet *tmp;
+                         int loop = t / 8;
+                         int remainder = t - loop * 8;
+                         for (int i = 0; i < loop; ++i)
+                         {
+                              for (int j = 0; j < 8; ++j)
+                              {
+                                   tmp = new Wallet;
+                                   wallets.push_back(tmp);
+                                   threads.emplace_back(WalletCreator, tmp);
+                              }
+                         }
+                         for (int i = 0; i < remainder; ++i)
+                         {
+                              tmp = new Wallet;
+                              wallets.push_back(tmp);
+                              threads.emplace_back(WalletCreator, tmp);
+                         }
+                         for (auto &t : threads)
+                         {
+                              if (t.joinable())
+                              {
+                                   t.join();
+                              }
+                         }
+                         vector<Wallet *> newWallets;
+                         for (int i = 0; i < t; ++i)
+                         {
+                              for (int j = 0; j < t; ++j)
+                              {
+                                   if (Wallet::walletInfo[i].first == wallets[j]->GetAddress())
+                                   {
+                                        newWallets.push_back(wallets[j]);
+                                   }
+                              }
+                         }
+                         fclose(stdout);
+                         cout << "Add wallet complete." << endl;
+                    }
                }
                if (*it == "exit")
                {
