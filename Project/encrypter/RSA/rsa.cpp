@@ -89,7 +89,6 @@ void RSA::Init(int worker)
 {
     //产生大素数p,q
     /*Since it might be confused when there are more than one operators in one calculation with bigInt, I just separate them apart*/
-    //auto st = clock();
     p = CreatePrime(worker);
     q = CreatePrime(worker);
     //make sure p \neq q
@@ -105,15 +104,7 @@ void RSA::Init(int worker)
     //欧拉数
     Euler = p * q;
     p = p + BigInt::one, q = q + BigInt::one;
-    //auto ed = clock();
-    /* cout << "Euler: " << Euler << endl
-         << "------------------------------------------" << endl; */
 }
-/* cout << p << endl
-         << q << endl
-         << Euler << endl
-         << product << endl; */
-//cout << "time:" << dec << ed - st << endl;
 
 bool RSA::IsPrime(const BigInt &num, int k)
 {
@@ -243,54 +234,8 @@ int RSA::Sieve(vector<BigInt> &vec, const BigInt &start, int sieveLength)
     return cnt;
 }
 
-/*void RSA::PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result)
-{
-    vector<BigInt> probablePrime;
-    while (1)
-    {
-        bool finished;
-        mutex->lock();
-        finished = *finishFlag;
-        mutex->unlock();
-        if (finished)
-        {
-            break;
-        }
-        BigInt start = CreateRandom(1);
-        int count = Sieve(probablePrime, start, 1000);
-        for (int i = 0; i < count; i++)
-        {
-            if (IsPrime(probablePrime[i]))
-            {
-                mutex->lock();
-                *result = probablePrime[i];
-                *finishFlag = true;
-                mutex->unlock();
-                break;
-            }
-        }
-        probablePrime.clear(); //no number passes Miller-Rabin, repeat
-    }
-    return;
-}*/
-
 BigInt RSA::CreatePrime(int worker)
 {
-    /*mutex mutex;
-    bool finished = false;
-    BigInt result;
-    vector<thread> threads(worker);
-    for (int i = 0; i < worker; ++i)
-    {
-        threads.emplace_back(&RSA::PrimeWorker, this, &mutex, &finished, &result);
-    }
-    for (auto &t : threads)
-    {
-        if (t.joinable())
-        {
-            t.join();
-        }
-    }*/
     vector<BigInt> probablePrime;
     bool foundFlag = false;
     while (1)
