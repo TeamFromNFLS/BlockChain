@@ -46,6 +46,7 @@ string Base58(string s)
 
 vector<pair<string, string>> Wallet::walletInfo;
 vector<Wallet> Wallet::walletSet;
+vector<Wallet> Wallet::onlyWalletSet;
 
 bool Wallet::CheckChain()
 {
@@ -103,6 +104,7 @@ void Wallet::Init(int worker)
                << "------------------------------------------" << endl;
         walletInfo.push_back(make_pair(address, publicKeyHash));
         walletSet.push_back(*this);
+        onlyWalletSet.push_back(*this);
     }
 }
 
@@ -172,8 +174,9 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     return true;
 }
 
-void Wallet::CreateCoinbase()
+void Wallet::CreateCoinbase(int x)
 {
+    Transaction::mineReward = x;
     Transaction transaction("null", address); //as receiver
     TxOutput _output(Transaction::mineReward, publicKeyHash);
     transaction.output = _output;

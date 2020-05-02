@@ -7,6 +7,7 @@
 #include <random>
 #include "chain.h"
 #include "block.h"
+#include "wallet.h"
 #include "sha256.h"
 #include "transaction.h"
 
@@ -233,6 +234,10 @@ void Block::Pack()
         Transaction::packedTx.push_back(tx);
     }
     Transaction::toBePackedTx.clear();
+    for (auto &t : Wallet::walletSet)
+    {
+        t.SetChain(blockChain);
+    }
     return;
 }
 

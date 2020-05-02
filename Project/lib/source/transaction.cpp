@@ -29,6 +29,7 @@ bool Transaction::IsCoinbase()
     {
         return true;
     }
+    return false;
 }
 
 void Transaction::Show()

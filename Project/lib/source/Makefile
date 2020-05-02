@@ -7,6 +7,6 @@ LIB = blockChain.lib
 SO = libChain.so
  
 all:
-	$(CC) $(INC) $(OBJS) -fPIC -shared -o $(SO) -lpthread -lm
+	$(CC) $(INC) $(OBJS) -shared -o $(TARGET) -Wl,--out-implib,$(LIB) -pthread
 clean:
 	rm $(SRCS) $(headfile)

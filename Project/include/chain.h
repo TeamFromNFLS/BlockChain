@@ -25,7 +25,7 @@ public:
     }
     static string GetCoinBaseIndex();
     static vector<Transaction> GetTransaction();
-    void print();
+    void Print();
 
 private:
     std::string difficulty = "0000";

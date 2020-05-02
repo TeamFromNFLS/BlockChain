@@ -45,7 +45,7 @@ bool IsInt(string &s)
 }
 
 const int INF = 0x3f3f3f3f;
-set<string> commandSet{"demo", "help", "add", "delete", "mine", "find", "make", "check", "clean", "exit"};
+set<string> commandSet{"demo", "help", "add", "delete", "mine", "find", "make", "display", "clean", "exit"};
 
 string EditDistance(string &s)
 {
@@ -163,7 +163,7 @@ int main()
                               << "mine -- use miners to pack transactions into blockchain." << endl
                               << "find -- find the balance of a wallet." << endl
                               << "make -- make a transaction." << endl
-                              << "check -- check whether the wallet contains a right blockchain." << endl
+                              << "display -- print the blockchain in a wallet." << endl
                               << "clean -- clean the log." << endl
                               << "exit -- exit the program." << endl
                               << endl
@@ -205,11 +205,12 @@ int main()
                               }
                               if (*it == "make")
                               {
-                                   cout << "make [walletA id] [walletB id] [value]: make a transaction from walletA to walletB." << endl;
+                                   cout << "make [walletA id] [walletB id] [value]: make a transaction from walletA to walletB." << endl
+                                        << "Especially, setting the first id to -1 means that this is a reward from coinBase." << endl;
                               }
-                              if (*it == "check")
+                              if (*it == "display")
                               {
-                                   cout << "check [wallet id]: check whether the blockchain in this wallet is true." << endl;
+                                   cout << "display [wallet id]: display the blockchain in this wallet." << endl;
                               }
                               if (*it == "clean")
                               {
@@ -274,6 +275,7 @@ int main()
                               }
                               cout.rdbuf(coutBackup);
                               cout << end[flag] << endl;
+                              continue;
                          }
                     }
                     catch (bool)
@@ -293,21 +295,23 @@ int main()
                               << "delete [wallet/miner]." << endl;
                          continue;
                     }
+                    string address;
                     if (cmdList[1] == "wallet")
                     {
                          try
                          {
-                              if (Wallet::walletInfo.empty())
+                              if (Wallet::onlyWalletSet.empty())
                               {
                                    throw false;
                               }
-                              string address = Wallet::walletInfo[Wallet::walletInfo.size() - 1].first;
-                              Wallet::walletInfo.erase(Wallet::walletInfo.end() - 1);
+                              address = Wallet::onlyWalletSet[Wallet::onlyWalletSet.size() - 1].GetAddress();
+                              Wallet::onlyWalletSet.erase(Wallet::onlyWalletSet.end() - 1);
                               cout << "Wallet: " << address << " has been deleted." << endl;
                          }
                          catch (bool)
                          {
                               cout << "No wallet in the net!" << endl;
+                              continue;
                          }
                     }
                     if (cmdList[1] == "miner")
@@ -318,15 +322,35 @@ int main()
                               {
                                    throw false;
                               }
-                              string address = Miner::minerSet[Miner::minerSet.size() - 1]->GetAddress();
+                              address = Miner::minerSet[Miner::minerSet.size() - 1]->GetAddress();
                               Miner::minerSet.erase(Miner::minerSet.end() - 1);
                               cout << "Miner: " << address << "has been deleted." << endl;
                          }
                          catch (bool)
                          {
                               cout << "No miner in the net!" << endl;
+                              continue;
                          }
                     }
+                    vector<Wallet>::iterator it;
+                    for (it = Wallet::walletSet.begin(); it != Wallet::walletSet.end(); ++it)
+                    {
+                         if (it->GetAddress() == address)
+                         {
+                              Wallet::walletSet.erase(it);
+                              break;
+                         }
+                    }
+                    vector<pair<string, string>>::iterator _it;
+                    for (_it = Wallet::walletInfo.begin(); _it != Wallet::walletInfo.end(); ++_it)
+                    {
+                         if (_it->first == address)
+                         {
+                              Wallet::walletInfo.erase(_it);
+                              break;
+                         }
+                    }
+                    continue;
                }
                if (*it == "make")
                {
@@ -346,6 +370,13 @@ int main()
                               throw "false";
                          }
                          cout.rdbuf(fileBackup);
+                         if (a == -1)
+                         {
+                              Wallet::walletSet[b].CreateCoinbase(value);
+                              cout.rdbuf(coutBackup);
+                              cout << "Transaction made." << endl;
+                              continue;
+                         }
                          bool flag = Wallet::walletSet[a].CreateTransaction(Wallet::walletInfo[b], value);
                          cout.rdbuf(coutBackup);
                          if (!flag)
@@ -353,6 +384,7 @@ int main()
                               throw 0;
                          }
                          cout << "Transaction made." << endl;
+                         continue;
                     }
                     catch (bool)
                     {
@@ -364,15 +396,79 @@ int main()
                     catch (char const *)
                     {
                          cout << "Wallet id cannot find. ONLY " << Wallet::walletSet.size() << " nodes exists." << endl;
+                         continue;
                     }
                     catch (int)
                     {
                          cout << "Transaction construction failed." << endl;
+                         continue;
                     }
                }
                if (*it == "clean")
                {
                     Clean();
+                    continue;
+               }
+               if (*it == "mine")
+               {
+                    try
+                    {
+                         if (Transaction::toBePackedTx.empty())
+                         {
+                              throw false;
+                         }
+                         if (Miner::minerSet.empty())
+                         {
+                              throw 0;
+                         }
+                         cout.rdbuf(fileBackup);
+                         int output = Mine();
+                         cout.rdbuf(coutBackup);
+                         cout << "Found miner id: " << output << endl
+                              << "Found miner address: " << Miner::minerSet[output]->GetAddress() << endl;
+                    }
+                    catch (bool)
+                    {
+                         cout << "All transactions have already been packed." << endl;
+                         continue;
+                    }
+                    catch (int)
+                    {
+                         cout << "No miner in the net!" << endl;
+                         continue;
+                    }
+               }
+               if (*it == "display")
+               {
+                    try
+                    {
+                         if (cmdList.size() != 2)
+                         {
+                              throw false;
+                         }
+                         int a = atoi(cmdList[1].c_str());
+                         if (a >= Wallet::walletSet.size())
+                         {
+                              throw 0;
+                         }
+                         cout.rdbuf(fileBackup);
+                         Wallet::walletSet[a].GetChain().Print();
+                         cout.rdbuf(coutBackup);
+                         cout << "Please check the log." << endl;
+                         continue;
+                    }
+                    catch (bool)
+                    {
+                         cout << "Ambiguous command "
+                              << "\"" << cmd << "\":"
+                              << "display [wallet id]." << endl;
+                         continue;
+                    }
+                    catch (int)
+                    {
+                         cout << "Wallet id cannot find. ONLY " << Wallet::walletSet.size() << " nodes exists." << endl;
+                         continue;
+                    }
                }
                if (*it == "exit")
                {

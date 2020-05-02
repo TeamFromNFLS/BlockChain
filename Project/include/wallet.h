@@ -25,6 +25,7 @@ public:
         return address;
     }
     static vector<Wallet> walletSet;
+    static vector<Wallet> onlyWalletSet;
     static vector<pair<string, string>> walletInfo;
     void SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr);
     bool CheckChain();
@@ -39,11 +40,19 @@ protected:
     /* create transaction */
 public:
     bool CreateTransaction(pair<string, string> receiverInfo, int _value);
-    void CreateCoinbase();
+    void CreateCoinbase(int x);
     void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
     vector<int> FindSpent(vector<Transaction> &pool);
     vector<Transaction> FindUTXO(const vector<int> &spentTxId, const vector<Transaction> &pool);
     void FindBalance();
+    Chain GetChain()
+    {
+        return chain;
+    }
+    void SetChain(Chain &newChain)
+    {
+        chain = newChain;
+    }
     static bool VerifyTx(const Transaction &_tx);
 };
 

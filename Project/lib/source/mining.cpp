@@ -25,7 +25,6 @@ void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool
     Miner *now = (*miners)[id];
     numberWorker = *worker;
     mutex->unlock();
-    now->Init(1);
     int nonce = now->GetNonce();
     now->Load(Transaction::toBePackedTx);
     bool flag, cntFlag;
@@ -47,10 +46,11 @@ void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool
             mutex->unlock();
             if (!checkFlag)
             {
+                mutex->lock();
+                LOGOUT << "Miner " << id << " is working now." << endl;
                 if (now->Check(check))
                 {
                     checkFlag = true;
-                    mutex->lock();
                     int tmp = *checkCnt;
                     tmp++;
                     *checkCnt = tmp;
@@ -58,7 +58,6 @@ void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool
                 }
                 else
                 {
-                    mutex->lock();
                     *foundFlag = false;
                     mutex->unlock();
                 }
@@ -74,30 +73,21 @@ void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool
             mutex->unlock();
         }
         nonce = (nonce + 1) % INT32_MAX;
-        //cout << nonce << endl;
     }
 }
 
-void TestMine()
+int Mine()
 {
     mutex mutex;
     Block toCheck;
     bool foundFlag = false, outputFlag = false;
     int checkCnt = 0;
-    int worker = 4;
-    //cout << "Type in the number of workers：";
-    //cin >> worker;
+    int worker = Miner::minerSet.size();
     int output;
     vector<thread> threads(worker);
-    vector<Miner *> miners(worker);
     for (int i = 0; i < worker; ++i)
     {
-        Miner *tmp = new Miner;
-        miners[i] = tmp;
-    }
-    for (int i = 0; i < worker; ++i)
-    {
-        threads.emplace_back(MineWorker, &miners, &worker, &mutex, &i, &foundFlag, &checkCnt, &toCheck, &output);
+        threads.emplace_back(MineWorker, &Miner::minerSet, &worker, &mutex, &i, &foundFlag, &checkCnt, &toCheck, &output);
     }
     for (auto &t : threads)
     {
@@ -107,6 +97,6 @@ void TestMine()
         }
     }
     toCheck.Pack();
-    cout << "Found miner address: " << Miner::minerSet[output]->GetAddress() << endl;
     toCheck.Show();
+    return output;
 }

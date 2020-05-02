@@ -1,7 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-void TestMine();
+int Mine();
 void TestTx();
 void TestPowMod();
 int EncryptAndDecrypt();

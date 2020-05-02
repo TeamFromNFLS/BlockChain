@@ -36,6 +36,6 @@ void TestTx()
             t.join();
         }
     }
-    wallets[0]->CreateCoinbase();
+    wallets[0]->CreateCoinbase(5);
     wallets[0]->CreateTransaction(Wallet::walletInfo[1], Transaction::mineReward);
 }

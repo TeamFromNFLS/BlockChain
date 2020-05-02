@@ -26,7 +26,7 @@ Chain::Chain()
     end = &coinBase;
 }
 
-void Chain::print()
+void Chain::Print()
 {
     Block *now = end;
     while (now != nullptr)
