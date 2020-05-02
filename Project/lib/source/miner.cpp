@@ -29,7 +29,6 @@ Miner::Miner() : Wallet()
     uniform_int_distribution<int> num(0, INT32_MAX);
     nonce = num(rng);
     difficultyTarget = blockChain.GetDifficulty();
-    Miner::minerSet.push_back(this);
 }
 
 void Miner::Reset()
@@ -59,7 +58,6 @@ void Miner::Init(int worker)
     string tailHash = sha256(sha256(versionpublicKeyHash)).substr(0, 4);
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
-    walletInfo.push_back(make_pair(address, publicKeyHash));
     chain = blockChain;
     LOGOUT << "Begin checking blockchain in this miner..." << endl;
     if (!CheckChain())
@@ -69,10 +67,13 @@ void Miner::Init(int worker)
     else
     {
         LOGOUT << "Passed blockchain test in this miner." << endl;
+        walletInfo.push_back(make_pair(address, publicKeyHash));
+        LOGOUT << "Complete." << endl;
+        LOGOUT << "Address: " << address << endl
+               << "------------------------------------------" << endl;
+        walletSet.push_back(*this);
+        Miner::minerSet.push_back(this);
     }
-    LOGOUT << "Complete." << endl;
-    LOGOUT << "Address: " << address << endl
-           << "------------------------------------------" << endl;
 }
 
 bool Miner::TestPoW(int nonce)

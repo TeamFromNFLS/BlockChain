@@ -45,6 +45,7 @@ string Base58(string s)
 }
 
 vector<pair<string, string>> Wallet::walletInfo;
+vector<Wallet> Wallet::walletSet;
 
 bool Wallet::CheckChain()
 {
@@ -89,7 +90,6 @@ void Wallet::Init(int worker)
     string tailHash = sha256(sha256(versionpublicKeyHash)).substr(0, 4);
     string finalHash = versionpublicKeyHash + tailHash;
     address = Base58(finalHash);
-    walletInfo.push_back(make_pair(address, publicKeyHash));
     chain = blockChain;
     LOGOUT << "Begin checking blockchain in this wallet..." << endl;
     if (!CheckChain())
@@ -99,10 +99,12 @@ void Wallet::Init(int worker)
     else
     {
         LOGOUT << "Passed blockchain test in this wallet." << endl;
+        LOGOUT << "Complete." << endl;
+        LOGOUT << "Address: " << address << endl
+               << "------------------------------------------" << endl;
+        walletInfo.push_back(make_pair(address, publicKeyHash));
+        walletSet.push_back(*this);
     }
-    LOGOUT << "Complete." << endl;
-    LOGOUT << "Address: " << address << endl
-           << "------------------------------------------" << endl;
 }
 
 void Wallet::SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr)
@@ -117,7 +119,7 @@ void Wallet::SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string 
 
 //00c94696460043b120981f922acd5f3bccefe1a5fdd6d4
 
-void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
+bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 {
     Transaction transaction(address, get<0>(receiverInfo));
     TxInput _input(_value, publicKey, n);
@@ -132,6 +134,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     if (!CandidateTx.size())
     {
         LOGOUT << "Transaction construction failed. No matching UTXO." << endl;
+        return false;
     }
     else
     {
@@ -162,6 +165,7 @@ void Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         LOGOUT << "Signature: " << transaction.input.signature << endl
                << "------------------------------------------" << endl;
     }
+    return true;
 }
 
 void Wallet::CreateCoinbase()

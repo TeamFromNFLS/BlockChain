@@ -23,6 +23,7 @@ public:
     {
         return address;
     }
+    static vector<Wallet> walletSet;
     static vector<pair<string, string>> walletInfo;
     void SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr);
     bool CheckChain();
@@ -36,7 +37,7 @@ protected:
 
     /* create transaction */
 public:
-    void CreateTransaction(pair<string, string> receiverInfo, int _value);
+    bool CreateTransaction(pair<string, string> receiverInfo, int _value);
     void CreateCoinbase();
     void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
     vector<int> FindSpent(vector<Transaction> &pool);
