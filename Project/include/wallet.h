@@ -15,6 +15,7 @@ public:
     Wallet(int worker) { Init(worker); }
     Wallet(){};
     virtual void Init(int worker);
+    virtual void InitPrint();
     tuple<BigInt, BigInt, string> GetKey()
     {
         return make_tuple(publicKey, n, address);

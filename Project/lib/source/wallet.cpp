@@ -76,7 +76,6 @@ bool Wallet::CheckChain()
 
 void Wallet::Init(int worker)
 {
-    LOGOUT << "Creating a new wallet. Please wait..." << endl;
     RSA a;
     a.Init(worker);
     a.CreateKeys();
@@ -105,6 +104,11 @@ void Wallet::Init(int worker)
         walletInfo.push_back(make_pair(address, publicKeyHash));
         walletSet.push_back(*this);
     }
+}
+
+void Wallet::InitPrint()
+{
+    LOGOUT << "Creating a new wallet. Please wait..." << endl;
 }
 
 void Wallet::SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string _addr)

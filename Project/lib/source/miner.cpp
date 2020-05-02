@@ -44,7 +44,6 @@ void Miner::Reset()
 
 void Miner::Init(int worker)
 {
-    LOGOUT << "Creating a new miner. Please wait..." << endl;
     RSA a;
     a.Init(worker);
     a.CreateKeys();
@@ -74,6 +73,11 @@ void Miner::Init(int worker)
         walletSet.push_back(*this);
         Miner::minerSet.push_back(this);
     }
+}
+
+void Miner::InitPrint()
+{
+    LOGOUT << "Creating a new miner. Please wait..." << endl;
 }
 
 bool Miner::TestPoW(int nonce)

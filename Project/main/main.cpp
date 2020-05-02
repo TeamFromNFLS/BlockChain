@@ -17,11 +17,12 @@
 
 using namespace std;
 
-void WalletCreator(Wallet *wallet);
-
-void MinerCreator(Miner *miner)
+void WalletCreator(mutex *mutex, Wallet *wallet)
 {
-     miner->Init(1);
+     mutex->lock();
+     wallet->InitPrint();
+     mutex->unlock();
+     wallet->Init(1);
 }
 
 bool IsInt(string &s)
@@ -44,7 +45,7 @@ bool IsInt(string &s)
 }
 
 const int INF = 0x3f3f3f3f;
-set<string> commandSet{"demo", "help", "add", "delete", "mine", "find", "make", "check", "exit"};
+set<string> commandSet{"demo", "help", "add", "delete", "mine", "find", "make", "check", "clean", "exit"};
 
 string EditDistance(string &s)
 {
@@ -111,6 +112,7 @@ int main()
           << "For help, type \"help\"." << endl;
      string cmd;
      bool demoFlag = false;
+     Clean();
      while (getline(cin, cmd))
      {
           if (demoFlag)
@@ -162,6 +164,7 @@ int main()
                               << "find -- find the balance of a wallet." << endl
                               << "make -- make a transaction." << endl
                               << "check -- check whether the wallet contains a right blockchain." << endl
+                              << "clean -- clean the log." << endl
                               << "exit -- exit the program." << endl
                               << endl
                               << "Type \"help\" followed by command name for full documentation." << endl;
@@ -208,6 +211,10 @@ int main()
                               {
                                    cout << "check [wallet id]: check whether the blockchain in this wallet is true." << endl;
                               }
+                              if (*it == "clean")
+                              {
+                                   cout << "Delete everything in log." << endl;
+                              }
                               if (*it == "exit")
                               {
                                    cout << "Exit the program." << endl;
@@ -237,67 +244,36 @@ int main()
                               int t = atoi(cmdList[2].c_str());
                               int loop = t / 8;
                               int remainder = t - loop * 8;
-                              if (cmdList[1] == "wallet")
+                              string const start[2] = {"adding wallets, please wait...", "adding miners, please wait..."};
+                              string const end[2] = {"Add wallets complete.", "Add miners complete."};
+                              bool flag = cmdList[1] == "miner";
+                              cout << start[flag] << endl;
+                              cout.rdbuf(fileBackup);
+                              vector<thread> threads;
+                              Wallet *tmp;
+                              mutex mutex;
+                              for (int i = 0; i < loop; ++i)
                               {
-                                   cout << "adding wallets, please wait..." << endl;
-                                   cout.rdbuf(fileBackup);
-                                   vector<Wallet *> wallets;
-                                   vector<thread> threads;
-                                   Wallet *tmp;
-                                   for (int i = 0; i < loop; ++i)
+                                   for (int j = 0; j < 8; ++j)
                                    {
-                                        for (int j = 0; j < 8; ++j)
-                                        {
-                                             tmp = new Wallet;
-                                             wallets.push_back(tmp);
-                                             threads.emplace_back(WalletCreator, tmp);
-                                        }
+                                        tmp = flag ? new Miner : new Wallet;
+                                        threads.emplace_back(WalletCreator, &mutex, tmp);
                                    }
-                                   for (int i = 0; i < remainder; ++i)
-                                   {
-                                        tmp = new Wallet;
-                                        wallets.push_back(tmp);
-                                        threads.emplace_back(WalletCreator, tmp);
-                                   }
-                                   for (auto &t : threads)
-                                   {
-                                        if (t.joinable())
-                                        {
-                                             t.join();
-                                        }
-                                   }
-                                   cout.rdbuf(coutBackup);
-                                   cout << "Add wallets complete." << endl;
                               }
-                              else
+                              for (int i = 0; i < remainder; ++i)
                               {
-                                   cout << "adding miners, please wait..." << endl;
-                                   cout.rdbuf(fileBackup);
-                                   vector<thread> threads;
-                                   Miner *tmp;
-                                   for (int i = 0; i < loop; ++i)
-                                   {
-                                        for (int j = 0; j < 8; ++j)
-                                        {
-                                             tmp = new Miner;
-                                             threads.emplace_back(WalletCreator, tmp);
-                                        }
-                                   }
-                                   for (int i = 0; i < remainder; ++i)
-                                   {
-                                        tmp = new Miner;
-                                        threads.emplace_back(MinerCreator, tmp);
-                                   }
-                                   for (auto &t : threads)
-                                   {
-                                        if (t.joinable())
-                                        {
-                                             t.join();
-                                        }
-                                   }
-                                   cout.rdbuf(coutBackup);
-                                   cout << "Add miners complete." << endl;
+                                   tmp = flag ? new Miner : new Wallet;
+                                   threads.emplace_back(WalletCreator, &mutex, tmp);
                               }
+                              for (auto &t : threads)
+                              {
+                                   if (t.joinable())
+                                   {
+                                        t.join();
+                                   }
+                              }
+                              cout.rdbuf(coutBackup);
+                              cout << end[flag] << endl;
                          }
                     }
                     catch (bool)
@@ -393,6 +369,10 @@ int main()
                     {
                          cout << "Transaction construction failed." << endl;
                     }
+               }
+               if (*it == "clean")
+               {
+                    Clean();
                }
                if (*it == "exit")
                {

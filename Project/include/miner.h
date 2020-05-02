@@ -12,6 +12,7 @@ public:
     Miner(int worker);
     Miner();
     virtual void Init(int worker);
+    virtual void InitPrint();
     void Reset();
     Miner(const Miner &p) : nonce(p.nonce), difficultyTarget(p.difficultyTarget), stored(p.stored){};
     bool Check(Block &toCheck);
