@@ -2,6 +2,15 @@
 
 [TOC]
 
+## 编译方法
+
+* For Linux:
+  * 将lib中的.so文件移动到/usr/lib目录，再把main中的Makefile_b去掉后缀，make编译运行
+
+* For Windows:
+  * 将lib中的.dll和.lib文件移动到main中，再把main中的Makefile_a去掉后缀，make编译运行
+
+
 ## 开发日志
 
 * 2020.04.13 - 更早
@@ -302,4 +311,20 @@
   + 封装大数库
   + 实现区块链和工作量证明
   + 催促其他组员完成工作（不是）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
