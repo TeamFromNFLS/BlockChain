@@ -44,7 +44,7 @@ public:
     void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
     vector<int> FindSpent(vector<Transaction> &pool);
     vector<Transaction> FindUTXO(const vector<int> &spentTxId, const vector<Transaction> &pool);
-    void FindBalance();
+    int FindBalance();
     Chain GetChain()
     {
         return chain;

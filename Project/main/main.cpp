@@ -446,6 +446,10 @@ int main()
                          {
                               throw false;
                          }
+                         if (!IsInt(cmdList[1]))
+                         {
+                              throw false;
+                         }
                          int a = atoi(cmdList[1].c_str());
                          if (a >= Wallet::walletSet.size())
                          {
@@ -462,6 +466,42 @@ int main()
                          cout << "Ambiguous command "
                               << "\"" << cmd << "\":"
                               << "display [wallet id]." << endl;
+                         continue;
+                    }
+                    catch (int)
+                    {
+                         cout << "Wallet id cannot find. ONLY " << Wallet::walletSet.size() << " nodes exists." << endl;
+                         continue;
+                    }
+               }
+               if (*it == "find")
+               {
+                    try
+                    {
+                         if (cmdList.size() != 2)
+                         {
+                              throw false;
+                         }
+                         if (!IsInt(cmdList[1]))
+                         {
+                              throw false;
+                         }
+                         int id = atoi(cmdList[1].c_str());
+                         if (id >= Wallet::walletSet.size())
+                         {
+                              throw 0;
+                         }
+                         cout.rdbuf(fileBackup);
+                         int remainder = Wallet::walletSet[id].FindBalance();
+                         cout.rdbuf(coutBackup);
+                         cout << "Money in wallet " << Wallet::walletSet[id].GetAddress() << " : " << remainder << endl;
+                         continue;
+                    }
+                    catch (bool)
+                    {
+                         cout << "Ambiguous command "
+                              << "\"" << cmd << "\":"
+                              << "find [wallet id]." << endl;
                          continue;
                     }
                     catch (int)

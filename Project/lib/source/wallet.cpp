@@ -251,8 +251,9 @@ vector<Transaction> Wallet::FindUTXO(const vector<int> &spentTxId, const vector<
     return UTXOTx;
 }
 
-void Wallet::FindBalance()
+int Wallet::FindBalance()
 {
+    int result = 0;
     vector<Transaction> myPackedTx;
     vector<int> myPackedSpentTxID;
     vector<Transaction> balanceTx;
@@ -274,9 +275,11 @@ void Wallet::FindBalance()
     //int count = 1;
     for (Transaction &tx : balanceTx)
     {
+        result += tx.output.GetValue();
         LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
         //count++;
     }
+    return result;
 }
 
 bool Wallet::VerifyTx(const Transaction &_tx)
