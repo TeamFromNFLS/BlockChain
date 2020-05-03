@@ -499,7 +499,7 @@ int main()
                          cout.rdbuf(fileBackup);
                          int remainder = Wallet::walletSet[id].FindBalance();
                          cout.rdbuf(coutBackup);
-                         cout << "Money in wallet " << Wallet::walletSet[id].GetAddress() << " : " << remainder << endl;
+                         cout << "Money in wallet " << Wallet::walletSet[id].GetAddress() << " : " << dec << remainder << endl;
                          continue;
                     }
                     catch (bool)
