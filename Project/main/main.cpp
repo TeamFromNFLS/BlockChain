@@ -110,9 +110,9 @@ int main()
      fileBackup = fileOut.rdbuf();
      inBackup = fileIn.rdbuf();
      struct timeval timeStart, timeEnd;
-     cout << "Welcome to P.R.O.M.E.T.H.U.S, a blockchain simulation program." << endl
-          << "For bug reporting instructions, please send email to:" << endl
-          << "panh19@mails.tsinghua.edu.cn" << endl
+     cout << "Welcome to P.R.O.M.E.T.H.E.U.S, a blockchain simulation program." << endl
+          << "For bug reporting instructions, please send issue to:" << endl
+          << "https://github.com/TeamFromNFLS/BlockChain" << endl
           << "For help, type \"help\"." << endl;
      string cmd;
      bool demoFlag = false;
