@@ -127,12 +127,6 @@ void Wallet::SetWallet(BigInt _publicKey, BigInt _privateKey, BigInt _N, string 
 
 bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 {
-    Transaction transaction(address, get<0>(receiverInfo));
-    TxInput _input(_value, publicKey, n);
-    TxOutput _output(_value, get<1>(receiverInfo));
-    transaction.input = _input;
-    transaction.output = _output;
-
     /* determine prevTx */
     vector<int> spentTxId = FindSpent(Transaction::txPool);
     vector<Transaction> CandidateTx = FindUTXO(spentTxId, Transaction::packedTx);
@@ -148,30 +142,35 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
         {
             if (tx.output.GetValue() == _value)
             {
+                Transaction transaction(address, get<0>(receiverInfo));
+                TxInput _input(_value, publicKey, n);
+                TxOutput _output(_value, get<1>(receiverInfo));
+                transaction.input = _input;
+                transaction.output = _output;
                 transaction.input.SetPrevID(tx.GetID());
                 LOGOUT << "Transaction ID: " << transaction.GetID() << endl;
                 //transaction.SetID();
-                break;
+                Sign(transaction, get<1>(receiverInfo), _value);
+                Transaction::txPool.push_back(transaction);
+                Transaction::toBePackedTx.push_back(transaction);
+                LOGOUT << "Transaction constructed by " << address << endl
+                       << "------------------------------------------" << endl;
+
+                LOGOUT << "Transaction log: " << endl;
+                LOGOUT << "Type: Normal transaction" << endl;
+                LOGOUT << "Sender Address: " << address << endl;
+                LOGOUT << "Receiver Address: " << get<0>(receiverInfo) << endl;
+                LOGOUT << "Value: " << transaction.output.GetValue() << endl;
+                LOGOUT << "ID: " << transaction.GetID() << endl;
+                LOGOUT << "PrevTx ID: " << transaction.input.GetPrevID() << endl;
+                LOGOUT << "Signature: " << transaction.input.signature << endl
+                       << "------------------------------------------" << endl;
+                return true;
             }
         }
-        Sign(transaction, get<1>(receiverInfo), _value);
-        Transaction::txPool.push_back(transaction);
-        Transaction::toBePackedTx.push_back(transaction);
-
-        LOGOUT << "Transaction constructed by " << address << endl
-               << "------------------------------------------" << endl;
-
-        LOGOUT << "Transaction log: " << endl;
-        LOGOUT << "Type: Normal transaction" << endl;
-        LOGOUT << "Sender Address: " << address << endl;
-        LOGOUT << "Receiver Address: " << get<0>(receiverInfo) << endl;
-        LOGOUT << "Value: " << transaction.output.GetValue() << endl;
-        LOGOUT << "ID: " << transaction.GetID() << endl;
-        LOGOUT << "PrevTx ID: " << transaction.input.GetPrevID() << endl;
-        LOGOUT << "Signature: " << transaction.input.signature << endl
-               << "------------------------------------------" << endl;
+        LOGOUT << "Invalid input value" << endl;
+        return false;
     }
-    return true;
 }
 
 void Wallet::CreateCoinbase(int x)
@@ -236,14 +235,21 @@ vector<int> Wallet::FindSpent(vector<Transaction> &pool) //to be iterated over
 
 vector<Transaction> Wallet::FindUTXO(const vector<int> &spentTxId, const vector<Transaction> &pool)
 {
-    vector<Transaction> txPool = pool, UTXOTx;
+    vector<Transaction> txPool = pool, myTx, UTXOTx;
     vector<int> spent = spentTxId;
     vector<int>::iterator ret;
-
     for (Transaction &tx : txPool)
     {
+        if (tx.receiverAdr == address)
+        {
+            myTx.push_back(tx);
+        }
+    }
+
+    for (Transaction &tx : myTx)
+    {
         ret = find(spent.begin(), spent.end(), tx.txID);
-        if (ret == spentTxId.end()) //not found
+        if (ret == spent.end()) //not found
         {
             UTXOTx.push_back(tx);
         }
@@ -253,31 +259,43 @@ vector<Transaction> Wallet::FindUTXO(const vector<int> &spentTxId, const vector<
 
 int Wallet::FindBalance()
 {
-    int result = 0;
+    /* int result = 0;
     vector<Transaction> myPackedTx;
     vector<int> myPackedSpentTxID;
     vector<Transaction> balanceTx;
     for (Transaction &tx : Transaction::packedTx)
     {
-        if (tx.receiverAdr == address)
+        if (tx.receiverAdr == address || tx.senderAdr == address)
         {
             myPackedTx.push_back(tx);
         }
     }
 
     myPackedSpentTxID = FindSpent(myPackedTx);
-    balanceTx = FindUTXO(myPackedSpentTxID, myPackedTx);
+    balanceTx = FindUTXO(myPackedSpentTxID, myPackedTx); */
+    int result = 0;
+    vector<int> spentTxId = FindSpent(Transaction::txPool);
+    vector<Transaction> balanceTx = FindUTXO(spentTxId, Transaction::packedTx);
 
     LOGOUT << "UTXO information:" << endl;
     LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << "Transaction ID"
            << "\t"
            << "UTXO value" << endl;
     //int count = 1;
-    for (Transaction &tx : balanceTx)
+    if (!balanceTx.size())
     {
-        result += tx.output.GetValue();
-        LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
-        //count++;
+        LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << "null"
+               << "\t"
+               << "null" << endl;
+    }
+    else
+    {
+        for (Transaction &tx : balanceTx)
+        {
+            result += tx.output.GetValue();
+            LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
+            //count++;
+        }
     }
     return result;
 }
