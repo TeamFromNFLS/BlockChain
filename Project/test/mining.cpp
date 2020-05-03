@@ -16,7 +16,7 @@
 #include "Transaction.h"
 using namespace std;
 
-void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
+/*void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
 {
     Block check;
     int id, numberWorker;
@@ -99,4 +99,4 @@ int Mine()
     toCheck.Pack();
     toCheck.Show();
     return output;
-}
+}*/
