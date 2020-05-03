@@ -101,10 +101,14 @@ inline void Clean()
 int main()
 {
      ofstream fileOut;
+     ifstream fileIn;
      fileOut.open("log.txt", ios::app);
-     streambuf *coutBackup, *fileBackup;
+     fileIn.open("in.txt");
+     streambuf *coutBackup, *fileBackup, *cinBackup, *inBackup;
      coutBackup = cout.rdbuf();
+     cinBackup = cin.rdbuf();
      fileBackup = fileOut.rdbuf();
+     inBackup = fileIn.rdbuf();
      struct timeval timeStart, timeEnd;
      cout << "Welcome to P.R.O.M.E.T.H.U.S, a blockchain simulation program." << endl
           << "For bug reporting instructions, please send email to:" << endl
@@ -113,6 +117,7 @@ int main()
      string cmd;
      bool demoFlag = false;
      Clean();
+     //cin.rdbuf(inBackup);
      while (getline(cin, cmd))
      {
           if (demoFlag)

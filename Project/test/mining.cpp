@@ -14,19 +14,38 @@
 #include "block.h"
 #include "chain.h"
 #include "Transaction.h"
+
 using namespace std;
 
-void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
+void print(int x)
+{
+    std::ostringstream oss;
+    oss << std::this_thread::get_id();
+    std::string stid = oss.str();
+    unsigned long long tid = std::stoull(stid);
+    cout << tid << ' '
+         << x << endl;
+}
+
+void MineWorker(int *worker, mutex *mutex, bool *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
 {
     Block check;
     int id, numberWorker;
     mutex->lock();
-    id = *i;
-    Miner *now = (*miners)[id];
+    Miner now;
     numberWorker = *worker;
+    for (int j = 0; j < numberWorker; ++j)
+    {
+        if (!i[j])
+        {
+            id = j;
+            i[j] = true;
+            break;
+        }
+    }
+    int nonce = now.GetNonce();
+    now.Load(Transaction::toBePackedTx);
     mutex->unlock();
-    int nonce = now->GetNonce();
-    now->Load(Transaction::toBePackedTx);
     bool flag, cntFlag;
     bool checkFlag = false;
     while (true)
@@ -48,7 +67,7 @@ void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool
             {
                 mutex->lock();
                 LOGOUT << "Miner " << id << " is working now." << endl;
-                if (now->Check(check))
+                if (now.Check(check))
                 {
                     checkFlag = true;
                     int tmp = *checkCnt;
@@ -63,10 +82,12 @@ void MineWorker(vector<Miner *> *miners, int *worker, mutex *mutex, int *i, bool
                 }
             }
         }
-        if (now->TestPoW(nonce))
+        bool f = now.TestPoW(nonce);
+        print;
+        if (f)
         {
             mutex->lock();
-            Block found = now->GetBlock();
+            Block found = now.GetBlock();
             *foundFlag = true;
             *toCheck = found;
             *output = id;
@@ -85,9 +106,11 @@ int Mine()
     int worker = Miner::minerSet.size();
     int output;
     vector<thread> threads(worker);
+    bool id[20];
+    memset(id, false, sizeof(id));
     for (int i = 0; i < worker; ++i)
     {
-        threads.emplace_back(MineWorker, &Miner::minerSet, &worker, &mutex, &i, &foundFlag, &checkCnt, &toCheck, &output);
+        threads.emplace_back(MineWorker, &worker, &mutex, &*id, &foundFlag, &checkCnt, &toCheck, &output);
     }
     for (auto &t : threads)
     {

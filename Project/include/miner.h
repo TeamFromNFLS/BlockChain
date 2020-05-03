@@ -18,7 +18,7 @@ public:
     bool Check(Block &toCheck);
     bool TestPoW(int nonce);
     void PoW(std::vector<Transaction> &vec);
-    int GetNonce() const
+    int GetNonce()
     {
         return nonce;
     }

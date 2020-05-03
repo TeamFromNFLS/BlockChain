@@ -1,0 +1,3 @@
+add miner 4
+make -1 0 5
+mine

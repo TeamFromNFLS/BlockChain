@@ -82,7 +82,7 @@ void Wallet::Init(int worker)
     a.CreateKeys();
     tuple<BigInt, BigInt, BigInt> keys;
     keys = a.GetKey();
-    publicKey = get<0>(keys);
+    *publicKey = get<0>(keys);
     privateKey = get<1>(keys);
     n = get<2>(keys);
     publicKeyHash = rmd160(sha256(publicKey.ToString() + n.ToString()));
