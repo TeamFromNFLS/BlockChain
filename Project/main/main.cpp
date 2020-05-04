@@ -17,6 +17,17 @@
 
 using namespace std;
 
+void Output(string s)
+{
+     string::iterator it;
+     for (it = s.begin(); it != s.end(); ++it)
+     {
+          cout << *it << flush;
+          usleep(10000);
+     }
+     cout << endl;
+}
+
 void WalletCreator(mutex *mutex, Wallet *wallet)
 {
      mutex->lock();
@@ -45,7 +56,7 @@ bool IsInt(string &s)
 }
 
 const int INF = 0x3f3f3f3f;
-set<string> commandSet{"demo", "help", "add", "delete", "mine", "find", "make", "display", "clean", "exit"};
+set<string> commandSet{"demo", "help", "add", "delete", "mine", "find", "make", "display", "clean", "log", "exit"};
 
 string EditDistance(string &s)
 {
@@ -101,22 +112,24 @@ inline void Clean()
 int main()
 {
      ofstream fileOut;
-     ifstream fileIn;
+     ifstream fileIn, LogIn;
      fileOut.open("log.txt", ios::app);
-     fileIn.open("in.txt");
-     streambuf *coutBackup, *fileBackup, *cinBackup, *inBackup;
+     fileIn.open("in.txt", ios::in);
+     LogIn.open("log.txt", ios::in);
+     streambuf *coutBackup, *fileBackup, *cinBackup, *inBackup, *logBackup;
      coutBackup = cout.rdbuf();
      cinBackup = cin.rdbuf();
      fileBackup = fileOut.rdbuf();
      inBackup = fileIn.rdbuf();
+     logBackup = LogIn.rdbuf();
      struct timeval timeStart, timeEnd;
-     cout << "Welcome to P.R.O.M.E.T.H.U.S, a blockchain simulation program." << endl
-          << "For bug reporting instructions, please send email to:" << endl
-          << "panh19@mails.tsinghua.edu.cn" << endl
+     cout << "Welcome to P.R.O.M.E.T.H.E.U.S, a blockchain simulation program." << endl
+          << "For bug reporting instructions, please send issue to:" << endl
+          << "https://github.com/TeamFromNFLS/BlockChain" << endl
           << "For help, type \"help\"." << endl;
      string cmd;
      bool demoFlag = false;
-     Clean();
+     //Clean();
      //cin.rdbuf(inBackup);
      while (getline(cin, cmd))
      {
@@ -155,6 +168,14 @@ int main()
                     cout << "Demo exited normally. Please check \"log.txt\" for details." << endl
                          << "Log would be cleaned after next command." << endl;
                     demoFlag = true;
+                    cin.rdbuf(logBackup);
+                    string line;
+                    while (getline(cin, line))
+                    {
+                         cout << line << endl;
+                    }
+                    cout << "Over." << endl;
+                    cin.rdbuf(cinBackup);
                     continue;
                }
                if (*it == "help")
@@ -170,6 +191,7 @@ int main()
                               << "make -- make a transaction." << endl
                               << "display -- print the blockchain in a wallet." << endl
                               << "clean -- clean the log." << endl
+                              << "log -- print log file onto the screen." << endl
                               << "exit -- exit the program." << endl
                               << endl
                               << "Type \"help\" followed by command name for full documentation." << endl;
@@ -220,6 +242,10 @@ int main()
                               if (*it == "clean")
                               {
                                    cout << "Delete everything in log." << endl;
+                              }
+                              if (*it == "log")
+                              {
+                                   cout << "Display everything in log onto the screen." << endl;
                               }
                               if (*it == "exit")
                               {
@@ -418,6 +444,10 @@ int main()
                {
                     try
                     {
+                         if (cmdList.size() != 1)
+                         {
+                              throw "false";
+                         }
                          if (Transaction::toBePackedTx.empty())
                          {
                               throw false;
@@ -442,6 +472,13 @@ int main()
                          cout << "No miner in the net!" << endl;
                          continue;
                     }
+                    catch (char const *)
+                    {
+                         cout << "Ambiguous command "
+                              << "\"" << cmd << "\":"
+                              << "mine" << endl;
+                         continue;
+                    }
                }
                if (*it == "display")
                {
@@ -463,7 +500,7 @@ int main()
                          cout.rdbuf(fileBackup);
                          Wallet::walletSet[a].GetChain().Print();
                          cout.rdbuf(coutBackup);
-                         cout << "Please check the log." << endl;
+                         cout << "Print over. Please check the log." << endl;
                          continue;
                     }
                     catch (bool)
@@ -512,6 +549,43 @@ int main()
                     catch (int)
                     {
                          cout << "Wallet id cannot find. ONLY " << Wallet::walletSet.size() << " nodes exists." << endl;
+                         continue;
+                    }
+               }
+               if (*it == "log")
+               {
+                    try
+                    {
+                         if (cmdList.size() != 1)
+                         {
+                              throw false;
+                         }
+                         cin.rdbuf(logBackup);
+                         string line;
+                         bool flag = false;
+                         while (getline(cin, line))
+                         {
+                              flag = true;
+                              Output(line);
+                         }
+                         cin.rdbuf(cinBackup);
+                         if (!flag)
+                         {
+                              throw 0;
+                         }
+                         cout << "Over." << endl;
+                         continue;
+                    }
+                    catch (bool)
+                    {
+                         cout << "Ambiguous command "
+                              << "\"" << cmd << "\":"
+                              << "log" << endl;
+                         continue;
+                    }
+                    catch (int)
+                    {
+                         cout << "The log is empty!" << endl;
                          continue;
                     }
                }
