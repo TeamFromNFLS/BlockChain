@@ -17,6 +17,17 @@
 
 using namespace std;
 
+void Output(string s)
+{
+     string::iterator it;
+     for (it = s.begin(); it != s.end(); ++it)
+     {
+          cout << *it << flush;
+          usleep(10000);
+     }
+     cout << endl;
+}
+
 void WalletCreator(mutex *mutex, Wallet *wallet)
 {
      mutex->lock();
@@ -118,7 +129,7 @@ int main()
           << "For help, type \"help\"." << endl;
      string cmd;
      bool demoFlag = false;
-     Clean();
+     //Clean();
      //cin.rdbuf(inBackup);
      while (getline(cin, cmd))
      {
@@ -555,7 +566,7 @@ int main()
                          while (getline(cin, line))
                          {
                               flag = true;
-                              cout << line << endl;
+                              Output(line);
                          }
                          cin.rdbuf(cinBackup);
                          if (!flag)
