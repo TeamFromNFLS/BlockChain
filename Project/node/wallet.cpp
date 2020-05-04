@@ -140,7 +140,7 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
     {
         for (Transaction &tx : CandidateTx)
         {
-            if (tx.output.GetValue() == _value)
+            if (tx.output.GetValue() >= _value)
             {
                 Transaction transaction(address, get<0>(receiverInfo));
                 TxInput _input(_value, publicKey, n);
@@ -150,7 +150,7 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
                 transaction.input.SetPrevID(tx.GetID());
                 LOGOUT << "Transaction ID: " << transaction.GetID() << endl;
                 //transaction.SetID();
-                Sign(transaction, get<1>(receiverInfo), _value);
+                Sign(transaction, get<1>(receiverInfo));
                 Transaction::txPool.push_back(transaction);
                 Transaction::toBePackedTx.push_back(transaction);
                 LOGOUT << "Transaction constructed by " << address << endl
@@ -195,11 +195,10 @@ void Wallet::CreateCoinbase(int x)
            << "------------------------------------------" << endl;
 }
 
-void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int _value)
+void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash)
 {
     if (!tx.IsCoinbase())
     {
-        RSA rsa;
         /* cout << "publicKeyHash: " << publicKeyHash << endl
              << "receiverPublicKeyHash: " << receiverPublicKeyHash << endl; */
         string signStr = "0x" + publicKeyHash + receiverPublicKeyHash;
