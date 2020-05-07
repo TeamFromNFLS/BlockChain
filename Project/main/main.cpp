@@ -129,7 +129,7 @@ int main()
      Output("For help, type \"help\".");
      string cmd;
      bool demoFlag = false;
-     //Clean();
+     Clean();
      //cin.rdbuf(inBackup);
      while (getline(cin, cmd))
      {
@@ -454,7 +454,9 @@ int main()
                          cout.rdbuf(fileBackup);
                          int output = Mine();
                          cout.rdbuf(coutBackup);
-                         Output("Found miner id: " + output);
+                         stringstream ss;
+                         ss << output;
+                         Output("Found miner id: " + ss.str());
                          Output("Found miner address: " + Miner::minerSet[output]->GetAddress());
                     }
                     catch (bool)
