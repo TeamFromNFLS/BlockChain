@@ -23,7 +23,7 @@ void Output(string s)
      for (it = s.begin(); it != s.end(); ++it)
      {
           cout << *it << flush;
-          usleep(10000);
+          usleep(20000);
      }
      cout << endl;
 }
@@ -123,10 +123,10 @@ int main()
      inBackup = fileIn.rdbuf();
      logBackup = LogIn.rdbuf();
      struct timeval timeStart, timeEnd;
-     cout << "Welcome to P.R.O.M.E.T.H.E.U.S, a blockchain simulation program." << endl
-          << "For bug reporting instructions, please send issue to:" << endl
-          << "https://github.com/TeamFromNFLS/BlockChain" << endl
-          << "For help, type \"help\"." << endl;
+     Output("Welcome to P.R.O.M.E.T.H.E.U.S, a blockchain simulation program.");
+     Output("For bug reporting instructions, please send issue to:");
+     Output("https://github.com/TeamFromNFLS/BlockChain");
+     Output("For help, type \"help\".");
      string cmd;
      bool demoFlag = false;
      //Clean();
@@ -156,7 +156,7 @@ int main()
                if (*it == "demo")
                {
                     Clean();
-                    cout << "Run demo..." << endl;
+                    Output("Run demo...");
                     cout.rdbuf(fileBackup);
                     double runtime = 0;
                     gettimeofday(&timeStart, NULL);
@@ -165,16 +165,16 @@ int main()
                     runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
                     cout << "Total time: " << runtime << "s." << endl;
                     cout.rdbuf(coutBackup);
-                    cout << "Demo exited normally. Please check \"log.txt\" for details." << endl
-                         << "Log would be cleaned after next command." << endl;
+                    Output("Demo exited normally. Please check \"log.txt\" for details.");
+                    Output("Log would be cleaned after next command.");
                     demoFlag = true;
                     cin.rdbuf(logBackup);
                     string line;
                     while (getline(cin, line))
                     {
-                         cout << line << endl;
+                         Output(line);
                     }
-                    cout << "Over." << endl;
+                    Output("Over.");
                     cin.rdbuf(cinBackup);
                     continue;
                }
@@ -182,19 +182,18 @@ int main()
                {
                     if (cmdList.size() == 1)
                     {
-                         cout << "List of classes of commands:" << endl
-                              << "demo -- run demo." << endl
-                              << "add -- add a wallet or miner." << endl
-                              << "delete -- delete a wallet or miner." << endl
-                              << "mine -- use miners to pack transactions into blockchain." << endl
-                              << "find -- find the balance of a wallet." << endl
-                              << "make -- make a transaction." << endl
-                              << "display -- print the blockchain in a wallet." << endl
-                              << "clean -- clean the log." << endl
-                              << "log -- print log file onto the screen." << endl
-                              << "exit -- exit the program." << endl
-                              << endl
-                              << "Type \"help\" followed by command name for full documentation." << endl;
+                         Output("List of classes of commands:");
+                         Output("demo -- run demo.");
+                         Output("add -- add a wallet or miner.");
+                         Output("delete -- delete a wallet or miner.");
+                         Output("mine -- use miners to pack transactions into blockchain.");
+                         Output("find -- find the balance of a wallet.");
+                         Output("make -- make a transaction.");
+                         Output("display -- print the blockchain in a wallet.");
+                         Output("clean -- clean the log.");
+                         Output("exit -- exit the program.");
+                         cout << endl;
+                         Output("Type \"help\" followed by command name for full documentation.");
                     }
                     else
                     {
@@ -202,54 +201,54 @@ int main()
                          if (it == commandSet.end())
                          {
                               string guess = EditDistance(cmdList[1]);
-                              cout << "Undefined command: \"" << cmdList[1] << "\". Do you mean \"" << guess << "\" ?" << endl;
+                              Output("Undefined command: \"" + cmdList[1] + "\". Do you mean \"" + guess + "\" ?");
                          }
                          else
                          {
                               if (*it == "demo")
                               {
-                                   cout << "Run a demo which shows how this program works with pictures and a log file." << endl;
+                                   Output("Run a demo which shows how this program works with pictures and a log file.");
                               }
                               if (*it == "add")
                               {
-                                   cout << "add [wallet/miner] [number of nodes]: add some nodes to the net. Each would be given a unique address and id." << endl;
+                                   Output("add [wallet/miner] [number of nodes]: add some nodes to the net. Each would be given a unique address and id.");
                               }
                               if (*it == "delete")
                               {
-                                   cout << "delete [wallet/miner]: delete the last wallet or miner which is added into the net." << endl;
+                                   Output("delete [wallet/miner]: delete the last wallet or miner which is added into the net.");
                               }
                               if (*it == "help")
                               {
-                                   cout << "NO MATRYOSHKA!" << endl;
+                                   Output("NO MATRYOSHKA!");
                               }
                               if (*it == "find")
                               {
-                                   cout << "find [wallet id]: find the remainder of a wallet and related transactions." << endl;
+                                   Output("find [wallet id]: find the remainder of a wallet and related transactions.");
                               }
                               if (*it == "mine")
                               {
-                                   cout << "Only packed transactions could be avalidable for spending. This command would ask all the miners in the net to try to pack transactions." << endl;
+                                   Output("Only packed transactions could be avalidable for spending. This command would ask all the miners in the net to try to pack transactions.");
                               }
                               if (*it == "make")
                               {
-                                   cout << "make [walletA id] [walletB id] [value]: make a transaction from walletA to walletB." << endl
-                                        << "Especially, setting the first id to -1 means that this is a reward from coinBase." << endl;
+                                   Output("make [walletA id] [walletB id] [value]: make a transaction from walletA to walletB.");
+                                   Output("Especially, setting the first id to -1 means that this is a reward from coinBase.");
                               }
                               if (*it == "display")
                               {
-                                   cout << "display [wallet id]: display the blockchain in this wallet." << endl;
+                                   Output("display [wallet id]: display the blockchain in this wallet.");
                               }
                               if (*it == "clean")
                               {
-                                   cout << "Delete everything in log." << endl;
+                                   Output("Delete everything in log.");
                               }
                               if (*it == "log")
                               {
-                                   cout << "Display everything in log onto the screen." << endl;
+                                   Output("Display everything in log onto the screen.");
                               }
                               if (*it == "exit")
                               {
-                                   cout << "Exit the program." << endl;
+                                   Output("Exit the program.");
                               }
                          }
                     }
@@ -279,7 +278,7 @@ int main()
                               string const start[2] = {"adding wallets, please wait...", "adding miners, please wait..."};
                               string const end[2] = {"Add wallets complete.", "Add miners complete."};
                               bool flag = cmdList[1] == "miner";
-                              cout << start[flag] << endl;
+                              Output(start[flag]);
                               cout.rdbuf(fileBackup);
                               vector<thread> threads;
                               Wallet *tmp;
@@ -305,15 +304,13 @@ int main()
                                    }
                               }
                               cout.rdbuf(coutBackup);
-                              cout << end[flag] << endl;
+                              Output(end[flag]);
                               continue;
                          }
                     }
                     catch (bool)
                     {
-                         cout << "Ambiguous command "
-                              << "\"" << cmd << "\":"
-                              << "add [wallet/miner] [number of nodes]." << endl;
+                         Output("Ambiguous command \"" + cmd + "\": add [wallet/miner] [number of nodes].");
                          continue;
                     }
                }
@@ -321,9 +318,7 @@ int main()
                {
                     if (cmdList[1] != "wallet" && cmdList[1] != "miner")
                     {
-                         cout << "Ambiguous command "
-                              << "\"" << cmd << "\":"
-                              << "delete [wallet/miner]." << endl;
+                         Output("Ambiguous command \"" + cmd + "\": delete [wallet/miner].");
                          continue;
                     }
                     string address;
@@ -337,11 +332,11 @@ int main()
                               }
                               address = Wallet::onlyWalletSet[Wallet::onlyWalletSet.size() - 1].GetAddress();
                               Wallet::onlyWalletSet.erase(Wallet::onlyWalletSet.end() - 1);
-                              cout << "Wallet: " << address << " has been deleted." << endl;
+                              Output("Wallet: " + address + " has been deleted.");
                          }
                          catch (bool)
                          {
-                              cout << "No wallet in the net!" << endl;
+                              Output("No wallet in the net!");
                               continue;
                          }
                     }
@@ -355,11 +350,11 @@ int main()
                               }
                               address = Miner::minerSet[Miner::minerSet.size() - 1]->GetAddress();
                               Miner::minerSet.erase(Miner::minerSet.end() - 1);
-                              cout << "Miner: " << address << "has been deleted." << endl;
+                              Output("Miner: " + address + " has been deleted.");
                          }
                          catch (bool)
                          {
-                              cout << "No miner in the net!" << endl;
+                              Output("No miner in the net!");
                               continue;
                          }
                     }
@@ -405,7 +400,7 @@ int main()
                          {
                               Wallet::walletSet[b].CreateCoinbase(value);
                               cout.rdbuf(coutBackup);
-                              cout << "Transaction made." << endl;
+                              Output("Transaction made.");
                               continue;
                          }
                          bool flag = Wallet::walletSet[a].CreateTransaction(Wallet::walletInfo[b], value);
@@ -414,24 +409,24 @@ int main()
                          {
                               throw 0;
                          }
-                         cout << "Transaction made." << endl;
+                         Output("Transaction made.");
                          continue;
                     }
                     catch (bool)
                     {
-                         cout << "Ambiguous command "
-                              << "\"" << cmd << "\":"
-                              << "make [walletA id] [walletB id] [value]." << endl;
+                         Output("Ambiguous command \"" + cmd + "\": make [walletA id] [walletB id] [value].");
                          continue;
                     }
                     catch (char const *)
                     {
-                         cout << "Wallet id cannot find. ONLY " << Wallet::walletSet.size() << " nodes exists." << endl;
+                         stringstream ss;
+                         ss << Wallet::walletSet.size();
+                         Output("Wallet id cannot find. ONLY " + ss.str() + " nodes exists.");
                          continue;
                     }
                     catch (int)
                     {
-                         cout << "Transaction construction failed." << endl;
+                         Output("Transaction construction failed.");
                          continue;
                     }
                }
@@ -459,24 +454,22 @@ int main()
                          cout.rdbuf(fileBackup);
                          int output = Mine();
                          cout.rdbuf(coutBackup);
-                         cout << "Found miner id: " << output << endl
-                              << "Found miner address: " << Miner::minerSet[output]->GetAddress() << endl;
+                         Output("Found miner id: " + output);
+                         Output("Found miner address: " + Miner::minerSet[output]->GetAddress());
                     }
                     catch (bool)
                     {
-                         cout << "All transactions have already been packed." << endl;
+                         Output("All transactions have already been packed.");
                          continue;
                     }
                     catch (int)
                     {
-                         cout << "No miner in the net!" << endl;
+                         Output("No miner in the net!");
                          continue;
                     }
                     catch (char const *)
                     {
-                         cout << "Ambiguous command "
-                              << "\"" << cmd << "\":"
-                              << "mine" << endl;
+                         Output("Ambiguous command \"" + cmd + "\": mine");
                          continue;
                     }
                }
@@ -500,19 +493,19 @@ int main()
                          cout.rdbuf(fileBackup);
                          Wallet::walletSet[a].GetChain().Print();
                          cout.rdbuf(coutBackup);
-                         cout << "Print over. Please check the log." << endl;
+                         Output("Print over. Please check the log.");
                          continue;
                     }
                     catch (bool)
                     {
-                         cout << "Ambiguous command "
-                              << "\"" << cmd << "\":"
-                              << "display [wallet id]." << endl;
+                         Output("Ambiguous command \"" + cmd + "\": display [wallet id].");
                          continue;
                     }
                     catch (int)
                     {
-                         cout << "Wallet id cannot find. ONLY " << Wallet::walletSet.size() << " nodes exists." << endl;
+                         stringstream ss;
+                         ss << Wallet::walletSet.size();
+                         Output("Wallet id cannot find. ONLY " + ss.str() + " nodes exists.");
                          continue;
                     }
                }
@@ -536,7 +529,9 @@ int main()
                          cout.rdbuf(fileBackup);
                          int remainder = Wallet::walletSet[id].FindBalance();
                          cout.rdbuf(coutBackup);
-                         cout << "Money in wallet " << Wallet::walletSet[id].GetAddress() << " : " << dec << remainder << endl;
+                         stringstream ss;
+                         ss << dec << remainder;
+                         Output("Money in wallet " + Wallet::walletSet[id].GetAddress() + " : " + ss.str());
                          continue;
                     }
                     catch (bool)
@@ -548,7 +543,9 @@ int main()
                     }
                     catch (int)
                     {
-                         cout << "Wallet id cannot find. ONLY " << Wallet::walletSet.size() << " nodes exists." << endl;
+                         stringstream ss;
+                         ss << Wallet::walletSet.size();
+                         Output("Wallet id cannot find. ONLY " + ss.str() + " nodes exists.");
                          continue;
                     }
                }
@@ -573,19 +570,17 @@ int main()
                          {
                               throw 0;
                          }
-                         cout << "Over." << endl;
+                         Output("Over.");
                          continue;
                     }
                     catch (bool)
                     {
-                         cout << "Ambiguous command "
-                              << "\"" << cmd << "\":"
-                              << "log" << endl;
+                         Output("Ambiguous command \"" + cmd + "\": log");
                          continue;
                     }
                     catch (int)
                     {
-                         cout << "The log is empty!" << endl;
+                         Output("The log is empty!");
                          continue;
                     }
                }
@@ -598,8 +593,8 @@ int main()
           else
           {
                string guess = EditDistance(cmdList[0]);
-               cout << "Undefined command: \"" << cmdList[0] << "\". Do you mean \"" << guess << "\" ?" << endl
-                    << "Try \"help\"." << endl;
+               Output("Undefined command: \"" + cmdList[0] + "\". Do you mean \"" + guess + "\" ?");
+               Output("Try \"help\".");
           }
      }
      return 0;
