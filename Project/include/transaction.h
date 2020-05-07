@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 #include <ctime>
-
 using namespace std;
+
 class Transaction
 {
 public:
@@ -17,7 +17,7 @@ public:
         _time = std::time(0);
         txID = ++cnt;
     }
-    Transaction(string _receiverAdr) : receiverAdr(_receiverAdr)
+    Transaction(string _receiverAdr) : senderAdr("null"), receiverAdr(_receiverAdr)
     {
         _time = std::time(0);
         txID = ++cnt;

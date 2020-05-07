@@ -143,14 +143,13 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
             if (tx.output.GetValue() >= _value)
             {
                 Transaction transaction(address, get<0>(receiverInfo));
-                TxInput _input(_value, publicKey, n);
+                TxInput _input(tx.output.GetValue(), publicKey, n);
                 TxOutput _output(_value, get<1>(receiverInfo));
                 transaction.input = _input;
                 transaction.output = _output;
                 transaction.input.SetPrevID(tx.GetID());
                 LOGOUT << "Transaction ID: " << transaction.GetID() << endl;
-                //transaction.SetID();
-                Sign(transaction, get<1>(receiverInfo));
+                Sign(transaction, get<1>(receiverInfo), _value);
                 Transaction::txPool.push_back(transaction);
                 Transaction::toBePackedTx.push_back(transaction);
                 LOGOUT << "Transaction constructed by " << address << endl
@@ -165,6 +164,34 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
                 LOGOUT << "PrevTx ID: " << transaction.input.GetPrevID() << endl;
                 LOGOUT << "Signature: " << transaction.input.signature << endl
                        << "------------------------------------------" << endl;
+
+                if (tx.output.GetValue() > _value)
+                {
+                    int remainder = tx.output.GetValue() - _value;
+                    Transaction self(address, address);
+                    TxInput _selfInput(tx.output.GetValue(), publicKey, n);
+                    TxOutput _selfOutput(remainder, publicKeyHash);
+                    self.input = _selfInput;
+                    self.output = _selfOutput;
+                    self.input.SetPrevID(tx.GetID());
+                    LOGOUT << "Transaction ID: " << self.GetID() << endl;
+                    Sign(self, publicKeyHash, remainder);
+                    Transaction::txPool.push_back(self);
+                    Transaction::toBePackedTx.push_back(self);
+
+                    LOGOUT << "Transaction constructed by " << address << endl
+                           << "------------------------------------------" << endl;
+
+                    LOGOUT << "Transaction log: " << endl;
+                    LOGOUT << "Type: Change" << endl;
+                    LOGOUT << "Sender Address: " << address << endl;
+                    LOGOUT << "Receiver Address: " << address << endl;
+                    LOGOUT << "Value: " << self.output.GetValue() << endl;
+                    LOGOUT << "ID: " << self.GetID() << endl;
+                    LOGOUT << "PrevTx ID: " << self.input.GetPrevID() << endl;
+                    LOGOUT << "Signature: " << self.input.signature << endl
+                           << "------------------------------------------" << endl;
+                }
                 return true;
             }
         }
@@ -176,18 +203,19 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 void Wallet::CreateCoinbase(int x)
 {
     Transaction::mineReward = x;
-    Transaction transaction("null", address); //as receiver
+    Transaction transaction(address); //as receiver
     TxOutput _output(Transaction::mineReward, publicKeyHash);
     transaction.output = _output;
     //transaction.SetID();
     Transaction::txPool.push_back(transaction);
-
     Transaction::toBePackedTx.push_back(transaction);
+
     LOGOUT << "Coinbase transaction constructed." << endl
            << "------------------------------------------" << endl;
 
     LOGOUT << "Transaction log: " << endl;
     LOGOUT << "Type: Coinbase transaction" << endl;
+    LOGOUT << "Sender Address: " << transaction.senderAdr << endl;
     LOGOUT << "Receiver Address: " << address << endl;
     LOGOUT << "Value: " << transaction.output.GetValue() << endl;
     LOGOUT << "ID: " << transaction.GetID() << endl
@@ -195,13 +223,22 @@ void Wallet::CreateCoinbase(int x)
            << "------------------------------------------" << endl;
 }
 
-void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash)
+string ConverToHex(int x)
+{
+    stringstream ss;
+    ss << hex << x;
+    string out(ss.str());
+    return out;
+}
+
+void Wallet::Sign(Transaction &tx, string receiverPublicKeyHash, int val)
 {
     if (!tx.IsCoinbase())
     {
         /* cout << "publicKeyHash: " << publicKeyHash << endl
              << "receiverPublicKeyHash: " << receiverPublicKeyHash << endl; */
-        string signStr = "0x" + publicKeyHash + receiverPublicKeyHash;
+        string hexVal = ConverToHex(val);
+        string signStr = "0x" + publicKeyHash + receiverPublicKeyHash + hexVal;
         BigInt signInfo(signStr);
         BigInt _signature = RSA::EncryptAndDecrypt(signInfo, privateKey, n);
         /* BigInt _decrypt = RSA::EncryptAndDecrypt(_signature, publicKey, n);
@@ -258,20 +295,6 @@ vector<Transaction> Wallet::FindUTXO(const vector<int> &spentTxId, const vector<
 
 int Wallet::FindBalance()
 {
-    /* int result = 0;
-    vector<Transaction> myPackedTx;
-    vector<int> myPackedSpentTxID;
-    vector<Transaction> balanceTx;
-    for (Transaction &tx : Transaction::packedTx)
-    {
-        if (tx.receiverAdr == address || tx.senderAdr == address)
-        {
-            myPackedTx.push_back(tx);
-        }
-    }
-
-    myPackedSpentTxID = FindSpent(myPackedTx);
-    balanceTx = FindUTXO(myPackedSpentTxID, myPackedTx); */
     int result = 0;
     vector<int> spentTxId = FindSpent(Transaction::txPool);
     vector<Transaction> balanceTx = FindUTXO(spentTxId, Transaction::packedTx);
@@ -306,7 +329,8 @@ bool Wallet::VerifyTx(const Transaction &_tx)
     {
         string senderHash = rmd160(sha256(tx.input.publicKey.ToString() + tx.input.N.ToString()));
         string receiverHash = tx.output.GetPublicHash();
-        string info = "0x" + senderHash + receiverHash;
+        string hexVal = ConverToHex(tx.output.GetValue());
+        string info = "0x" + senderHash + receiverHash + hexVal;
         BigInt infoInt(info);
         BigInt decrypted = RSA::EncryptAndDecrypt(tx.input.signature, tx.input.publicKey, tx.input.N);
         LOGOUT << "Signature decrypted." << endl;
