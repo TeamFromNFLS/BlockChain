@@ -293,11 +293,14 @@ vector<Transaction> Wallet::FindUTXO(const vector<int> &spentTxId, const vector<
     return UTXOTx;
 }
 
-int Wallet::FindBalance()
+int *Wallet::FindBalance()
 {
-    int result = 0;
+    int result = 0, cnt = 0;
     vector<int> spentTxId = FindSpent(Transaction::txPool);
     vector<Transaction> balanceTx = FindUTXO(spentTxId, Transaction::packedTx);
+    int len = balanceTx.size() + 1;
+    int *balance = new int[len + 1];
+    balance[cnt++] = len;
 
     LOGOUT << "UTXO information:" << endl;
     LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << "Transaction ID"
@@ -315,11 +318,13 @@ int Wallet::FindBalance()
         for (Transaction &tx : balanceTx)
         {
             result += tx.output.GetValue();
+            balance[cnt++] = tx.output.GetValue();
             LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
             //count++;
         }
     }
-    return result;
+    balance[cnt] = result;
+    return balance;
 }
 
 bool Wallet::VerifyTx(const Transaction &_tx)
