@@ -13,19 +13,9 @@
 #include "ripemd160.h"
 #include "block.h"
 #include "chain.h"
-#include "Transaction.h"
+#include "transaction.h"
 
 using namespace std;
-
-void print(int x)
-{
-    std::ostringstream oss;
-    oss << std::this_thread::get_id();
-    std::string stid = oss.str();
-    unsigned long long tid = std::stoull(stid);
-    cout << tid << ' '
-         << x << endl;
-}
 
 void MineWorker(int *worker, mutex *mutex, bool *i, bool *foundFlag, int *checkCnt, Block *toCheck, int *output)
 {
@@ -44,7 +34,9 @@ void MineWorker(int *worker, mutex *mutex, bool *i, bool *foundFlag, int *checkC
         }
     }
     int nonce = now.GetNonce();
+    Miner::minerSet[id]->CreateCoinbase();
     now.Load(Transaction::toBePackedTx);
+    Transaction::toBePackedTx.pop_back();
     mutex->unlock();
     bool flag, cntFlag;
     bool checkFlag = false;
@@ -83,7 +75,6 @@ void MineWorker(int *worker, mutex *mutex, bool *i, bool *foundFlag, int *checkC
             }
         }
         bool f = now.TestPoW(nonce);
-        print;
         if (f)
         {
             mutex->lock();
