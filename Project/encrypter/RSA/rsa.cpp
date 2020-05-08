@@ -351,15 +351,3 @@ BigInt RSA::EncryptAndDecrypt(const BigInt &num, const BigInt &key, const BigInt
     BigInt ans = BigInt::PowMod(data, exponent, mod);
     return ans;
 }
-
-void RSA::setNumber(BigInt a, BigInt b)
-{
-    p = a;
-    q = b;
-    product = p * q;
-    p -= BigInt::one;
-    q -= BigInt::one;
-    Euler = p * q;
-    p += BigInt::one;
-    q += BigInt::one;
-}

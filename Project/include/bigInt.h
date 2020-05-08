@@ -15,11 +15,10 @@ class BigInt
 {
 public:
     static int Shrink(vector<uint64_t> &vec); // update bit, calculate the bit length of a number
-    void check();                             // update
     BigInt()
     {
         number.push_back(0);
-        check();
+        bit = Shrink(number);
     }
     BigInt(const BigInt &bigInt)
     {
@@ -29,7 +28,7 @@ public:
     BigInt(string s);
     BigInt(const vector<uint64_t> &vec) : number(vec)
     {
-        check();
+        bit = Shrink(number);
     }
     ~BigInt(){};
     BigInt(const int &x);                       // implicit type change from int to BigInt
