@@ -541,6 +541,7 @@ int main()
                          }
                          ss << dec << balance[len - 1] << ")";
                          Output("Money in wallet " + Wallet::walletSet[id].GetAddress() + " : " + ss.str());
+                         delete[] balance;
                          continue;
                     }
                     catch (bool)
