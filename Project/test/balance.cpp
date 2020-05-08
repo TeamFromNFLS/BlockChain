@@ -56,15 +56,15 @@ int balance()
     }
     Miner tmpMiner(1);
     newWallets[1]->CreateCoinbase(5);
-    tmpMiner.PoW(Transaction::toBePackedTx);
+    tmpMiner.PoW();
     newWallets[2]->CreateCoinbase(5);
     tmpMiner.Reset();
-    tmpMiner.PoW(Transaction::toBePackedTx);
+    tmpMiner.PoW();
     newWallets[1]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
     newWallets[2]->CreateTransaction(Wallet::walletInfo[0], Transaction::mineReward);
     newWallets[0]->CreateCoinbase(5);
     tmpMiner.Reset();
-    tmpMiner.PoW(Transaction::toBePackedTx);
+    tmpMiner.PoW();
     newWallets[0]->FindBalance();
     return 0;
 }

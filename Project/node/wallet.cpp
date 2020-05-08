@@ -202,7 +202,28 @@ bool Wallet::CreateTransaction(pair<string, string> receiverInfo, int _value)
 
 void Wallet::CreateCoinbase(int x)
 {
-    Transaction::mineReward = x;
+    Transaction transaction(address); //as receiver
+    TxOutput _output(x, publicKeyHash);
+    transaction.output = _output;
+    //transaction.SetID();
+    Transaction::txPool.push_back(transaction);
+    Transaction::toBePackedTx.push_back(transaction);
+
+    LOGOUT << "Coinbase transaction constructed." << endl
+           << "------------------------------------------" << endl;
+
+    LOGOUT << "Transaction log: " << endl;
+    LOGOUT << "Type: Coinbase transaction" << endl;
+    LOGOUT << "Sender Address: " << transaction.senderAdr << endl;
+    LOGOUT << "Receiver Address: " << address << endl;
+    LOGOUT << "Value: " << transaction.output.GetValue() << endl;
+    LOGOUT << "ID: " << transaction.GetID() << endl
+           //<< "PrevTx ID: " << transaction.input.GetPrevID() << endl
+           << "------------------------------------------" << endl;
+}
+
+void Wallet::CreateCoinbase()
+{
     Transaction transaction(address); //as receiver
     TxOutput _output(Transaction::mineReward, publicKeyHash);
     transaction.output = _output;
