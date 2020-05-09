@@ -1,5 +1,4 @@
-#include <sys/time.h>
-#include <unistd.h>
+#include <Windows.h>
 #include <set>
 #include <sstream>
 #include <fstream>
@@ -23,7 +22,7 @@ void Output(string s)
      for (it = s.begin(); it != s.end(); ++it)
      {
           cout << *it << flush;
-          usleep(20000);
+          Sleep(200);
      }
      cout << endl;
 }
@@ -157,13 +156,11 @@ int main()
                {
                     Clean();
                     Output("Run demo...");
+                    auto start = clock();
                     cout.rdbuf(fileBackup);
-                    double runtime = 0;
-                    gettimeofday(&timeStart, NULL);
                     balance();
-                    gettimeofday(&timeEnd, NULL);
-                    runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
-                    cout << "Total time: " << runtime << "s." << endl;
+                    auto end = clock();
+                    cout << "Total time: " << end - start << "s." << endl;
                     cout.rdbuf(coutBackup);
                     Output("Demo exited normally. Please check \"log.txt\" for details.");
                     Output("Log would be cleaned after next command.");

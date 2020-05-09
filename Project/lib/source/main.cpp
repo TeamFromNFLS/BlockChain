@@ -1,4 +1,4 @@
-#include<windows.h>
+#include <Windows.h>
 #include <set>
 #include <sstream>
 #include <fstream>
@@ -160,8 +160,7 @@ int main()
                     cout.rdbuf(fileBackup);
                     balance();
                     auto end = clock();
-                    auto runtime = end - start;
-                    cout << "Total time: " << runtime << "s." << endl;
+                    cout << "Total time: " << end - start << "s." << endl;
                     cout.rdbuf(coutBackup);
                     Output("Demo exited normally. Please check \"log.txt\" for details.");
                     Output("Log would be cleaned after next command.");
@@ -527,11 +526,19 @@ int main()
                               throw 0;
                          }
                          cout.rdbuf(fileBackup);
-                         int* remainder = Wallet::walletSet[id].FindBalance();
+                         int *balance = Wallet::walletSet[id].FindBalance();
+                         int len = balance[0];
+                         int remainder = balance[len];
                          cout.rdbuf(coutBackup);
                          stringstream ss;
-                         ss << dec << remainder;
+                         ss << dec << remainder << "(";
+                         for (int i = 1; i < len - 1; i++)
+                         {
+                              ss << dec << balance[i] << " + ";
+                         }
+                         ss << dec << balance[len - 1] << ")";
                          Output("Money in wallet " + Wallet::walletSet[id].GetAddress() + " : " + ss.str());
+                         delete[] balance;
                          continue;
                     }
                     catch (bool)

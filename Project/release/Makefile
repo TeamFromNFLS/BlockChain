@@ -4,6 +4,6 @@ TRAGET=test
 INC=-I../include
 LIB=blockChain.lib
 all:
-	$(CC) $(INC) -std=c++11 $(OBJS) -o $(TRAGET) -lpthread -lChain
+	$(CC) $(INC) -std=c++11 $(OBJS) $(LIB) -o $(TRAGET)
 clean:
 	rm $(SRCS) $(headfile)
