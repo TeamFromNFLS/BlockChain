@@ -529,19 +529,11 @@ int main()
                               throw 0;
                          }
                          cout.rdbuf(fileBackup);
-                         int *balance = Wallet::walletSet[id].FindBalance();
-                         int len = balance[0];
-                         int remainder = balance[len];
+                         int remainder = Wallet::walletSet[id].FindBalance();
                          cout.rdbuf(coutBackup);
                          stringstream ss;
-                         ss << dec << remainder << "(";
-                         for (int i = 1; i < len - 1; i++)
-                         {
-                              ss << dec << balance[i] << " + ";
-                         }
-                         ss << dec << balance[len - 1] << ")";
+                         ss << dec << remainder;
                          Output("Money in wallet " + Wallet::walletSet[id].GetAddress() + " : " + ss.str());
-                         delete[] balance;
                          continue;
                     }
                     catch (bool)
