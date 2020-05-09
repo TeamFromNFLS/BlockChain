@@ -21,9 +21,8 @@ class RSA
 public:
     RSA() {}
     ~RSA() {}
-    void Init(int worker);                                            //prime & euler & product
-    BigInt CreatePrime(int worker);                                   //create two prime numbers p and q
-    void PrimeWorker(mutex *mutex, bool *finishFlag, BigInt *result); // multi-thread
+    void Init(int worker);          //prime & euler & product
+    BigInt CreatePrime(int worker); //create two prime numbers p and q
     BigInt CreateRandom(int);
     void Extgcd(BigInt, BigInt, BigInt &);
     void CreateKeys(); //use ext gcd to create public and private key
@@ -39,7 +38,6 @@ public:
     static BigInt EncryptAndDecrypt(const BigInt &, const BigInt &, const BigInt &);
     bool IsPrime(const BigInt &, int k = 4);
     int Sieve(vector<BigInt> &, const BigInt &, int);
-    void setNumber(BigInt, BigInt);
 
 private:
     BigInt publicKey, privateKey, Euler, product, p, q;

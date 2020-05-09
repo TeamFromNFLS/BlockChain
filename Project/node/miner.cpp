@@ -72,6 +72,8 @@ void Miner::Init(int worker)
                << "------------------------------------------" << endl;
         walletSet.push_back(*this);
         Miner::minerSet.push_back(this);
+        Miner::minerSet.back()->CreateCoinbase(100);
+        this->PoW();
     }
 }
 
@@ -93,10 +95,11 @@ bool Miner::TestPoW(int nonce)
     return false;
 }
 
-void Miner::PoW(vector<Transaction> &vec)
+void Miner::PoW()
 {
+    //this->CreateCoinbase();
     int now = nonce;
-    Block tmp(now, difficultyTarget, vec);
+    Block tmp(now, difficultyTarget, Transaction::toBePackedTx);
     stored = tmp;
     while (true)
     {

@@ -1,11 +1,11 @@
 #设置编译器
 CC=g++
 #debug文件夹里的makefile文件需要最后执行，所以这里需要执行的子目录要排除debug文件夹，这里使用awk排除了debug文件夹，读取剩下的文件夹
-SUBDIRS=$(shell ls -l | grep ^d | awk '{if($$9 != "debug" && $$9 != "lib") print $$9}')
+SUBDIRS=$(shell ls -l | grep ^d | awk '{if($$9 != "debug" && $$9 != "lib" && $$9 != "release") print $$9}')
 #无需下一行的注释代码，因为我们已经知道debug里的makefile是最后执行的，所以最后直接去debug目录下执行指定的makefile文件就行，具体下面有注释
 #DEBUG=$(shell ls -l | grep ^d | awk '{if($$9 == "debug") print $$9}')
 #记住当前工程的根目录路径
-ROOT_DIR=$(PWD)
+ROOT_DIR=$(shell pwd)
 #最终bin文件的名字，可以更改为自己需要的
 BIN=test
 #目标文件所在的目录

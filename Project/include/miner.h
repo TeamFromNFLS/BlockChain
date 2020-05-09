@@ -17,8 +17,8 @@ public:
     Miner(const Miner &p) : nonce(p.nonce), difficultyTarget(p.difficultyTarget), stored(p.stored){};
     bool Check(Block &toCheck);
     bool TestPoW(int nonce);
-    void PoW(std::vector<Transaction> &vec);
-    int GetNonce() const
+    void PoW();
+    int GetNonce()
     {
         return nonce;
     }

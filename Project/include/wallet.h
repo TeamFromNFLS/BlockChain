@@ -41,10 +41,11 @@ protected:
 public:
     bool CreateTransaction(pair<string, string> receiverInfo, int _value);
     void CreateCoinbase(int x);
-    void Sign(Transaction &tx, string receiverPublicKeyHash, int _value);
+    void CreateCoinbase();
+    void Sign(Transaction &tx, string receiverPublicKeyHash, int val);
     vector<int> FindSpent(vector<Transaction> &pool);
     vector<Transaction> FindUTXO(const vector<int> &spentTxId, const vector<Transaction> &pool);
-    int FindBalance();
+    int *FindBalance();
     Chain GetChain()
     {
         return chain;

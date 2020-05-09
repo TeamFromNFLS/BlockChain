@@ -1,5 +1,4 @@
-#include <sys/time.h>
-#include <unistd.h>
+#include<windows.h>
 #include <set>
 #include <sstream>
 #include <fstream>
@@ -23,7 +22,7 @@ void Output(string s)
      for (it = s.begin(); it != s.end(); ++it)
      {
           cout << *it << flush;
-          usleep(20000);
+          Sleep(200);
      }
      cout << endl;
 }
@@ -157,12 +156,11 @@ int main()
                {
                     Clean();
                     Output("Run demo...");
+                    auto start = clock();
                     cout.rdbuf(fileBackup);
-                    double runtime = 0;
-                    gettimeofday(&timeStart, NULL);
                     balance();
-                    gettimeofday(&timeEnd, NULL);
-                    runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
+                    auto end = clock();
+                    auto runtime = end - start;
                     cout << "Total time: " << runtime << "s." << endl;
                     cout.rdbuf(coutBackup);
                     Output("Demo exited normally. Please check \"log.txt\" for details.");
@@ -529,19 +527,11 @@ int main()
                               throw 0;
                          }
                          cout.rdbuf(fileBackup);
-                         int *balance = Wallet::walletSet[id].FindBalance();
-                         int len = balance[0];
-                         int remainder = balance[len];
+                         int* remainder = Wallet::walletSet[id].FindBalance();
                          cout.rdbuf(coutBackup);
                          stringstream ss;
-                         ss << dec << remainder << "(";
-                         for (int i = 1; i < len - 1; i++)
-                         {
-                              ss << dec << balance[i] << " + ";
-                         }
-                         ss << dec << balance[len - 1] << ")";
+                         ss << dec << remainder;
                          Output("Money in wallet " + Wallet::walletSet[id].GetAddress() + " : " + ss.str());
-                         delete[] balance;
                          continue;
                     }
                     catch (bool)

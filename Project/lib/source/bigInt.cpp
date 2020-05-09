@@ -45,15 +45,6 @@ int BigInt::Shrink(vector<uint64_t> &vec)
     return cntBits;
 }
 
-/*update*/
-void BigInt::check()
-{
-    while (!number.empty() && !number.back())
-        number.pop_back();
-    bit = Shrink(number);
-    return;
-}
-
 /*simulate x / 2, x % 2 in string*/
 string BigInt::DecToBin(string s)
 {
@@ -106,7 +97,7 @@ void BigInt::SetBin(string s)
         it--;
         cnt = (cnt + 1) % 64;
     }
-    check();
+    bit = Shrink(number);
     return;
 }
 
