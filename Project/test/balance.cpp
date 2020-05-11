@@ -15,7 +15,6 @@
 #include "ripemd160.h"
 #include "block.h"
 #include "chain.h"
-#include "test.h"
 using namespace std;
 
 /* Assume transactions are packed immediately after they are constructed.

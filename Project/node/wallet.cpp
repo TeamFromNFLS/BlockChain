@@ -340,7 +340,7 @@ int *Wallet::FindBalance()
         {
             result += tx.output.GetValue();
             balance[cnt++] = tx.output.GetValue();
-            LOGOUT << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
+            LOGOUT << dec << setiosflags(ios::left) << setfill(' ') << setw(20) << tx.GetID() << "\t" << tx.output.GetValue() << endl;
             //count++;
         }
     }
