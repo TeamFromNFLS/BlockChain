@@ -9,7 +9,7 @@ enum CMD_SET
      ERR
 };
 
-CMD_SET CmdSelect(char *const cmd)
+CMD_SET CmdSelect(string const cmd)
 {
      if (cmd == "show")
           return SHOW;
