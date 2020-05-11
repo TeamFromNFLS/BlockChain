@@ -4,31 +4,61 @@ using namespace std;
 
 enum CMD_SET
 {
-     DEMO,
+     SHOW,
      DEBUG,
-     ERROR
+     ERR
 };
 
 CMD_SET CmdSelect(char *const cmd)
 {
-     if (cmd == "demo")
-          return DEMO;
-     if (cmd == "DEBUG")
+     if (cmd == "show")
+          return SHOW;
+     if (cmd == "debug")
           return DEBUG;
      else
-          return ERROR;
+          return ERR;
 }
 
 int main(int argc, char **argv)
 {
      Init();
-     string cmd;
-     while (getline(cin, cmd))
+     try
      {
-          if (!Work(cmd))
+          if (argc == 1)
           {
+               throw 0;
+          }
+          if (argc != 2)
+          {
+               throw false;
+          }
+          switch (CmdSelect(argv[1]))
+          {
+          case SHOW:
+               cout << "Run demo..." << endl;
+               break;
+          case DEBUG:
+               cout << "Run errors..." << endl;
+               break;
+          default:
+               throw false;
                break;
           }
+     }
+     catch (int)
+     {
+          string cmd;
+          while (getline(cin, cmd))
+          {
+               if (!Work(cmd))
+               {
+                    break;
+               }
+          }
+     }
+     catch (bool)
+     {
+          cout << "Wrong command." << endl;
      }
      return 0;
 }
