@@ -539,12 +539,19 @@ bool Work(string cmd)
             int remainder = balance[len];
             cout.rdbuf(coutBackup);
             stringstream ss;
-            ss << dec << remainder << "(";
-            for (int i = 1; i < len - 1; i++)
+            if (!remainder)
             {
-                ss << dec << balance[i] << " + ";
+                ss << dec << remainder;
             }
-            ss << dec << balance[len - 1] << ")";
+            else
+            {
+                ss << dec << remainder << "(";
+                for (int i = 1; i < len - 1; i++)
+                {
+                    ss << dec << balance[i] << " + ";
+                }
+                ss << dec << balance[len - 1] << ")";
+            }
             Output("Money in wallet " + Wallet::walletSet[id].GetAddress() + " : " + ss.str());
             delete[] balance;
         }
