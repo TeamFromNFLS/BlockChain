@@ -1,0 +1,6 @@
+adc
+help adc
+add walle 2
+add wallet a
+delete wall
+exit

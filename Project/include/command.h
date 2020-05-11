@@ -25,7 +25,7 @@ enum COMMAND
 };
 
 extern ofstream fileOut;
-extern ifstream fileIn, LogIn;
+extern ifstream logIn, fileIn;
 extern streambuf *coutBackup, *fileBackup, *cinBackup, *inBackup, *logBackup;
 extern struct timeval timeStart, timeEnd;
 
