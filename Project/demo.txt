@@ -1,0 +1,7 @@
+add miner 4
+make 1 2 10
+mine
+find 1
+find 2
+log
+exit

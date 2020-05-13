@@ -18,7 +18,7 @@
 using namespace std;
 
 ofstream fileOut;
-ifstream fileIn, LogIn;
+ifstream logIn, fileIn;
 streambuf *coutBackup, *fileBackup, *cinBackup, *inBackup, *logBackup;
 struct timeval timeStart, timeEnd;
 
@@ -28,7 +28,7 @@ void Output(string s)
     for (it = s.begin(); it != s.end(); ++it)
     {
         cout << *it << flush;
-        usleep(20000);
+        usleep(2000);
     }
     cout << endl;
 }
@@ -61,12 +61,10 @@ bool IsInt(string &s)
 }
 
 const int INF = 0x3f3f3f3f;
-vector<string> commandSet{"demo", "help", "add", "delete", "mine", "find", "make", "display", "clean", "log", "exit"};
+set<string> commandSet{"help", "add", "delete", "mine", "find", "make", "display", "clean", "log", "exit"};
 
 COMMAND CommandSelect(string s)
 {
-    if (s == "demo")
-        return DEMO;
     if (s == "help")
         return HELP;
     if (s == "add")
@@ -99,7 +97,7 @@ string EditDistance(string &s)
     string check = s;
     check.insert(0, "0");
     int lenCheck = check.length() - 1;
-    vector<string>::iterator it;
+    set<string>::iterator it;
     for (it = commandSet.begin(); it != commandSet.end(); ++it)
     {
         string command = *it;
@@ -145,13 +143,11 @@ inline void Clean()
 void Init()
 {
     fileOut.open("log.txt", ios::app);
-    fileIn.open("in.txt", ios::in);
-    LogIn.open("log.txt", ios::in);
+    logIn.open("log.txt", ios::in);
     coutBackup = cout.rdbuf();
     cinBackup = cin.rdbuf();
     fileBackup = fileOut.rdbuf();
-    inBackup = fileIn.rdbuf();
-    logBackup = LogIn.rdbuf();
+    logBackup = logIn.rdbuf();
     Output("Welcome to P.R.O.M.E.T.H.E.U.S, a blockchain simulation program.");
     Output("For bug reporting instructions, please send issue to:");
     Output("https://github.com/TeamFromNFLS/BlockChain");
@@ -176,30 +172,6 @@ bool Work(string cmd)
     switch (CommandSelect(cmdList[0]))
     {
 
-    case DEMO:
-    {
-        Clean();
-        Output("Run demo...");
-        cout.rdbuf(fileBackup);
-        double runtime = 0;
-        gettimeofday(&timeStart, NULL);
-        //balance();
-        gettimeofday(&timeEnd, NULL);
-        runtime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
-        cout << "Total time: " << runtime << "s." << endl;
-        cout.rdbuf(coutBackup);
-        Output("Demo exited normally. Please check \"log.txt\" for details.");
-        cin.rdbuf(logBackup);
-        string line;
-        while (getline(cin, line))
-        {
-            Output(line);
-        }
-        Output("Over.");
-        cin.rdbuf(cinBackup);
-        break;
-    }
-
     case HELP:
     {
         if (cmdList.size() == 1)
@@ -221,9 +193,6 @@ bool Work(string cmd)
         {
             switch (CommandSelect(cmdList[1]))
             {
-            case DEMO:
-                Output("Run a demo which shows how this program works with pictures and a log file.");
-                break;
             case ADD:
                 Output("add [wallet/miner] [number of nodes]: add some nodes to the net. Each would be given a unique address and id.");
                 break;
