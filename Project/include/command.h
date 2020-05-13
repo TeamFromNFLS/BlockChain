@@ -10,7 +10,6 @@ using namespace std;
 
 enum COMMAND
 {
-    DEMO,
     HELP,
     ADD,
     DELETE,
