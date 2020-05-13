@@ -185,6 +185,7 @@ bool Work(string cmd)
             Output("make -- make a transaction.");
             Output("display -- print the blockchain in a wallet.");
             Output("clean -- clean the log.");
+            Output("log -- print the log.");
             Output("exit -- exit the program.");
             cout << endl;
             Output("Type \"help\" followed by command name for full documentation.");
