@@ -3,7 +3,7 @@
 #define LOGOUT             \
     _time_ = std::time(0); \
     _s = ctime(&_time_);   \
-    cout << _s.substr(11, 8) << ' '
+    cout << dec << _s.substr(11, 8) << ' '
 #include <string>
 #include <ctime>
 

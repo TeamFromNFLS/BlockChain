@@ -76,8 +76,17 @@ int main(int argc, char **argv)
                string line;
                while (SafeGetline(cin, line))
                {
-                    cout << line << endl;
-                    Work(line);
+                    Output(line);
+                    bool flag = Work(line);
+                    //cout << "nice" << endl;
+                    if (line == "log")
+                    {
+                         cin.rdbuf(inBackup);
+                    }
+                    if (!flag)
+                    {
+                         return 0;
+                    }
                }
                fileIn.close();
                break;
@@ -91,8 +100,13 @@ int main(int argc, char **argv)
                string line;
                while (SafeGetline(cin, line))
                {
-                    cout << line << endl;
-                    if (!Work(line))
+                    Output(line);
+                    bool flag = Work(line);
+                    if (line == "log")
+                    {
+                         cin.rdbuf(inBackup);
+                    }
+                    if (!flag)
                     {
                          return 0;
                     }
@@ -118,7 +132,7 @@ int main(int argc, char **argv)
      }
      catch (bool)
      {
-          cout << "Wrong command." << endl;
+          Output("Wrong command. Type \"demo\" for demonstration; type \"debug\" for wrong-command demonstration.");
      }
      return 0;
 }

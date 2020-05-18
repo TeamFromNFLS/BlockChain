@@ -27,7 +27,18 @@ void Output(string s)
     string::iterator it;
     for (it = s.begin(); it != s.end(); ++it)
     {
-        cout << *it << flush;
+        cout << dec << *it << flush;
+        usleep(20000);
+    }
+    cout << endl;
+}
+
+void QuickOutput(string s)
+{
+    string::iterator it;
+    for (it = s.begin(); it != s.end(); ++it)
+    {
+        cout << dec << *it << flush;
         usleep(2000);
     }
     cout << endl;
@@ -298,9 +309,10 @@ bool Work(string cmd)
 
     case DELETE:
     {
-        if (cmdList[1] != "wallet" && cmdList[1] != "miner")
+        if (cmdList.size() != 2 || (cmdList[1] != "wallet" && cmdList[1] != "miner"))
         {
             Output("Ambiguous command \"" + cmd + "\": delete [wallet/miner].");
+            break;
         }
         string address;
         if (cmdList[1] == "wallet")
@@ -554,7 +566,7 @@ bool Work(string cmd)
             while (getline(cin, line))
             {
                 flag = true;
-                Output(line);
+                QuickOutput(line);
             }
             cin.rdbuf(cinBackup);
             if (!flag)

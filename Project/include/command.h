@@ -32,5 +32,7 @@ int Mine();
 int balance();
 void Init();
 bool Work(string s);
+void Output(string s);
+void QuickOutput(string s);
 
 #endif //TEST_H
