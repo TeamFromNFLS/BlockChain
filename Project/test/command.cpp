@@ -566,7 +566,7 @@ bool Work(string cmd)
             while (getline(cin, line))
             {
                 flag = true;
-                QuickOutput(line);
+                Output(line);
             }
             cin.rdbuf(cinBackup);
             if (!flag)

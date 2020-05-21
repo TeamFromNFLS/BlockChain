@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <termio.h>
 #include "command.h"
 
 using namespace std;
@@ -121,6 +122,14 @@ int main(int argc, char **argv)
      }
      catch (int)
      {
+          while (1)
+          {
+               if (scanKeyboard() == 279165)
+               {
+                    cout << "yes" << endl;
+               }
+               printf(":%d", scanKeyboard());
+          }
           string cmd;
           while (SafeGetline(cin, cmd))
           {
