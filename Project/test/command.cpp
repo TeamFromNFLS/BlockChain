@@ -170,6 +170,7 @@ vector<string> CmdInit(string cmd)
 {
     int pos = 0, len = cmd.length();
     cmd.erase(0, cmd.find_first_not_of(' '));
+    cmd.erase(cmd.find_last_not_of(' ') + 1);
     cmd.insert(cmd.end(), ' ');
     transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
     vector<string> cmdList;
