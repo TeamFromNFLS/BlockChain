@@ -166,11 +166,13 @@ void Init()
     Clean();
 }
 
-bool Work(string cmd)
+vector<string> CmdInit(string cmd)
 {
+    int pos = 0, len = cmd.length();
+    cmd.erase(0, cmd.find_first_not_of(' '));
     cmd.insert(cmd.end(), ' ');
+    transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
     vector<string> cmdList;
-    int pos = 0;
     for (int i = 0; i < cmd.length(); ++i)
     {
         if (cmd[i] == ' ')
@@ -179,7 +181,13 @@ bool Work(string cmd)
             pos = i + 1;
         }
     }
-    cmd.erase(cmd.end() - 1);
+    return cmdList;
+}
+
+bool Work(string cmd)
+{
+    vector<string> cmdList;
+    cmdList = CmdInit(cmd);
     switch (CommandSelect(cmdList[0]))
     {
 

@@ -122,14 +122,6 @@ int main(int argc, char **argv)
      }
      catch (int)
      {
-          while (1)
-          {
-               if (scanKeyboard() == 279165)
-               {
-                    cout << "yes" << endl;
-               }
-               printf(":%d", scanKeyboard());
-          }
           string cmd;
           while (SafeGetline(cin, cmd))
           {
