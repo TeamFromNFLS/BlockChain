@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <unistd.h>
 #include "command.h"
 
 using namespace std;
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
           }
           switch (CmdSelect(argv[1]))
           {
-          case SHOW:
+          case DEMO:
           {
                cout << "Run demo..." << endl;
                fileIn.open("demo.txt", ios::in);
@@ -74,8 +76,17 @@ int main(int argc, char **argv)
                string line;
                while (SafeGetline(cin, line))
                {
-                    cout << line << endl;
-                    Work(line);
+                    Output(line);
+                    bool flag = Work(line);
+                    //cout << "nice" << endl;
+                    if (line == "log")
+                    {
+                         cin.rdbuf(inBackup);
+                    }
+                    if (!flag)
+                    {
+                         return 0;
+                    }
                }
                fileIn.close();
                break;
@@ -89,8 +100,13 @@ int main(int argc, char **argv)
                string line;
                while (SafeGetline(cin, line))
                {
-                    cout << line << endl;
-                    if (!Work(line))
+                    Output(line);
+                    bool flag = Work(line);
+                    if (line == "log")
+                    {
+                         cin.rdbuf(inBackup);
+                    }
+                    if (!flag)
                     {
                          return 0;
                     }
@@ -106,7 +122,7 @@ int main(int argc, char **argv)
      catch (int)
      {
           string cmd;
-          while (getline(cin, cmd))
+          while (SafeGetline(cin, cmd))
           {
                if (!Work(cmd))
                {
@@ -116,7 +132,7 @@ int main(int argc, char **argv)
      }
      catch (bool)
      {
-          cout << "Wrong command." << endl;
+          Output("Wrong command. Type \"demo\" for demonstration; type \"debug\" for wrong-command demonstration.");
      }
      return 0;
 }

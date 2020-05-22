@@ -1,6 +1,25 @@
 adc
 help adc
+add
 add walle 2
 add wallet a
+delete
 delete wall
+delete wallet
+make
+add miner 4
+find
+find 5
+make 5 6 10
+make 0 1 120
+mine
+delete miner
+delete miner
+delete miner
+delete miner
+mine
+display
+display 1
+clean
+log
 exit

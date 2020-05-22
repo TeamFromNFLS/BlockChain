@@ -27,7 +27,18 @@ void Output(string s)
     string::iterator it;
     for (it = s.begin(); it != s.end(); ++it)
     {
-        cout << *it << flush;
+        cout << dec << *it << flush;
+        usleep(20000);
+    }
+    cout << endl;
+}
+
+void QuickOutput(string s)
+{
+    string::iterator it;
+    for (it = s.begin(); it != s.end(); ++it)
+    {
+        cout << dec << *it << flush;
         usleep(2000);
     }
     cout << endl;
@@ -155,11 +166,13 @@ void Init()
     Clean();
 }
 
-bool Work(string cmd)
+vector<string> CmdInit(string cmd)
 {
+    int pos = 0, len = cmd.length();
+    cmd.erase(0, cmd.find_first_not_of(' '));
     cmd.insert(cmd.end(), ' ');
+    transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
     vector<string> cmdList;
-    int pos = 0;
     for (int i = 0; i < cmd.length(); ++i)
     {
         if (cmd[i] == ' ')
@@ -168,7 +181,13 @@ bool Work(string cmd)
             pos = i + 1;
         }
     }
-    cmd.erase(cmd.end() - 1);
+    return cmdList;
+}
+
+bool Work(string cmd)
+{
+    vector<string> cmdList;
+    cmdList = CmdInit(cmd);
     switch (CommandSelect(cmdList[0]))
     {
 
@@ -185,6 +204,7 @@ bool Work(string cmd)
             Output("make -- make a transaction.");
             Output("display -- print the blockchain in a wallet.");
             Output("clean -- clean the log.");
+            Output("log -- print the log.");
             Output("exit -- exit the program.");
             cout << endl;
             Output("Type \"help\" followed by command name for full documentation.");
@@ -297,9 +317,10 @@ bool Work(string cmd)
 
     case DELETE:
     {
-        if (cmdList[1] != "wallet" && cmdList[1] != "miner")
+        if (cmdList.size() != 2 || (cmdList[1] != "wallet" && cmdList[1] != "miner"))
         {
             Output("Ambiguous command \"" + cmd + "\": delete [wallet/miner].");
+            break;
         }
         string address;
         if (cmdList[1] == "wallet")
