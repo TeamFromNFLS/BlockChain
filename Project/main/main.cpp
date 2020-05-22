@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <termio.h>
 #include "command.h"
 
 using namespace std;
