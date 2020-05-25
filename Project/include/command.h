@@ -19,6 +19,7 @@ enum COMMAND
     DISPLAY,
     CLEAN,
     LOG,
+    IMPORT,
     EXIT,
     ERROR
 };
@@ -34,5 +35,7 @@ void Init();
 bool Work(string s);
 void Output(string s);
 void QuickOutput(string s);
+vector<string> CmdInit(string cmd);
+istream &SafeGetline(std::istream &is, std::string &t);
 
 #endif //TEST_H

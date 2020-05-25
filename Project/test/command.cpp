@@ -28,7 +28,7 @@ void Output(string s)
     for (it = s.begin(); it != s.end(); ++it)
     {
         cout << dec << *it << flush;
-        usleep(20000);
+        usleep(10000);
     }
     cout << endl;
 }
@@ -72,7 +72,7 @@ bool IsInt(string &s)
 }
 
 const int INF = 0x3f3f3f3f;
-set<string> commandSet{"help", "add", "delete", "mine", "find", "make", "display", "clean", "log", "exit"};
+set<string> commandSet{"help", "add", "delete", "mine", "find", "make", "display", "clean", "log", "import", "exit"};
 
 COMMAND CommandSelect(string s)
 {
@@ -94,6 +94,8 @@ COMMAND CommandSelect(string s)
         return CLEAN;
     if (s == "log")
         return LOG;
+    if (s == "import")
+        return IMPORT;
     if (s == "exit")
         return EXIT;
     else
@@ -144,6 +146,37 @@ string EditDistance(string &s)
         }
     }
     return result;
+}
+
+/*To solve the problem that in Linux getline would get a \r, I would use this SafeGetline.
+copyright: 
+————————————————
+版权声明：本文为CSDN博主「潜行狙击」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/fanwenbo/java/article/details/17390487*/
+istream &SafeGetline(std::istream &is, std::string &t)
+{
+    t.clear();
+    istream::sentry se(is, true);
+    streambuf *sb = is.rdbuf();
+    for (;;)
+    {
+        int c = sb->sbumpc();
+        switch (c)
+        {
+        case '\n':
+            return is;
+        case '\r':
+            if (sb->sgetc() == '\n')
+                sb->sbumpc();
+            return is;
+        case EOF:
+            if (t.empty())
+                is.setstate(std::ios::eofbit);
+            return is;
+        default:
+            t += (char)c;
+        }
+    }
 }
 
 inline void Clean()
@@ -206,6 +239,7 @@ bool Work(string cmd)
             Output("display -- print the blockchain in a wallet.");
             Output("clean -- clean the log.");
             Output("log -- print the log.");
+            Output("import -- open a file containing a command set and work on it.");
             Output("exit -- exit the program.");
             cout << endl;
             Output("Type \"help\" followed by command name for full documentation.");
@@ -241,6 +275,9 @@ bool Work(string cmd)
                 break;
             case LOG:
                 Output("Display everything in log onto the screen.");
+                break;
+            case IMPORT:
+                Output("import $(path): type a path and try to open the file and work the commands. You can type an absolute path or a relative path.");
                 break;
             case EXIT:
                 Output("Exit the program.");
@@ -591,6 +628,56 @@ bool Work(string cmd)
         catch (int)
         {
             Output("The log is empty!");
+        }
+        break;
+    }
+
+    case IMPORT:
+    {
+        try
+        {
+            if (cmdList.size() != 2)
+            {
+                throw 0;
+            }
+            ifstream importIn;
+            importIn.open(cmdList[1], ios::in);
+            if (!importIn.is_open())
+            {
+                throw false;
+            }
+            streambuf *importBackup = importIn.rdbuf();
+            cin.rdbuf(importBackup);
+            string line;
+            while (SafeGetline(cin, line))
+            {
+                Output(line);
+                bool flag = Work(line);
+                vector<string> lineList = CmdInit(line);
+                if (lineList[0] == "log")
+                {
+                    cin.rdbuf(importBackup);
+                }
+                else if (lineList[0] == "import")
+                {
+                    cin.rdbuf(importBackup);
+                }
+                if (!flag)
+                {
+                    break;
+                }
+            }
+            cin.rdbuf(cinBackup);
+            importIn.close();
+            Output("Over.");
+        }
+        catch (int)
+        {
+            Output("Ambiguous command \"" + cmd + "\": import $(path)");
+        }
+        catch (bool)
+        {
+            Output("Wrong file path, please check again.");
         }
         break;
     }

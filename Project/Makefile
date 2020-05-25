@@ -7,11 +7,11 @@ SUBDIRS=$(shell ls -l | grep ^d | awk '{if($$9 != "debug" && $$9 != "lib" && $$9
 #记住当前工程的根目录路径
 ROOT_DIR=$(shell pwd)
 #最终bin文件的名字，可以更改为自己需要的
-BIN=test
+BIN=prometheus
 #目标文件所在的目录
 OBJS_DIR=debug/obj
 #bin文件所在的目录
-BIN_DIR=debug/bin
+BIN_DIR=/
 #获取当前目录下的c文件集，放在变量CUR_SOURCE中
 CUR_SOURCE=${wildcard *.cpp}
 #将对应的c文件名转为o文件后放在下面的CUR_OBJS变量中
@@ -33,4 +33,3 @@ $(CUR_OBJS):%.o:%.cpp
 	$(CC) -c $^ -o $(ROOT_DIR)/$(OBJS_DIR)/$@ 
 CLEAN:
 	@rm $(OBJS_DIR)/*.o
-	@rm -rf $(BIN_DIR)/*
