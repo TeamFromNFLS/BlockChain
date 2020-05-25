@@ -1,0 +1,6 @@
+hahaha
+add miner 4
+make 1 2 10
+mine
+find 2
+log

@@ -4,35 +4,26 @@
 
 ## 编译方法
 
-### 使用动态库：
-
-```bash
-cd Project/lib
-sudo mv libChain.so /usr/lib
-cd ../release
-make
-./test
-```
-
-
-
-### 直接编译：
-
 ```bash
 cd Project
 make
-./debug/bin/test
+./prometheus
 ```
 
-
-
+- 可选命令行参数：
+  - demo：运行demo.txt中的命令集，查看本软件的使用方法
+  - debug：运行debug.txt中的命令集，查看错误提示
+  
 ## 开发日志
+
+- 2020.05.18
+  应该开发完了
 
 - 2020.05.07 - 2020.04.03
 
   在开发了
 
-* 2020.04.13 - 更早
+- 2020.04.13 - 更早
 
   更新readme，实现大数，加密，哈希
 

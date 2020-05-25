@@ -105,12 +105,8 @@ void Miner::PoW()
     {
         if (TestPoW(now))
         {
-
-            if (Check(stored))
-            {
-                stored.Pack();
-                stored.Show();
-            }
+            stored.Pack();
+            stored.Show();
             break;
         }
         now = (now + 1) % INT32_MAX;
