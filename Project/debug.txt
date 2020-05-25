@@ -22,4 +22,6 @@ display
 display 1
 clean
 log
+import
+import noExist.txt
 exit

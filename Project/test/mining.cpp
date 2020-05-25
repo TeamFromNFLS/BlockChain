@@ -38,7 +38,7 @@ void MineWorker(int *worker, mutex *mutex, bool *i, bool *foundFlag, int *checkC
     now.Load(Transaction::toBePackedTx);
     Transaction::toBePackedTx.pop_back();
     mutex->unlock();
-    bool flag, cntFlag;
+    bool flag;
     bool checkFlag = false;
     while (true)
     {

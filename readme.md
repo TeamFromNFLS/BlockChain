@@ -7,7 +7,7 @@
 ```bash
 cd Project
 make
-./debug/bin/test
+./prometheus
 ```
 
 - 可选命令行参数：
