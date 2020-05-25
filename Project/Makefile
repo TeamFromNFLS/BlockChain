@@ -11,7 +11,7 @@ BIN=test
 #目标文件所在的目录
 OBJS_DIR=debug/obj
 #bin文件所在的目录
-BIN_DIR=debug/bin
+BIN_DIR=/
 #获取当前目录下的c文件集，放在变量CUR_SOURCE中
 CUR_SOURCE=${wildcard *.cpp}
 #将对应的c文件名转为o文件后放在下面的CUR_OBJS变量中
