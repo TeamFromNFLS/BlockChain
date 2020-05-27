@@ -17,6 +17,7 @@ delete miner
 delete miner
 delete miner
 delete miner
+delete miner
 mine
 display
 display 1

@@ -1,9 +1,11 @@
 clean
 add miner 4
 make 1 2 10
+find 1
+find 2
 mine
 find 1
 find 2
 log
-import debug.txt
+import bugs.txt
 exit

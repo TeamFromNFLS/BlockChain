@@ -230,7 +230,6 @@ bool Work(string cmd)
         if (cmdList.size() == 1)
         {
             Output("List of classes of commands:");
-            Output("demo -- run demo.");
             Output("add -- add a wallet or miner.");
             Output("delete -- delete a wallet or miner.");
             Output("mine -- use miners to pack transactions into blockchain.");
@@ -478,13 +477,13 @@ bool Work(string cmd)
             {
                 throw "false";
             }
-            if (Transaction::toBePackedTx.empty())
-            {
-                throw false;
-            }
             if (Miner::minerSet.empty())
             {
                 throw 0;
+            }
+            if (Transaction::toBePackedTx.empty())
+            {
+                throw false;
             }
             cout.rdbuf(fileBackup);
             int output = Mine();
@@ -494,13 +493,13 @@ bool Work(string cmd)
             Output("Found miner id: " + ss.str());
             Output("Found miner address: " + Miner::minerSet[output]->GetAddress());
         }
-        catch (bool)
-        {
-            Output("All transactions have already been packed.");
-        }
         catch (int)
         {
             Output("No miner in the net!");
+        }
+        catch (bool)
+        {
+            Output("All transactions have already been packed.");
         }
         catch (char const *)
         {
@@ -666,6 +665,7 @@ bool Work(string cmd)
                 {
                     break;
                 }
+                getchar();
             }
             cin.rdbuf(cinBackup);
             importIn.close();

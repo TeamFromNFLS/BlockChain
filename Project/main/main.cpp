@@ -61,6 +61,7 @@ int main(int argc, char **argv)
                     {
                          return 0;
                     }
+                    getchar();
                }
                fileIn.close();
                break;
@@ -89,6 +90,7 @@ int main(int argc, char **argv)
                     {
                          return 0;
                     }
+                    getchar();
                }
                fileIn.close();
                break;
